@@ -30,7 +30,19 @@
     color: #000;
     text-transform: uppercase;
 }
-
+.navbar ul li::after{
+    content:'';
+    height: 4px;
+    width: 0%;
+    background: #000;
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    transition: 0.4s;
+}
+.navbar ul li:hover::after{
+    width: 100%;
+}
 
 
 
@@ -56,8 +68,11 @@
     text-align: center;
     position: relative;
     margin: 0 auto;
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
 .interactiveMap:hover {
     background: #FFBF00;
     color: #f0dca1cc;
@@ -76,5 +91,4 @@ span {
     transition: 0.5s;
     
 }
-
 
