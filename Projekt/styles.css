@@ -33,13 +33,13 @@
 }
 .navbar ul li::after{
     content:'';
-    height: 4px;
+    height: 1px;
     width: 0%;
     background: #000;
     position: absolute;
     left: 0;
-    bottom: -10px;
-    transition: 0.4s;
+    bottom: -2px;
+    transition: 0.3s;
 }
 .navbar ul li:hover::after{
     width: 100%;
