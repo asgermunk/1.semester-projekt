@@ -5,7 +5,7 @@
     padding: 0;
     font-family: 'Montserrat', sans-serif;
     color: #f0dca1cc;
-    background-color: #f0dca1cc;
+    background-color: #f0dca1;
 }
 /*navigations bar til tilgængelighed til de forskellige sider*/
 .navbar {
@@ -16,7 +16,7 @@
     align-items: center;
     height:70px ;
     justify-content: space-between;
-    color: #000;
+    color: #000000;
 }
 /* List attributes (forskellige knapper) */
 .navbar ul li{
@@ -92,4 +92,16 @@ span {
     transition: 0.5s;
     
 }
+.DownloadLogo {
+    width: 100px;
+    height: auto;
+    position:absolute;
+    top: 10cm;
+    left: 6.5cm;
 
+}
+.sourceData {
+    color: #000;
+    font-size: 20px;
+    padding: 2cm;   
+}
