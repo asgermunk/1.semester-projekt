@@ -108,11 +108,17 @@ d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/wo
 
   // Scale up the clicked country and set its opacity back to 1
   d3.select(this).transition()
-    .duration(750)
-    .attr("transform", "translate(" + x + "," + y + ")scale(" + scaleFactor + ")");
-
-  svg.selectAll(".Country")
-    
+  .duration(750)
+  .attr("transform", "translate(" + x + "," + y + ")scale(" + scaleFactor + ")")
+  .on("end", function(d) { // After the transition ends...
+    svg.append("text") // Append a text element to the SVG
+      .attr("x", width / 2) // Position it at the center of the SVG
+      .attr("y", 50) // A little bit down from the top
+      .attr("text-anchor", "middle") // Center the text
+      .style("font-size", "24px") // Make the text a bit larger
+      .style("fill", "black") // Make the text black
+      .text(d.properties.name); // Set the text to the name of the country
+  });
 }
 
       // Attach the mouseClick function to the click event
@@ -126,5 +132,7 @@ svg.on("dblclick", function() {
     .attr("transform", "scale(1)")
     .style("opacity", 0.8)
     .attr("stroke-width", 0.5);
+    svg.selectAll("text").remove();
+
 });
 })
