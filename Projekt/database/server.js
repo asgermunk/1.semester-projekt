@@ -17,9 +17,9 @@ app.get('/', (request, response) => {
     response.json({ info: 'Node.js, Express, and Postgres API' });
 });
 
-app.get('/energyProduction', db.get1sem);
-app.post('/insert-energyProduction', db.insert1sem);
-app.post('/populate#', db.populate1sem);
+app.get('/energyProduction', db.getenergyProduction);
+app.post('/insert-energyProduction', db.insertenergyProduction);
+app.post('/populateEnergyProduction', db.populateEnergyProduction);
 
 app.listen(port, () => {
     console.log(`App running on port ${port}.`);
