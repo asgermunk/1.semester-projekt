@@ -35,30 +35,6 @@ d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/wo
     topo.features = topo.features.filter(function(feature) {
         return feature.properties.name !== 'Antarctica';
       });
-      // let mouseOver = function(d) {
-      //   d3.selectAll(".Country")
-      //     .transition()
-      //     .duration(200)
-      //     .style("opacity", .5)
-      //   d3.select(this)
-      //     .transition()
-      //     .duration(200)
-      //     .style("opacity", 1)
-      //     .style("stroke", "black")
-      // }
-    
-      // let mouseLeave = function(d) {
-      //   d3.selectAll(".Country")
-      //     .transition()
-      //     .duration(200)
-      //       .style("opacity", .8)
-      //       .style("stroke", "transparent")
-      //   d3.select(this)
-      //     .transition()
-      //     .duration(200)
-      //     .style("stroke", "transparent")
-      // }
-
   // Draw the map
   svg.selectAll("path")
     .data(topo.features)
