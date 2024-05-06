@@ -6,12 +6,15 @@
     color: #f0dca1cc;
     background-color: #f0dca1;
 }
+/* background image*/
 .banner {
     width: 100%;
     height: 100vh;
     background-image: linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.75)),url(photos/placeholderBanner.png);
     background-size: cover;
     background-position: center;
+    position: relative;
+    z-index: 100;
 }
     
 /*navigations bar til tilgængelighed til de forskellige sider*/
@@ -58,6 +61,7 @@
 .navbar a:hover {
     color: #000;
 }
+/* button styling*/
 .interactiveMap {
     color: #000;
     border-radius: 15px;
@@ -104,28 +108,28 @@ span {
 }
 /* Content i midten af siden */
 .content{
-    width: 100%;
-    position: absolute;
-    top: 50%;
+    width: 35%;
+    margin: 0 auto;
+    margin-top: 25%;
     transform: translateY(-50%);
     text-align: center;
     color: #000;
-    background-color: rgba(181, 208, 209, 0.5);
+    border-radius: 20px;
+    padding: 10px;
+    padding-bottom: 20px;
+    padding-top: 10px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5); 
+    position: relative;
+    z-index: 101;
 }
 .content h1{
     font-size: 70px;
-    margin-top: 80px;
+    margin-top: 30px;
     color: #000;
 }
 .content p{
     margin: 20px auto;
-    font-weight: 400;
-    line-height: 35px;
+    font-weight: 450;
+    line-height: 45px;
     color: #000;
-}
-.mail {
-    margin: 20px auto;
-    font-weight: 400;
-    line-height: 35px;
-    color: #ff0000;
 }
