@@ -20,6 +20,16 @@ app.get('/', (request, response) => {
 app.get('/energyProduction', db.getenergyProduction);
 app.post('/insert-energyProduction', db.insertenergyProduction);
 app.post('/populateEnergyProduction', db.populateEnergyProduction);
+app.get('/energyPotential', db.getenergyPotential);
+app.post('/insert-energyPotential', db.insertenergyPotential);
+app.post('/populateEnergyPotential', db.populateEnergyPotential);
+app.get('/landArea', db.getlandArea);
+app.post('/insert-landArea', db.insertlandArea);
+app.post('/populateLandArea', db.populateLandArea);
+app.get('/SolarEnergy', db.getSolarEnergy);
+app.post('/insert-SolarEnergy', db.insertSolarEnergy);
+app.post('/populateSolarEnergy', db.populateSolarEnergy);
+
 
 app.listen(port, () => {
     console.log(`App running on port ${port}.`);
