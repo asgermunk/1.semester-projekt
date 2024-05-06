@@ -10,26 +10,30 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 <body>
+    <div class="banner">
         <div class="navbar">
                 <a href="https://www.eaaa.dk/">
                     <img class="logo" src="photos/eaa_logo.png" alt="logo">
                 </a>
             <ul>
-                <li><a href="index.html">Homepage</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="map.html">Map</a></li>
                 <li><a href="sourceData.html">Source Data</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
         </div>
-            
-        <div>
+    </div>      
+    <div>
+        <div class="content">
+            <h1>Solar Energy Potential</h1>
+            <p>Click To View Data Visualisation</p>
+            <div class="mapButton">
+                <a>
+                    <button class="interactiveMap" onclick="location.href='map.html';" type="button"><span></span>Map</button>
+                </a>
+            </div>
+        </div>
     </div>
-    </div>
-    <div class ="mapButton">
-        <a>
-            <button class="interactiveMap" onclick="location.href='map.html';" type="button"><span></span>Map</button>
-        </a>
-    </div>
-
 </body>
 </html>
