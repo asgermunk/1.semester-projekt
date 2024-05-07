@@ -92,9 +92,9 @@ Promise.all([
     // Calculate the centroid of the clicked country
     const centroid = path.centroid(d1);
 
-  // Calculate the translation to center the clicked country
-  const svgx = width / 2 - scaleFactor * centroid[0];
-  const svgy = height / 2 - scaleFactor * centroid[1];
+    // Calculate the translation to center the clicked country
+    const x = width / 2 - scaleFactor * centroid[0];
+    const y = height / 2 - scaleFactor * centroid[1];
 
     // Transition all countries back to their original scale and set their opacity back to 0.8
     d3.selectAll(".Country")
@@ -103,33 +103,76 @@ Promise.all([
       .attr("transform", "")
       .style("opacity", 0);
 
-  // Scale up the clicked country and set its opacity back to 1
-  d3.select(this).transition()
-  .duration(750)
-  .attr("transform", "translate(" + x + "," + y + ")scale(" + scaleFactor + ")")
-  .on("end", function(d) { // After the transition ends...
-    svg.append("text") // Append a text element to the SVG
-      .attr("x", width / 2) // Position it at the center of the SVG
-      .attr("y", 50) // A little bit down from the top
-      .attr("text-anchor", "middle") // Center the text
-      .style("font-size", "24px") // Make the text a bit larger
-      .style("fill", "black") // Make the text black
-      .text(d.properties.name); // Set the text to the name of the country
-  });
-}
+    // Scale up the clicked country and set its opacity back to 1
+    d3.select(this)
+      .transition()
+      .duration(750)
+      .attr(
+        "transform",
+        "translate(" + x + "," + y + ")scale(" + scaleFactor + ")"
+      )
+      .on("end", function (d) {
+        // After the transition ends...
+        svg
+          .append("text") // Append a text element to the SVG
+          .attr("x", width / 2) // Position it at the center of the SVG
+          .attr("y", 50) // A little bit down from the top
+          .attr("text-anchor", "middle") // Center the text
+          .style("font-size", "24px") // Make the text a bit larger
+          .style("fill", "black") // Make the text black
+          .style("opacity", 0) // Set the opacity to 0
+          .text(d.properties.name)
+          .transition()
+          .duration(500)
+          .style("opacity", 1); // Set the text to the name of the country
+        svg
+          .append("rect") // Append a rectangle to the SVG
+          .attr("x", 0)
+          .attr("y", 500)
+          .attr("width", scale(sunMax(d1))) // Use the scale here
+
+          .attr("height", 50)
+          .style("opacity", 0)
+          .transition()
+          .duration(500)
+          .style("opacity", 1);
+      });
+    function sunMax(d) {
+      return d.total;
+    }
+    console.log("this is d1", sunMax(d1));
+  }
 
   // Attach the mouseClick function to the click event
   d3.selectAll(".Country").on("click", mouseClick);
 
-      // Add an event listener for a double click event
-svg.on("dblclick", function() {
-  // Transition all countries back to their original scale and set their opacity back to 0.8
-  d3.selectAll(".Country").transition()
-    .duration(750)
-    .attr("transform", "scale(1)")
-    .style("opacity", 0.8)
-    .attr("stroke-width", 0.5);
-    svg.selectAll("text").remove();
+  // Add an event listener for a double click event
+  svg.on("dblclick", function () {
+    // Transition all countries back to their original scale and set their opacity back to 0.8
+    d3.selectAll(".Country")
+      .transition()
+      .duration(750)
+      .attr("transform", "scale(1)")
+      .style("opacity", 0.8)
+      .attr("stroke-width", 0.5);
+    svg
+      .selectAll("text")
+      .transition()
+      .duration(1000) // duration of transition in milliseconds
+      .style("opacity", 0) // transition to transparent before removing
+      .remove();
 
+    svg
+      .selectAll("rect")
+      .transition()
+      .duration(1000) // duration of transition in milliseconds
+      .style("opacity", 0) // transition to transparent before removing
+      .remove();
+  });
+
+  console.log(sunMax());
+  function sunMin() {
+    return d3.min(Array.from(data.values(), (d) => d));
+  }
+  console.log(sunMin());
 });
-})
