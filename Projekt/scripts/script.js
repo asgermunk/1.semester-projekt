@@ -56,12 +56,16 @@ Promise.all([
 
   function mouseClick(d) {
     // Calculate min and max total values
-    const minTotal = d3.min(Array.from(data.values()));
-    const maxTotal = d3.max(Array.from(data.values()));
+    const minTotal = d3.min(
+      Array.from(data.values()).filter((value) => value > 50000)
+    );
 
+    const maxTotal = d3.max(Array.from(data.values()));
+    console.log("minTotal:", minTotal);
+    console.log("maxTotal:", maxTotal);
     // Define your output range
-    const minOutput = 100; // Minimum rectangle width
-    const maxOutput = 1000; // Maximum rectangle width
+    const minOutput = 50; // Minimum rectangle width
+    const maxOutput = 200; // Maximum rectangle width
 
     // Create the scale
     const scale = d3
@@ -123,7 +127,7 @@ Promise.all([
           .style("opacity", 1); // Set the text to the name of the country
         svg
           .append("rect") // Append a rectangle to the SVG
-          .attr("x", 20)
+          .attr("x", 0)
           .attr("y", 500)
           .attr("width", scale(sunMax(d1))) // Use the scale here
 
