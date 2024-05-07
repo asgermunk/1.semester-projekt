@@ -73,7 +73,7 @@ d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/wo
   const centroid = path.centroid(d1);
 
   // Calculate the translation to center the clicked country
-  const x = width / 2 - scaleFactor * centroid[0];
+  const x = width / 1.25 - scaleFactor * centroid[0];
   const y = height / 2 - scaleFactor * centroid[1];
 
   // Transition all countries back to their original scale and set their opacity back to 0.8
@@ -87,14 +87,41 @@ d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/wo
   .duration(750)
   .attr("transform", "translate(" + x + "," + y + ")scale(" + scaleFactor + ")")
   .on("end", function(d) { // After the transition ends...
+
+let svgWidth = document.querySelector('svg').getBoundingClientRect().width;
+let bodyWidth = document.body.getBoundingClientRect().width;
+let remainingWidth = bodyWidth - svgWidth;
+
+/* positionering af div */
+let divWidth;
+if (remainingWidth > svgWidth) {
+  divWidth = svgWidth;
+} else {
+  divWidth = remainingWidth;
+}
+
+d3.select("body").append("div")
+  .attr("class", "content")
+  .style("position", "absolute") // Position it absolutely
+  .style("left", "150px") // Position it to the left of the SVG
+  .style("top", "150px") // Position it at the top of the page
+  .style("width", divWidth + "px") // Limit the width to the remaining space or the SVG width, whichever is smaller
+  .style("height", "80%") // Make it take up 80% of the height
+  .append("h1")
+  .text('Indhold')
+  .append("p")
+  .text('');
+    
+
     svg.append("text") // Append a text element to the SVG
-      .attr("x", width / 2) // Position it at the center of the SVG
+      .attr("x", width / 1.25) // Position it at the center of the SVG
       .attr("y", 50) // A little bit down from the top
       .attr("text-anchor", "middle") // Center the text
       .style("font-size", "24px") // Make the text a bit larger
       .style("fill", "black") // Make the text black
       .text(d.properties.name); // Set the text to the name of the country
   });
+
 }
 
       // Attach the mouseClick function to the click event
@@ -109,6 +136,5 @@ svg.on("dblclick", function() {
     .style("opacity", 0.8)
     .attr("stroke-width", 0.5);
     svg.selectAll("text").remove();
-
 });
 })
