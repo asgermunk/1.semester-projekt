@@ -15,8 +15,11 @@ const colorScaleMap = d3 //midlertidig farve skala
   .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
   .range(["#FFFF00", "#FFD700", "#FFA500", "#FF8C00", "#FF4500", "#FF0000"]);
 const minOutputMap = 50; // Minimum rectangle width
-const maxOutputMap = 200; // Maximum rectangle width
-
+const maxOutputMap = 500; // Maximum rectangle width
+function colorGradientMap(d) {
+  // Denne funktion skal tage landets sol potentiale og returnere en farve
+  return "red"; //Vi mangler data til denne funktion
+}
 Promise.all([
   // Load external data and boot for map
   d3.json(
@@ -141,17 +144,18 @@ Promise.all([
           .style("opacity", 1);
       });
     function sunMaxMap(d) {
-      //Denne funktion skal tage landets sol potentiale
+      //Denne funktion skal retunere landets sol potentiale
       return d.total; //Vi mangler data til denne funktion
     }
     function sunProdMap(d) {
-      //Denne funktion skal tage landets sol produktion
+      //Denne funktion skal retunere landets sol produktion
       return d.total; //Vi mangler data til denne funktion
     }
     function energiConsMap(d) {
-      //Denne funktion skal tage landets energi forbrug
+      //Denne funktion skal retunere landets energi forbrug
       return d.total; //Vi mangler data til denne funktion
     }
+
     console.log("this is d1", sunMaxMap(dataCountry));
   }
 
