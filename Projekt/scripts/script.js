@@ -111,7 +111,7 @@ Promise.all([
         "translate(" + xMap + "," + yMap + ")scale(" + scaleFactorMap + ")"
       )
       .on("end", function (d) {
-        // After the transition ends...
+        // After the transition ends... s
         svgMap
           .append("text") // Append a text element to the SVG
           .attr("x", xMap / 2) // Position it at the center of the SVG
