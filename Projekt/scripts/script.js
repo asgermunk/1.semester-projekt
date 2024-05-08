@@ -8,15 +8,15 @@ const projectionMap = d3
   .scale(200)
   .center([0, 20])
   .translate([widthMap / 2, heightMap / 2]);
-
 const pathMap = d3.geoPath().projection(projectionMap);
-
 // Data and color scale for map
 const dataMap = new Map();
-const colorScaleMap = d3
+const colorScaleMap = d3 //midlertidig farve skala
   .scaleThreshold()
   .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
   .range(["#FFFF00", "#FFD700", "#FFA500", "#FF8C00", "#FF4500", "#FF0000"]);
+const minOutputMap = 50; // Minimum rectangle width
+const maxOutputMap = 200; // Maximum rectangle width
 
 // Load external data and boot for map
 Promise.all([
@@ -27,6 +27,7 @@ Promise.all([
     "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv"
   ),
 ]).then(function ([topoData, populationData]) {
+  //topoData = world.geojson, populationData = world_population.csv
   topoData.features = topoData.features.filter(function (feature) {
     return feature.properties.name !== "Antarctica";
   });
@@ -57,51 +58,31 @@ Promise.all([
     const minTotalMap = d3.min(
       Array.from(dataMap.values()).filter((value) => value > 50000)
     );
-
     const maxTotalMap = d3.max(Array.from(dataMap.values()));
-    console.log("minTotal:", minTotalMap);
-    console.log("maxTotal:", maxTotalMap);
-    // Define your output range
-    const minOutputMap = 50; // Minimum rectangle width
-    const maxOutputMap = 200; // Maximum rectangle width
-
     // Create the scale
     const scaleMap = d3
       .scaleLinear()
       .domain([minTotalMap, maxTotalMap])
       .range([minOutputMap, maxOutputMap]);
-    console.log("mouseClick d:", d);
     const dataCountry = d3.select(this).datum();
-    console.log("this:", dataCountry.total);
-
-    console.log("mouseClick d:", d);
-    console.log("this:", dataCountry.total);
-
-    console.log("Country clicked:", dataCountry);
-
     // Calculate the bounding box of the clicked country
     const bboxMap = this.getBBox();
     const bboxWidthMap = bboxMap.width;
     const bboxHeightMap = bboxMap.height;
-
     // Calculate the scale factor based on the size of the country
     const scaleFactorMap =
       0.8 / Math.max(bboxWidthMap / widthMap, bboxHeightMap / heightMap);
-
     // Calculate the centroid of the clicked country
     const centroidMap = pathMap.centroid(dataCountry);
-
     // Calculate the translation to center the clicked country
     const xMap = widthMap / 2 - scaleFactorMap * centroidMap[0];
     const yMap = heightMap / 2 - scaleFactorMap * centroidMap[1];
-
     // Transition all countries back to their original scale and set their opacity back to 0.8
     d3.selectAll(".Country")
       .transition()
       .duration(750)
       .attr("transform", "")
       .style("opacity", 0);
-
     // Scale up the clicked country and set its opacity back to 1
     d3.select(this)
       .transition()
@@ -124,22 +105,22 @@ Promise.all([
           .transition()
           .duration(500)
           .style("opacity", 1); // Set the text to the name of the country
-        svgMap
+        svgMap //bar for max sol potentiale
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
           .attr("y", 500)
-          .attr("width", scaleMap(sunMaxMap(dataCountry))) // Use the scale here
-
+          .attr("width", scaleMap(sunMaxMap(dataCountry))) //lav en ny funktion som tager landets sol potentiale
           .attr("height", 50)
           .style("opacity", 0)
           .transition()
           .duration(500)
           .style("opacity", 1);
+
         svgMap //bar for land energi forbrug
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
           .attr("y", 500)
-          .attr("width", scaleMap(sunMaxMap(dataCountry)) - 20) //denne skal ændres til en ny funktion som tager landets energi forbrug
+          .attr("width", scaleMap(energiConsMap(dataCountry)) - 20) //denne skal ændres til en ny funktion som tager landets energi forbrug
           .attr("height", 50)
           .style("opacity", 0)
           .style("fill", "red")
@@ -147,11 +128,11 @@ Promise.all([
           .duration(500)
           .style("opacity", 1);
 
-        svgMap
+        svgMap // bar for sol produktion
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
           .attr("y", 500)
-          .attr("width", scaleMap(sunMaxMap(dataCountry)) - 50) // Use the scale here
+          .attr("width", scaleMap(sunProdMap(dataCountry)) - 50) //denne skal ændres til en ny funktion som tager landets sol produktion
           .attr("height", 50)
           .style("opacity", 0)
           .style("fill", "blue")
@@ -160,20 +141,28 @@ Promise.all([
           .style("opacity", 1);
       });
     function sunMaxMap(d) {
-      return d.total;
+      //Denne funktion skal tage landets sol potentiale
+      return d.total; //Vi mangler data til denne funktion
+    }
+    function sunProdMap(d) {
+      //Denne funktion skal tage landets sol produktion
+      return d.total; //Vi mangler data til denne funktion
+    }
+    function energiConsMap(d) {
+      //Denne funktion skal tage landets energi forbrug
+      return d.total; //Vi mangler data til denne funktion
     }
     console.log("this is d1", sunMaxMap(dataCountry));
   }
 
   // Attach the mouseClick function to the click event
   svgMap.selectAll(".Country").on("click", mouseClickMap);
-
   // Add an event listener for a double click event
   svgMap.on("dblclick", function () {
     // Transition all countries back to their original scale and set their opacity back to 0.8
     d3.selectAll(".Country")
       .transition()
-      .duration(750)
+      .duration(1000)
       .attr("transform", "scale(1)")
       .style("opacity", 0.8)
       .attr("stroke-width", 0.5);
@@ -191,12 +180,6 @@ Promise.all([
       .style("opacity", 0) // transition to transparent before removing
       .remove();
   });
-
-  console.log(sunMaxMap());
-  function sunMinMap() {
-    return d3.min(Array.from(dataMap.values(), (d) => d));
-  }
-  console.log(sunMinMap());
 });
 
 // The svg for chart
