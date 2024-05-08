@@ -1,7 +1,25 @@
 // The svg for map
+// Existing code
 const svgMap = d3.select("#svgmap"),
   widthMap = +svgMap.attr("width"),
   heightMap = +svgMap.attr("height");
+
+// Add a class to the SVG
+svgMap.attr("class", "mySvg").style("z-index", "0");
+
+const svgBar = d3.select("body").append("svg").attr("id", "svgbar"),
+  widthBar = 500, // specify the width of the bar chart SVG
+  heightBar = 500; // specify the height of the bar chart SVG
+
+// Add a class to the SVG bar chart
+svgBar
+  .attr("class", "mySvgBar")
+  .style("z-index", "2")
+  .style("position", "fixed")
+  .attr("width", widthBar)
+  .attr("height", heightBar);
+// Add a class to the div
+let div = d3.select("body").append("div").attr("class", "myDiv");
 // Map and projection
 const projectionMap = d3
   .geoMercator()
@@ -113,47 +131,49 @@ Promise.all([
       .on("end", function (d) {
         // After the transition ends... s
 
-let svgWidth = document.querySelector('svg').getBoundingClientRect().width;
-let bodyWidth = document.body.getBoundingClientRect().width;
-let remainingWidth = bodyWidth - svgWidth;
+        let svgWidth = document
+          .querySelector("svg")
+          .getBoundingClientRect().width;
+        let bodyWidth = document.body.getBoundingClientRect().width;
+        let remainingWidth = bodyWidth - svgWidth;
+        /* positionering af div */
+        let divWidth;
+        if (remainingWidth > svgWidth) {
+          divWidth = svgWidth;
+        } else {
+          divWidth = remainingWidth;
+        }
+        console.log("divWidth", divWidth);
+        let div = d3
+          .select("body")
+          .append("div")
+          .attr("class", "content")
+          .style("position", "fixed") // Position it fixed
+          .style("left", "150px") // Position it to the left of the SVG
+          .style("top", "150px") // Position it at the top of the page
+          .style("width", divWidth + "px") // Limit the width to the remaining space or the SVG width, whichever is smaller
+          .style("height", "80%") // Make it take up 80% of the height
+          .style("opacity", 0) // Start with an opacity of 0
+          .style("z-index", "2"); // Set the z-index to 2
 
-/* positionering af div */
-let divWidth;
-if (remainingWidth > svgWidth) {
-  divWidth = svgWidth;
-} else {
-  divWidth = remainingWidth;
-}
+        div.append("h1").text("Indhold");
 
-let div = d3.select("body").append("div")
-  .attr("class", "content")
-  .style("position", "absolute") // Position it absolutely
-  .style("left", "150px") // Position it to the left of the SVG
-  .style("top", "150px") // Position it at the top of the page
-  .style("width", divWidth + "px") // Limit the width to the remaining space or the SVG width, whichever is smaller
-  .style("height", "80%") // Make it take up 80% of the height
-  .style("opacity", 0) // Start with an opacity of 0
-  .style("z-index", "1"); // Set the z-index to 1
+        div.append("p").text("");
 
-div.append("h1")
-  .text('Indhold');
+        div
+          .transition() // Start a transition
+          .duration(750) // Make the transition last 0.75 seconds
+          .style("opacity", 1); // End with an opacity of 1
 
-div.append("p")
-  .text('');
+        //   let svgWrapper = d3.select("body").append("div")
+        //   .style("position", "relative")
+        //   .style("z-index", "3");
 
-div.transition() // Start a transition
-  .duration(750) // Make the transition last 0.75 seconds
-  .style("opacity", 1); // End with an opacity of 1
-  
+        // // Append the SVGs to the wrapper div
+        // let svg = svgWrapper.append("svgMap")
 
-//   let svgWrapper = d3.select("body").append("div")
-//   .style("position", "relative")
-//   .style("z-index", "3");
-
-// // Append the SVGs to the wrapper div
-// let svg = svgWrapper.append("svgMap")
-
-        svgMap
+        svgBar
+          .style("z-index", "1")
           .append("text") // Append a text element to the SVG
           .attr("x", widthMap / 1.25) // Position it at the center of the SVG
           .attr("y", 50) // A little bit down from the top
@@ -165,18 +185,17 @@ div.transition() // Start a transition
           .transition()
           .duration(500)
           .style("opacity", 1); // Set the text to the name of the country
-        svgMap
+        svgBar
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
           .attr("y", 500)
           .attr("width", scaleMap(sunMaxMap(dataCountry))) // Use the scale here
-
           .attr("height", 50)
           .style("opacity", 0)
           .transition()
           .duration(500)
           .style("opacity", 1);
-        svgMap //bar for land energi forbrug
+        svgBar //bar for land energi forbrug
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
           .attr("y", 500)
@@ -188,7 +207,7 @@ div.transition() // Start a transition
           .duration(500)
           .style("opacity", 1);
 
-        svgMap
+        svgBar
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
           .attr("y", 500)
@@ -232,16 +251,15 @@ div.transition() // Start a transition
       .style("opacity", 0) // transition to transparent before removing
       .remove();
 
-      d3.select(".content")
-        .transition()
-        .duration(750) // duration of transition in milliseconds
-        .style("opacity", 0) // transition to transparent
-        .on("end", function() {
-          d3.select(".content").remove()}); // remove the div after the transition is complete
-    
+    d3.select(".content")
+      .transition()
+      .duration(750) // duration of transition in milliseconds
+      .style("opacity", 0) // transition to transparent
+      .on("end", function () {
+        d3.select(".content").remove();
+      }); // remove the div after the transition is complete
   });
 
-  console.log(sunMaxMap());
   function sunMinMap() {
     return d3.min(Array.from(dataMap.values(), (d) => d));
   }
