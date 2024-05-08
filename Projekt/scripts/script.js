@@ -1,16 +1,15 @@
-// The svg for map
-const svgMap = d3.select("#svgmap"),
+const svgMap = d3.select("#svgmap"), // The svg for map
   widthMap = +svgMap.attr("width"),
   heightMap = +svgMap.attr("height");
-// Map and projection
-const projectionMap = d3
+
+const projectionMap = d3 // Map and projection
   .geoMercator()
   .scale(200)
   .center([0, 20])
   .translate([widthMap / 2, heightMap / 2]);
 const pathMap = d3.geoPath().projection(projectionMap);
-// Data and color scale for map
-const dataMap = new Map();
+
+const dataMap = new Map(); // Data for map
 const colorScaleMap = d3 //midlertidig farve skala
   .scaleThreshold()
   .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
@@ -18,8 +17,8 @@ const colorScaleMap = d3 //midlertidig farve skala
 const minOutputMap = 50; // Minimum rectangle width
 const maxOutputMap = 200; // Maximum rectangle width
 
-// Load external data and boot for map
 Promise.all([
+  // Load external data and boot for map
   d3.json(
     "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson"
   ),
@@ -66,24 +65,25 @@ Promise.all([
       .range([minOutputMap, maxOutputMap]);
     const dataCountry = d3.select(this).datum();
     // Calculate the bounding box of the clicked country
-    const bboxMap = this.getBBox();
+    const bboxMap = this.getBBox(); //bboxMap = {x, y, width, height} bounding box laver den mindste firkant omkring landet
     const bboxWidthMap = bboxMap.width;
     const bboxHeightMap = bboxMap.height;
     // Calculate the scale factor based on the size of the country
     const scaleFactorMap =
       0.8 / Math.max(bboxWidthMap / widthMap, bboxHeightMap / heightMap);
     // Calculate the centroid of the clicked country
-    const centroidMap = pathMap.centroid(dataCountry);
+    const centroidMap = pathMap.centroid(dataCountry); //centroidMap = [x, y] - midten af landet
     // Calculate the translation to center the clicked country
-    const xMap = widthMap / 2 - scaleFactorMap * centroidMap[0];
-    const yMap = heightMap / 2 - scaleFactorMap * centroidMap[1];
-    // Transition all countries back to their original scale and set their opacity back to 0.8
+    const xMap = widthMap / 2 - scaleFactorMap * centroidMap[0]; //map x position
+    const yMap = heightMap / 2 - scaleFactorMap * centroidMap[1]; //map y position
+    //gør alle lande usynlige
     d3.selectAll(".Country")
       .transition()
       .duration(750)
       .attr("transform", "")
-      .style("opacity", 0);
-    // Scale up the clicked country and set its opacity back to 1
+      .style("opacity", 0)
+      .attr("translate", "scale(0)");
+    // gør det valgte land synligt og gør det stort, samt få det til at være i midten
     d3.select(this)
       .transition()
       .duration(750)
@@ -93,7 +93,7 @@ Promise.all([
       )
       .on("end", function (d) {
         // After the transition ends...
-        svgMap
+        svgMap // Append a text element to the SVG
           .append("text") // Append a text element to the SVG
           .attr("x", widthMap / 2) // Position it at the center of the SVG
           .attr("y", 50) // A little bit down from the top
