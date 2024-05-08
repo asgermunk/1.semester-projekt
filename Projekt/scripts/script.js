@@ -65,7 +65,7 @@ Promise.all([
     console.log("maxTotal:", maxTotal);
     // Define your output range
     const minOutput = 50; // Minimum rectangle width
-    const maxOutput = 200; // Maximum rectangle width
+    const maxOutput = 400; // Maximum rectangle width
 
     // Create the scale
     const scale = d3
@@ -73,13 +73,13 @@ Promise.all([
       .domain([minTotal, maxTotal])
       .range([minOutput, maxOutput]);
     console.log("mouseClick d:", d);
-    const d1 = d3.select(this).datum();
-    console.log("this:", d1.total);
+    const dataCountry = d3.select(this).datum();
+    console.log("this:", dataCountry.total);
 
     console.log("mouseClick d:", d);
-    console.log("this:", d1.total);
+    console.log("this:", dataCountry.total);
 
-    console.log("Country clicked:", d1);
+    console.log("Country clicked:", dataCountry);
 
     // Calculate the bounding box of the clicked country
     const bbox = this.getBBox();
@@ -90,11 +90,11 @@ Promise.all([
     const scaleFactor = 0.8 / Math.max(bboxWidth / width, bboxHeight / height);
 
     // Calculate the centroid of the clicked country
-    const centroid = path.centroid(d1);
+    const centroid = path.centroid(dataCountry);
 
     // Calculate the translation to center the clicked country
-    const x = width / 2 - scaleFactor * centroid[0];
-    const y = height / 2 - scaleFactor * centroid[1];
+    const xCountry = width / 2 - scaleFactor * centroid[0];
+    const yCountry = height / 2 - scaleFactor * centroid[1];
 
     // Transition all countries back to their original scale and set their opacity back to 0.8
     d3.selectAll(".Country")
@@ -109,7 +109,7 @@ Promise.all([
       .duration(750)
       .attr(
         "transform",
-        "translate(" + x + "," + y + ")scale(" + scaleFactor + ")"
+        "translate(" + xCountry + "," + yCountry + ")scale(" + scaleFactor + ")"
       )
       .on("end", function (d) {
         // After the transition ends...
@@ -129,10 +129,32 @@ Promise.all([
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
           .attr("y", 500)
-          .attr("width", scale(sunMax(d1))) // Use the scale here
-
+          .attr("width", scale(sunMax(dataCountry))) // Use the scale here
           .attr("height", 50)
           .style("opacity", 0)
+          .transition()
+          .duration(500)
+          .style("opacity", 1);
+        svg //bar for land energi forbrug
+          .append("rect") // Append a rectangle to the SVG
+          .attr("x", 0)
+          .attr("y", 500)
+          .attr("width", scale(sunMax(dataCountry)) - 20) //denne skal ændres til en ny funktion som tager landets energi forbrug
+          .attr("height", 50)
+          .style("opacity", 0)
+          .style("fill", "red")
+          .transition()
+          .duration(500)
+          .style("opacity", 1);
+
+        svg
+          .append("rect") // Append a rectangle to the SVG
+          .attr("x", 0)
+          .attr("y", 500)
+          .attr("width", scale(sunMax(dataCountry)) - 50) // Use the scale here
+          .attr("height", 50)
+          .style("opacity", 0)
+          .style("fill", "blue")
           .transition()
           .duration(500)
           .style("opacity", 1);
@@ -140,7 +162,7 @@ Promise.all([
     function sunMax(d) {
       return d.total;
     }
-    console.log("this is d1", sunMax(d1));
+    console.log("this is dataCountry", sunMax(dataCountry));
   }
 
   // Attach the mouseClick function to the click event
