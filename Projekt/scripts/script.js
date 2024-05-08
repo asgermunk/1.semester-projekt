@@ -114,7 +114,7 @@ Promise.all([
         // After the transition ends...
         svgMap
           .append("text") // Append a text element to the SVG
-          .attr("x", xMap / 2) // Position it at the center of the SVG
+          .attr("x", widthMap / 2) // Position it at the center of the SVG
           .attr("y", 50) // A little bit down from the top
           .attr("text-anchor", "middle") // Center the text
           .style("font-size", "24px") // Make the text a bit larger
@@ -135,7 +135,7 @@ Promise.all([
           .transition()
           .duration(500)
           .style("opacity", 1);
-        svg //bar for land energi forbrug
+        svgMap //bar for land energi forbrug
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
           .attr("y", 500)
@@ -147,7 +147,7 @@ Promise.all([
           .duration(500)
           .style("opacity", 1);
 
-        svg
+        svgMap
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
           .attr("y", 500)
