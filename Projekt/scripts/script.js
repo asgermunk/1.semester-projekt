@@ -89,7 +89,7 @@ Promise.all([
       0.8 / Math.max(bboxWidthMap / widthMap, bboxHeightMap / heightMap);
 
     // Calculate the centroid of the clicked country
-    const centroidMap = pathMap.centroid(d1);
+    const centroidMap = pathMap.centroid(dataCountry);
 
     // Calculate the translation to center the clicked country
     const xMap = widthMap / 2 - scaleFactorMap * centroidMap[0];
@@ -114,7 +114,7 @@ Promise.all([
         // After the transition ends...
         svgMap
           .append("text") // Append a text element to the SVG
-          .attr("x", widthMap / 2) // Position it at the center of the SVG
+          .attr("x", xMap / 2) // Position it at the center of the SVG
           .attr("y", 50) // A little bit down from the top
           .attr("text-anchor", "middle") // Center the text
           .style("font-size", "24px") // Make the text a bit larger
@@ -128,7 +128,7 @@ Promise.all([
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
           .attr("y", 500)
-          .attr("width", scaleMap(sunMaxMap(d1))) // Use the scale here
+          .attr("width", scaleMap(sunMaxMap(dataCountry))) // Use the scale here
 
           .attr("height", 50)
           .style("opacity", 0)
@@ -139,7 +139,7 @@ Promise.all([
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
           .attr("y", 500)
-          .attr("width", scale(sunMax(dataCountry)) - 20) //denne skal ændres til en ny funktion som tager landets energi forbrug
+          .attr("width", scaleMap(sunMaxMap(dataCountry)) - 20) //denne skal ændres til en ny funktion som tager landets energi forbrug
           .attr("height", 50)
           .style("opacity", 0)
           .style("fill", "red")
@@ -151,7 +151,7 @@ Promise.all([
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
           .attr("y", 500)
-          .attr("width", scale(sunMax(dataCountry)) - 50) // Use the scale here
+          .attr("width", scaleMap(sunMaxMap(dataCountry)) - 50) // Use the scale here
           .attr("height", 50)
           .style("opacity", 0)
           .style("fill", "blue")
@@ -162,7 +162,7 @@ Promise.all([
     function sunMaxMap(d) {
       return d.total;
     }
-    console.log("this is d1", sunMaxMap(d1));
+    console.log("this is d1", sunMaxMap(dataCountry));
   }
 
   // Attach the mouseClick function to the click event
