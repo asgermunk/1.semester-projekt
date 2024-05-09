@@ -29,6 +29,9 @@ app.post('/populateLandArea', db.populateLandArea);
 app.get('/SolarEnergy', db.getSolarEnergy);
 app.post('/insert-SolarEnergy', db.insertSolarEnergy);
 app.post('/populateSolarEnergy', db.populateSolarEnergy);
+app.get('/Alldata', db.getAlldata);
+app.post('/insert-Alldata', db.insertAlldata);
+app.post('/populateAlldata', db.populateAlldata);
 
 
 app.listen(port, () => {
