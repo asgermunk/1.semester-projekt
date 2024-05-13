@@ -185,7 +185,7 @@ Promise.all([
       .remove();
   });
 });
-
+//Start på chart
 // The svg for chart
 const svgChart = d3.select("#svgchart"),
   widthChart = +svgChart.attr("width"),
