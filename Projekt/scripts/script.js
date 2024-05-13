@@ -20,7 +20,7 @@ const projectionMap = d3 // Map and projection
   .center([0, 20])
   .translate([widthMap / 2, heightMap / 2]);
 const pathMap = d3.geoPath().projection(projectionMap);
-
+//hello
 const dataMap = new Map(); // Data for map
 const colorScaleMap = d3 //midlertidig farve skala
   .scaleThreshold()
