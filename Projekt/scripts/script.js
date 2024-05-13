@@ -1,11 +1,11 @@
 // The svg for map
 // Existing code
-const svgMap = d3.select("#svgmap"),
-  widthMap = +svgMap.attr("width"),
-  heightMap = +svgMap.attr("height");
+const svgBar = d3.select("#svgmap"),
+  widthMap = +svgBar.attr("width"),
+  heightMap = +svgBar.attr("height");
 
 // Add a class to the SVG
-svgMap.attr("class", "mySvg").style("z-index", "0");
+svgBar.attr("class", "mySvg").style("z-index", "0");
 const widthBar = 500; // specify the width of the bar chart SVG
 const heightBar = 500; // specify the height of the bar chart SVG
 // Add a class to the SVG bar chart
@@ -57,8 +57,8 @@ Promise.all([
   });
 
   // Draw the map
-  svgMap;
-  svgMap
+  svgBar;
+  svgBar
     .selectAll("path")
     .data(topoData.features)
     .data(topoData.features)
@@ -73,7 +73,7 @@ Promise.all([
     .style("stroke", "transparent")
     .attr("class", "Country");
 
-  svgMap.attr("preserveAspectRatio", "none");
+  svgBar.attr("preserveAspectRatio", "none");
 
   function mouseClickMap(d) {
     // Calculate min and max total values
@@ -97,7 +97,7 @@ Promise.all([
     // Calculate the centroid of the clicked country
     const centroidMap = pathMap.centroid(dataCountry); //centroidMap = [x, y] - midten af landet
     // Calculate the translation to center the clicked country
-    const xMap = widthMap / 2 - scaleFactorMap * centroidMap[0]; //map x position
+    const xMap = widthMap / 1.25 - scaleFactorMap * centroidMap[0]; //map x position
     const yMap = heightMap / 2 - scaleFactorMap * centroidMap[1]; //map y position
     //gør alle lande usynlige
     d3.selectAll(".Country")
@@ -157,7 +157,7 @@ Promise.all([
         //   .style("z-index", "3");
 
         // // Append the SVGs to the wrapper div
-        // let svg = svgWrapper.append("svgMap")
+        // let svg = svgWrapper.append("svgBar")
         const svgBar = d3
           .select("#content")
           .append("svg")
@@ -170,8 +170,8 @@ Promise.all([
         div;
         d3.select("#contentText")
 
-          // .attr("x", widthMap / 1.25) // Position it at the center of the SVG
-          // .attr("y", 50) // A little bit down from the top
+          .attr("x", widthMap / 1.25) // Position it at the center of the SVG
+          .attr("y", 50) // A little bit down from the top
           .attr("text-anchor", "middle") // Center the text
           .style("font-size", "24px") // Make the text a bit larger
           .style("fill", "black") // Make the text black
@@ -180,10 +180,10 @@ Promise.all([
           .transition()
           .duration(500)
           .style("opacity", 1); // Set the text to the name of the country
-        svgMap //bar for max sol potentiale
+        svgBar //bar for max sol potentiale
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
-          .attr("y", 500)
+          .attr("y", 450)
           .attr("width", scaleMap(sunMaxMap(dataCountry))) //lav en ny funktion som tager landets sol potentiale
           .attr("height", 50)
           .style("opacity", 0)
@@ -191,10 +191,10 @@ Promise.all([
           .duration(500)
           .style("opacity", 1);
 
-        svgMap //bar for land energi forbrug
+        svgBar //bar for land energi forbrug
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
-          .attr("y", 500)
+          .attr("y", 450)
           .attr("width", scaleMap(energiConsMap(dataCountry)) - 20) //denne skal ændres til en ny funktion som tager landets energi forbrug
           .attr("height", 50)
           .style("opacity", 0)
@@ -203,10 +203,10 @@ Promise.all([
           .duration(500)
           .style("opacity", 1);
 
-        svgMap // bar for sol produktion
+        svgBar // bar for sol produktion
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
-          .attr("y", 500)
+          .attr("y", 450)
           .attr("width", scaleMap(sunProdMap(dataCountry)) - 50) //denne skal ændres til en ny funktion som tager landets sol produktion
           .attr("height", 50)
           .style("opacity", 0)
@@ -232,9 +232,9 @@ Promise.all([
   }
 
   // Attach the mouseClick function to the click event
-  svgMap.selectAll(".Country").on("click", mouseClickMap);
+  svgBar.selectAll(".Country").on("click", mouseClickMap);
   // Add an event listener for a double click event
-  svgMap.on("dblclick", function () {
+  svgBar.on("dblclick", function () {
     // Transition all countries back to their original scale and set their opacity back to 0.8
     d3.selectAll(".Country")
       .transition()
@@ -242,19 +242,21 @@ Promise.all([
       .attr("transform", "scale(1)")
       .style("opacity", 0.8)
       .attr("stroke-width", 0.5);
-    svgMap
+    svgBar
       .selectAll("text")
       .transition()
       .duration(1000) // duration of transition in milliseconds
       .style("opacity", 0) // transition to transparent before removing
       .remove();
 
-    svgMap
+    svgBar
       .selectAll("rect")
       .transition()
       .duration(1000) // duration of transition in milliseconds
       .style("opacity", 0) // transition to transparent before removing
       .remove();
+
+    d3.select("#content").remove();
   });
 });
 //Start på chart
