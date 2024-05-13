@@ -1,3 +1,19 @@
+// The svg for map
+// Existing code
+const svgMap = d3.select("#svgmap"),
+  widthMap = +svgMap.attr("width"),
+  heightMap = +svgMap.attr("height");
+
+// Add a class to the SVG
+svgMap.attr("class", "mySvg").style("z-index", "0");
+const widthBar = 500; // specify the width of the bar chart SVG
+const heightBar = 500; // specify the height of the bar chart SVG
+// Add a class to the SVG bar chart
+
+// Add a class to the div
+
+// Map and projection
+const projectionMap = d3
 const svgMap = d3.select("#svgmap"), // The svg for map
   widthMap = +svgMap.attr("width"),
   heightMap = +svgMap.attr("height");
@@ -29,6 +45,10 @@ Promise.all([
     "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv"
   ),
 ]).then(function ([topoData, populationData]) {
+  topoData.features = topoData.features.filter(function (feature) {
+    "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv"
+  ),
+]).then(function ([topoData, populationData]) {
   //topoData = world.geojson, populationData = world_population.csv
   topoData.features = topoData.features.filter(function (feature) {
     return feature.properties.name !== "Antarctica";
@@ -39,29 +59,46 @@ Promise.all([
     dataMap.set(d.code, +d.pop);
   });
 
+
+  // Process population data
+  populationData.forEach(function (d) {
+    dataMap.set(d.code, +d.pop);
+  });
+
   // Draw the map
   svgMap
+  svgMap
     .selectAll("path")
+    .data(topoData.features)
     .data(topoData.features)
     .enter()
     .append("path")
     .attr("d", pathMap)
+    .attr("d", pathMap)
     .attr("fill", function (d) {
+      d.total = dataMap.get(d.id) || 0;
+      return colorScaleMap(d.total);
       d.total = dataMap.get(d.id) || 0;
       return colorScaleMap(d.total);
     })
     .style("stroke", "transparent")
     .attr("class", "Country");
+    .attr("class", "Country");
 
+  svgMap.attr("preserveAspectRatio", "none");
   svgMap.attr("preserveAspectRatio", "none");
 
   function mouseClickMap(d) {
+  function mouseClickMap(d) {
     // Calculate min and max total values
+    const minTotalMap = d3.min(
+      Array.from(dataMap.values()).filter((value) => value > 50000)
     const minTotalMap = d3.min(
       Array.from(dataMap.values()).filter((value) => value > 50000)
     );
     const maxTotalMap = d3.max(Array.from(dataMap.values()));
     // Create the scale
+    const scaleMap = d3
     const scaleMap = d3
       .scaleLinear()
       .domain([minTotalMap, maxTotalMap])

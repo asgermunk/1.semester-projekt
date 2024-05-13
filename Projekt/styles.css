@@ -1,135 +1,136 @@
 /*Baseline css værdier til styles dokumentet*/
-*{
-    margin: 0;
-    padding: 0;
-    font-family: 'Montserrat', sans-serif;
-    color: #f0dca1cc;
-    background-color: #f0dca1;
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat", sans-serif;
+  color: #f0dca1cc;
+  background-color: #f0dca1;
 }
 /* background image*/
 .banner {
-    width: 100%;
-    height: 100vh;
-    background-image: linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.75)),url(photos/placeholderBanner.png);
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    z-index: 100;
+  width: 100%;
+  height: 100vh;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
+    url(photos/placeholderBanner.png);
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  z-index: 100;
 }
-    
+
 /*navigations bar til tilgængelighed til de forskellige sider*/
 .navbar {
-    width: 100%;
-    margin: auto;
-    padding: 15px 0;
-    display: flex;
-    align-items: center;
-    height:70px ;
-    justify-content: space-between;
-    color: #000000;
-    border-bottom: 1px solid #000; 
+  width: 100%;
+  margin: auto;
+  padding: 15px 0;
+  display: flex;
+  align-items: center;
+  height: 70px;
+  justify-content: space-between;
+  color: #000000;
+  border-bottom: 1px solid #000;
 }
 /* List attributes (forskellige knapper) */
-.navbar ul li{
-    list-style: none;
-    display: inline-block;
-    margin: 0 35px;
-    position: relative;
+.navbar ul li {
+  list-style: none;
+  display: inline-block;
+  margin: 0 35px;
+  position: relative;
 }
 /* underlining 28-46 */
-.navbar ul li a{
-    text-decoration: none;
-    color: #000;
-    text-transform: uppercase;
+.navbar ul li a {
+  text-decoration: none;
+  color: #000;
+  text-transform: uppercase;
 }
-.navbar ul li::after{
-    content:'';
-    height: 1px;
-    width: 0%;
-    background: #000;
-    position: absolute;
-    left: 0;
-    bottom: -2px;
-    transition: 0.3s;
+.navbar ul li::after {
+  content: "";
+  height: 1px;
+  width: 0%;
+  background: #000;
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  transition: 0.3s;
 }
-.navbar ul li:hover::after{
-    width: 100%;
+.navbar ul li:hover::after {
+  width: 100%;
 }
 .logo {
-    padding: 5px 10px;
+  padding: 5px 10px;
 }
 .navbar a:hover {
-    color: #000;
+  color: #000;
 }
 /* button styling*/
 .interactiveMap {
-    color: #000;
-    border-radius: 15px;
-    font-weight: bold;
-    background: transparent;
-    padding: 14px 20px;
-    border: 2px solid #000000;
-    cursor: pointer;
-    width: 200px;
-    overflow: hidden;
-    text-align: center;
-    position: relative;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  color: #000;
+  border-radius: 15px;
+  font-weight: bold;
+  background: transparent;
+  padding: 14px 20px;
+  border: 2px solid #000000;
+  cursor: pointer;
+  width: 200px;
+  overflow: hidden;
+  text-align: center;
+  position: relative;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .interactiveMap:hover {
-    background: #FFBF00;
-    color: #f0dca1cc;
-    border: 2px solid #000000;
+  background: #ffbf00;
+  color: #f0dca1cc;
+  border: 2px solid #000000;
 }
 /*centrering af kort*/
 .svg-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 span {
-    color: #f0dca1cc;
-    height: 100%;
-    width: 0%;
-    border: 25px;
-    left: 0;
-    bottom: 0;
-    z-index: 2;
-    transition: 0.5s;
+  color: #f0dca1cc;
+  height: 100%;
+  width: 0%;
+  border: 25px;
+  left: 0;
+  bottom: 0;
+  z-index: 2;
+  transition: 0.5s;
 }
 .sourceData {
-    color: #000;
-    font-size: 20px;
-    padding: 2cm;   
+  color: #000;
+  font-size: 20px;
+  padding: 2cm;
 }
 /* Content i midten af siden */
-.content{
-    width: 35%;
-    margin: 0 auto;
-    margin-top: 25%;
-    transform: translateY(-50%);
-    text-align: center;
-    color: #000;
-    border-radius: 20px;
-    padding: 10px;
-    padding-bottom: 20px;
-    padding-top: 10px;
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5); 
-    position: relative;
-    z-index: 101;
+.content {
+  width: 35%;
+  margin: 0 auto;
+  margin-top: 25%;
+  transform: translateY(-50%);
+  text-align: center;
+  color: #000;
+  border-radius: 20px;
+  padding: 10px;
+  padding-bottom: 20px;
+  padding-top: 10px;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+  position: relative;
+  z-index: 1;
 }
-.content h1{
-    font-size: 70px;
-    margin-top: 30px;
-    color: #000;
+.content h1 {
+  font-size: 70px;
+  margin-top: 30px;
+  color: #000;
 }
-.content p{
-    margin: 20px auto;
-    font-weight: 450;
-    line-height: 45px;
-    color: #000;
+.content p {
+  margin: 20px auto;
+  font-weight: 450;
+  line-height: 45px;
+  color: #000;
 }
