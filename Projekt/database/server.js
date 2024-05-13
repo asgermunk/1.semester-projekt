@@ -3,10 +3,12 @@ const app = express();
 const bodyParser = require('body-parser');
 const db = require('./queries');
 const port = process.env.PORT || 4000;
+const cors = require('cors');
 
 require('dotenv').config();
 
-app.use(bodyParser.json());
+app.use(cors());
+app.use(bodyParser.json()); 
 app.use(
   bodyParser.urlencoded({
     extended: true,
@@ -14,12 +16,14 @@ app.use(
 );
 
 app.get('/', (request, response) => {
-    response.json({ info: 'Node.js, Express, and Postgres API' });
+    response.sendFile(__dirname + '/index.html');
 });
 
-app.get('/energyProduction', db.get1sem);
-app.post('/insert-energyProduction', db.insert1sem);
-app.post('/populate#', db.populate1sem);
+
+app.get('/Alldata', db.getAlldata);
+app.post('/insert-Alldata', db.insertAlldata);
+app.post('/populateAlldata', db.populateAlldata);
+
 
 app.listen(port, () => {
     console.log(`App running on port ${port}.`);
