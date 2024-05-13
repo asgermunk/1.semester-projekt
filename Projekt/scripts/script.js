@@ -6,20 +6,12 @@ const svgMap = d3.select("#svgmap"),
 
 // Add a class to the SVG
 svgMap.attr("class", "mySvg").style("z-index", "0");
-
-const svgBar = d3.select("body").append("svg").attr("id", "svgbar"),
-  widthBar = 500, // specify the width of the bar chart SVG
-  heightBar = 500; // specify the height of the bar chart SVG
-
+const widthBar = 500; // specify the width of the bar chart SVG
+const heightBar = 500; // specify the height of the bar chart SVG
 // Add a class to the SVG bar chart
-svgBar
-  .attr("class", "mySvgBar")
-  .style("z-index", "2")
-  .style("position", "fixed")
-  .attr("width", widthBar)
-  .attr("height", heightBar);
+
 // Add a class to the div
-let div = d3.select("body").append("div").attr("class", "myDiv");
+
 // Map and projection
 const projectionMap = d3
   .geoMercator()
@@ -147,18 +139,19 @@ Promise.all([
         let div = d3
           .select("body")
           .append("div")
+          .attr("id", "content")
           .attr("class", "content")
           .style("position", "fixed") // Position it fixed
           .style("left", "150px") // Position it to the left of the SVG
           .style("top", "150px") // Position it at the top of the page
           .style("width", divWidth + "px") // Limit the width to the remaining space or the SVG width, whichever is smaller
           .style("height", "80%") // Make it take up 80% of the height
-          .style("opacity", 0) // Start with an opacity of 0
-          .style("z-index", "2"); // Set the z-index to 2
+          .style("opacity", 0); // Start with an opacity of 0
+        // .style("z-index", "2"); // Set the z-index to 2
 
         div.append("h1").text("Indhold");
 
-        div.append("p").text("");
+        div.append("p").text("").attr("id", "contentText");
 
         div
           .transition() // Start a transition
@@ -171,24 +164,33 @@ Promise.all([
 
         // // Append the SVGs to the wrapper div
         // let svg = svgWrapper.append("svgMap")
+        const svgBar = d3
+          .select("#content")
+          .append("svg")
+          .attr("id", "svgbar")
+          .attr("class", "mySvgBar")
+          .attr("width", widthBar)
+          .attr("height", heightBar)
+          .style("position", "fixed");
 
-        svgBar
-          .style("z-index", "1")
-          .append("text") // Append a text element to the SVG
-          .attr("x", widthMap / 1.25) // Position it at the center of the SVG
-          .attr("y", 50) // A little bit down from the top
+        div;
+        d3.select("#contentText")
+
+          // .attr("x", widthMap / 1.25) // Position it at the center of the SVG
+          // .attr("y", 50) // A little bit down from the top
           .attr("text-anchor", "middle") // Center the text
           .style("font-size", "24px") // Make the text a bit larger
           .style("fill", "black") // Make the text black
-          .style("opacity", 0) // Set the opacity to 0
+          .style("opacity", 1) // Set the opacity to 0
           .text(d.properties.name)
           .transition()
           .duration(500)
-          .style("opacity", 1); // Set the text to the name of the country
+          .style("z-index", "2");
+        // .style("opacity", 1); // Set the text to the name of the country
         svgBar
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
-          .attr("y", 500)
+          .attr("y", 450)
           .attr("width", scaleMap(sunMaxMap(dataCountry))) // Use the scale here
           .attr("height", 50)
           .style("opacity", 0)
@@ -198,7 +200,7 @@ Promise.all([
         svgBar //bar for land energi forbrug
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
-          .attr("y", 500)
+          .attr("y", 450)
           .attr("width", scaleMap(sunMaxMap(dataCountry)) - 20) //denne skal ændres til en ny funktion som tager landets energi forbrug
           .attr("height", 50)
           .style("opacity", 0)
@@ -210,7 +212,7 @@ Promise.all([
         svgBar
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
-          .attr("y", 500)
+          .attr("y", 450)
           .attr("width", scaleMap(sunMaxMap(dataCountry)) - 50) // Use the scale here
           .attr("height", 50)
           .style("opacity", 0)
@@ -264,130 +266,4 @@ Promise.all([
     return d3.min(Array.from(dataMap.values(), (d) => d));
   }
   console.log(sunMinMap());
-});
-
-// The svg for chart
-const svgChart = d3.select("#svgchart"),
-  widthChart = +svgChart.attr("width"),
-  heightChart = +svgChart.attr("height"),
-  margin = { top: 100, right: 0, bottom: 0, left: 0 },
-  width = widthChart - margin.left - margin.right,
-  height = heightChart - margin.top - margin.bottom,
-  innerRadius = 90,
-  outerRadius = Math.min(width, height) / 2;
-
-const svg = svgChart
-  .append("g")
-  .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-d3.csv(
-  "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum.csv"
-).then(function (dataChart) {
-  // X scale: common for 2 data series
-  var x = d3
-    .scaleBand()
-    .range([0, 2 * Math.PI])
-    .align(0)
-    .domain(
-      dataChart.map(function (d) {
-        return d.Country;
-      })
-    );
-
-  // Y scale outer variable
-  var y = d3.scaleRadial().range([innerRadius, outerRadius]).domain([0, 13000]);
-
-  // Second barplot Scales
-  var ybis = d3.scaleRadial().range([innerRadius, 5]).domain([0, 13000]);
-
-  // Add the bars
-  svg
-    .append("g")
-    .selectAll("path")
-    .data(dataChart)
-    .enter()
-    .append("path")
-    .attr("fill", "#69b3a2")
-    .attr("class", "yo")
-    .attr(
-      "d",
-      d3
-        .arc()
-        .innerRadius(innerRadius)
-        .outerRadius(function (d) {
-          return y(d["Value"]);
-        })
-        .startAngle(function (d) {
-          return x(d.Country);
-        })
-        .endAngle(function (d) {
-          return x(d.Country) + x.bandwidth();
-        })
-        .padAngle(0.01)
-        .padRadius(innerRadius)
-    );
-
-  // Add the labels
-  svg
-    .append("g")
-    .selectAll("g")
-    .data(dataChart)
-    .enter()
-    .append("g")
-    .attr("text-anchor", function (d) {
-      return (x(d.Country) + x.bandwidth() / 2 + Math.PI) % (2 * Math.PI) <
-        Math.PI
-        ? "end"
-        : "start";
-    })
-    .attr("transform", function (d) {
-      return (
-        "rotate(" +
-        (((x(d.Country) + x.bandwidth() / 2) * 180) / Math.PI - 90) +
-        ")" +
-        "translate(" +
-        (y(d["Value"]) + 10) +
-        ",0)"
-      );
-    })
-    .append("text")
-    .text(function (d) {
-      return d.Country;
-    })
-    .attr("transform", function (d) {
-      return (x(d.Country) + x.bandwidth() / 2 + Math.PI) % (2 * Math.PI) <
-        Math.PI
-        ? "rotate(180)"
-        : "rotate(0)";
-    })
-    .style("font-size", "11px")
-    .attr("alignment-baseline", "middle");
-
-  // Add the second series
-  svg
-    .append("g")
-    .selectAll("path")
-    .data(dataChart)
-    .enter()
-    .append("path")
-    .attr("fill", "red")
-    .attr(
-      "d",
-      d3
-        .arc()
-        .innerRadius(function (d) {
-          return ybis(0);
-        })
-        .outerRadius(function (d) {
-          return ybis(d["Value"]);
-        })
-        .startAngle(function (d) {
-          return x(d.Country);
-        })
-        .endAngle(function (d) {
-          return x(d.Country) + x.bandwidth();
-        })
-        .padAngle(0.01)
-        .padRadius(innerRadius)
-    );
 });
