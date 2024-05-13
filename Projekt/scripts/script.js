@@ -115,11 +115,63 @@ Promise.all([
         "translate(" + xMap + "," + yMap + ")scale(" + scaleFactorMap + ")"
       )
       .on("end", function (d) {
-        // After the transition ends...
-        svgMap // Append a text element to the SVG
-          .append("text") // Append a text element to the SVG
-          .attr("x", widthMap / 2) // Position it at the center of the SVG
-          .attr("y", 50) // A little bit down from the top
+        // After the transition ends... s
+
+        let svgWidth = document
+          .querySelector("svg")
+          .getBoundingClientRect().width;
+        let bodyWidth = document.body.getBoundingClientRect().width;
+        let remainingWidth = bodyWidth - svgWidth;
+        /* positionering af div */
+        let divWidth;
+        if (remainingWidth > svgWidth) {
+          divWidth = svgWidth;
+        } else {
+          divWidth = remainingWidth;
+        }
+        console.log("divWidth", divWidth);
+        let div = d3
+          .select("body")
+          .append("div")
+          .attr("id", "content")
+          .attr("class", "content")
+          .style("position", "fixed") // Position it fixed
+          .style("left", "150px") // Position it to the left of the SVG
+          .style("top", "150px") // Position it at the top of the page
+          .style("width", divWidth + "px") // Limit the width to the remaining space or the SVG width, whichever is smaller
+          .style("height", "80%") // Make it take up 80% of the height
+          .style("opacity", 0); // Start with an opacity of 0
+        // .style("z-index", "2"); // Set the z-index to 2
+
+        div.append("h1").text("Indhold");
+
+        div.append("p").text("").attr("id", "contentText");
+        //der er en forskel
+        div
+          .transition() // Start a transition
+          .duration(750) // Make the transition last 0.75 seconds
+          .style("opacity", 1); // End with an opacity of 1
+
+        //   let svgWrapper = d3.select("body").append("div")
+        //   .style("position", "relative")
+        //   .style("z-index", "3");
+
+        // // Append the SVGs to the wrapper div
+        // let svg = svgWrapper.append("svgMap")
+        const svgBar = d3
+          .select("#content")
+          .append("svg")
+          .attr("id", "svgbar")
+          .attr("class", "mySvgBar")
+          .attr("width", widthBar)
+          .attr("height", heightBar)
+          .style("position", "fixed");
+
+        div;
+        d3.select("#contentText")
+
+          // .attr("x", widthMap / 1.25) // Position it at the center of the SVG
+          // .attr("y", 50) // A little bit down from the top
           .attr("text-anchor", "middle") // Center the text
           .style("font-size", "24px") // Make the text a bit larger
           .style("fill", "black") // Make the text black
