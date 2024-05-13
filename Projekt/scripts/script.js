@@ -152,7 +152,7 @@ Promise.all([
         div.append("h1").text("Indhold");
 
         div.append("p").text("").attr("id", "contentText");
-
+        //der er en forskel
         div
           .transition() // Start a transition
           .duration(750) // Make the transition last 0.75 seconds
