@@ -1,17 +1,19 @@
 // The svg for map
 // Existing code
-const svgBar = d3.select("#svgmap"),
-  widthMap = +svgBar.attr("width"),
-  heightMap = +svgBar.attr("height");
+const widthMap = window.innerWidth;
+const heightMap = window.innerHeight;
+const svgBar = d3
+  .select("#svgmap")
+  .attr("width", widthMap)
+  .attr("height", heightMap);
 
 // Add a class to the SVG
 svgBar.attr("class", "mySvg");
-const widthBar = 500; // specify the width of the bar chart SVG
-const heightBar = 50; // specify the height of the bar chart SVG
+const widthBar = 350; // specify the width of the bar chart SVG
+const heightBar = 30; // specify the height of the bar chart SVG
 
 const projectionMap = d3 // Map and projection
   .geoMercator()
-  .scale(200)
   .center([0, 20])
   .translate([widthMap / 2, heightMap / 2]);
 const pathMap = d3.geoPath().projection(projectionMap);
@@ -21,7 +23,7 @@ const colorScaleMap = d3 //midlertidig farve skala
   .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
   .range(["#FFFF00", "#FFD700", "#FFA500", "#FF8C00", "#FF4500", "#FF0000"]);
 const minOutputMap = 50; // Minimum rectangle width
-const maxOutputMap = 500; // Maximum rectangle width
+const maxOutputMap = 300; // Maximum rectangle width
 function colorGradientMap(d) {
   // Denne funktion skal tage landets sol potentiale og returnere en farve
   return "red"; //Vi mangler data til denne funktion
@@ -83,11 +85,11 @@ Promise.all([
     const bboxHeightMap = bboxMap.height;
     // Calculate the scale factor based on the size of the country
     const scaleFactorMap =
-      0.8 / Math.max(bboxWidthMap / widthMap, bboxHeightMap / heightMap);
+      0.6 / Math.max(bboxWidthMap / widthMap, bboxHeightMap / heightMap);
     // Calculate the centroid of the clicked country
     const centroidMap = pathMap.centroid(dataCountry); //centroidMap = [x, y] - midten af landet
     // Calculate the translation to center the clicked country
-    const xMap = widthMap / 1.25 - scaleFactorMap * centroidMap[0]; //map x position
+    const xMap = widthMap / 1.45 - scaleFactorMap * centroidMap[0]; //map x position
     const yMap = heightMap / 2 - scaleFactorMap * centroidMap[1]; //map y position
     //gør alle lande usynlige
     d3.selectAll(".Country")
@@ -95,7 +97,7 @@ Promise.all([
       .duration(750)
       .attr("transform", "")
       .style("opacity", 0)
-      .attr("translate", "scale(0)");
+      .attr("transform", "scale(0)");
     // gør det valgte land synligt og gør det stort, samt få det til at være i midten
     d3.select(this)
       .transition()
@@ -110,9 +112,9 @@ Promise.all([
           .append("div")
           .attr("id", "content")
           .attr("class", "content")
-          .style("position", "fixed") // Position it fixed
-          .style("left", "150px") // Position it to the left of the SVG
-          .style("top", "150px") // Position it at the top of the page
+          .style("position", "absolute") // Position it fixed
+          .style("left", "50px") // Position it to the left of the SVG
+          .style("top", "50px") // Position it at the top of the page
           .style("width", widthBar + 20 + "px") // Limit the width to the remaining space or the SVG width, whichever is smaller
           .style("height", "60%") // Make it take up 80% of the height
           .style("opacity", 0); // Start with an opacity of 0
@@ -242,7 +244,8 @@ const svgChart = d3.select("#svgchart"),
 
 const svg = svgChart
   .append("g")
-  .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+  .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+  .style("margin-top", "10000px");
 
 d3.csv(
   "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum.csv"
@@ -271,6 +274,7 @@ d3.csv(
     .data(dataChart)
     .enter()
     .append("path")
+
     .attr("fill", "#69b3a2")
     .attr("class", "yo")
     .attr(

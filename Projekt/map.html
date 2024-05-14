@@ -1,38 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
     <title>SolData</title>
-</head>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-<link rel="icon" href="photos/sun.png" type="image/x-icon">
-<body>
-        <div class="navbar">
-                <a href="https://www.eaaa.dk/">
-                    <img class="logo" src="photos/eaa_logo.png" alt="logo">
-                </a>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="map.html">Map</a></li>
-                <li><a href="chart.html">Chart</a></li>
-                <li><a href="sourceData.html">Source Data</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </div>
+  </head>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="icon" href="photos/sun.png" type="image/x-icon" />
+  <body>
+    <div class="navbar">
+      <a href="https://www.eaaa.dk/">
+        <img class="logo" src="photos/eaa_logo.png" alt="logo" />
+      </a>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="map.html">Map</a></li>
+        <li><a href="chart.html">Chart</a></li>
+        <li><a href="sourceData.html">Source Data</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
 
-<script src="https://d3js.org/d3.v6.js"></script>
-<div class="svg-container">
-    <svg id="svgmap" width="2000" height="1080"></svg>
-</div>
-<div class="svg-container">
-    <svg id="svgchart" width="2000" height="1080"></svg>
- </div>
-<script src="scripts/script.js"></script>
-
-</body>
+    <script src="https://d3js.org/d3.v6.js"></script>
+    <div class="svg-container">
+      <svg id="svgmap" width="2000" height="1080"></svg>
+    </div>
+    <div class="svg-container">
+      <svg
+        id="svgchart"
+        width="2000"
+        height="1080"
+        style="margin-top: 750"
+      ></svg>
+    </div>
+    <script src="scripts/script.js"></script>
+  </body>
 </html>
