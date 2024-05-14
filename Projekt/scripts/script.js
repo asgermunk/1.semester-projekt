@@ -5,14 +5,9 @@ const svgBar = d3.select("#svgmap"),
   heightMap = +svgBar.attr("height");
 
 // Add a class to the SVG
-svgBar.attr("class", "mySvg").style("z-index", "0");
+svgBar.attr("class", "mySvg");
 const widthBar = 500; // specify the width of the bar chart SVG
-const heightBar = 500; // specify the height of the bar chart SVG
-// Add a class to the SVG bar chart
-
-// Add a class to the div
-
-// Map and projection
+const heightBar = 50; // specify the height of the bar chart SVG
 
 const projectionMap = d3 // Map and projection
   .geoMercator()
@@ -20,7 +15,6 @@ const projectionMap = d3 // Map and projection
   .center([0, 20])
   .translate([widthMap / 2, heightMap / 2]);
 const pathMap = d3.geoPath().projection(projectionMap);
-//hello
 const dataMap = new Map(); // Data for map
 const colorScaleMap = d3 //midlertidig farve skala
   .scaleThreshold()
@@ -57,14 +51,12 @@ Promise.all([
   });
 
   // Draw the map
-  svgBar;
   svgBar
     .selectAll("path")
     .data(topoData.features)
-    .data(topoData.features)
     .enter()
     .append("path")
-    .attr("d", pathMap)
+    .attr("position", "relative")
     .attr("d", pathMap)
     .attr("fill", function (d) {
       d.total = dataMap.get(d.id) || 0;
@@ -72,8 +64,6 @@ Promise.all([
     })
     .style("stroke", "transparent")
     .attr("class", "Country");
-
-  svgBar.attr("preserveAspectRatio", "none");
 
   function mouseClickMap(d) {
     // Calculate min and max total values
@@ -115,21 +105,6 @@ Promise.all([
         "translate(" + xMap + "," + yMap + ")scale(" + scaleFactorMap + ")"
       )
       .on("end", function (d) {
-        // After the transition ends... s
-
-        let svgWidth = document
-          .querySelector("svg")
-          .getBoundingClientRect().width;
-        let bodyWidth = document.body.getBoundingClientRect().width;
-        let remainingWidth = bodyWidth - svgWidth;
-        /* positionering af div */
-        let divWidth;
-        if (remainingWidth > svgWidth) {
-          divWidth = svgWidth;
-        } else {
-          divWidth = remainingWidth;
-        }
-        console.log("divWidth", divWidth);
         let div = d3
           .select("body")
           .append("div")
@@ -138,26 +113,19 @@ Promise.all([
           .style("position", "fixed") // Position it fixed
           .style("left", "150px") // Position it to the left of the SVG
           .style("top", "150px") // Position it at the top of the page
-          .style("width", divWidth + "px") // Limit the width to the remaining space or the SVG width, whichever is smaller
-          .style("height", "80%") // Make it take up 80% of the height
+          .style("width", widthBar + 20 + "px") // Limit the width to the remaining space or the SVG width, whichever is smaller
+          .style("height", "60%") // Make it take up 80% of the height
           .style("opacity", 0); // Start with an opacity of 0
         // .style("z-index", "2"); // Set the z-index to 2
 
         div.append("h1").text("Indhold");
 
         div.append("p").text("").attr("id", "contentText");
-        //der er en forskel
         div
           .transition() // Start a transition
           .duration(750) // Make the transition last 0.75 seconds
           .style("opacity", 1); // End with an opacity of 1
 
-        //   let svgWrapper = d3.select("body").append("div")
-        //   .style("position", "relative")
-        //   .style("z-index", "3");
-
-        // // Append the SVGs to the wrapper div
-        // let svg = svgWrapper.append("svgBar")
         const svgBar = d3
           .select("#content")
           .append("svg")
@@ -167,9 +135,7 @@ Promise.all([
           .attr("height", heightBar)
           .style("position", "fixed");
 
-        div;
         d3.select("#contentText")
-
           .attr("x", widthMap / 1.25) // Position it at the center of the SVG
           .attr("y", 50) // A little bit down from the top
           .attr("text-anchor", "middle") // Center the text
@@ -183,8 +149,8 @@ Promise.all([
         svgBar //bar for max sol potentiale
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
-          .attr("y", 450)
-          .attr("width", scaleMap(sunMaxMap(dataCountry))) //lav en ny funktion som tager landets sol potentiale
+          .attr("y", 0)
+          .attr("width", widthBar - scaleMap(sunMaxMap(dataCountry))) //lav en ny funktion som tager landets sol potentiale
           .attr("height", 50)
           .style("opacity", 0)
           .transition()
@@ -194,8 +160,8 @@ Promise.all([
         svgBar //bar for land energi forbrug
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
-          .attr("y", 450)
-          .attr("width", scaleMap(energiConsMap(dataCountry)) - 20) //denne skal ændres til en ny funktion som tager landets energi forbrug
+          .attr("y", 0)
+          .attr("width", widthBar - scaleMap(energiConsMap(dataCountry)) - 20) //denne skal ændres til en ny funktion som tager landets energi forbrug
           .attr("height", 50)
           .style("opacity", 0)
           .style("fill", "red")
@@ -206,8 +172,8 @@ Promise.all([
         svgBar // bar for sol produktion
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
-          .attr("y", 450)
-          .attr("width", scaleMap(sunProdMap(dataCountry)) - 50) //denne skal ændres til en ny funktion som tager landets sol produktion
+          .attr("y", 0)
+          .attr("width", widthBar - scaleMap(sunProdMap(dataCountry)) - 50) //denne skal ændres til en ny funktion som tager landets sol produktion
           .attr("height", 50)
           .style("opacity", 0)
           .style("fill", "blue")
@@ -256,7 +222,11 @@ Promise.all([
       .style("opacity", 0) // transition to transparent before removing
       .remove();
 
-    d3.select("#content").remove();
+    d3.select("#content")
+      .transition()
+      .duration(1000)
+      .style("opacity", 0)
+      .remove();
   });
 });
 //Start på chart
