@@ -1,6 +1,7 @@
 // The svg for map
 // Existing code
 const widthMap = window.innerWidth;
+console.log("widthMap", widthMap);
 const heightMap = window.innerHeight;
 const svgBar = d3
   .select("#svgmap")
@@ -137,7 +138,7 @@ Promise.all([
           .attr("height", heightBar)
           .style("position", "fixed");
 
-        d3.select("#contentText")
+        d3.select("#contentText") // Add the name of the country to the content div
           .attr("x", widthMap / 1.25) // Position it at the center of the SVG
           .attr("y", 50) // A little bit down from the top
           .attr("text-anchor", "middle") // Center the text
@@ -152,6 +153,7 @@ Promise.all([
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
           .attr("y", 0)
+          .attr("class", "maxBar")
           .attr("width", widthBar - scaleMap(sunMaxMap(dataCountry))) //lav en ny funktion som tager landets sol potentiale
           .attr("height", 50)
           .style("opacity", 0)
@@ -163,6 +165,7 @@ Promise.all([
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
           .attr("y", 0)
+          .attr("class", "energiConsBar")
           .attr("width", widthBar - scaleMap(energiConsMap(dataCountry)) - 20) //denne skal ændres til en ny funktion som tager landets energi forbrug
           .attr("height", 50)
           .style("opacity", 0)
@@ -175,6 +178,7 @@ Promise.all([
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
           .attr("y", 0)
+          .attr("class", "sunProdBar")
           .attr("width", widthBar - scaleMap(sunProdMap(dataCountry)) - 50) //denne skal ændres til en ny funktion som tager landets sol produktion
           .attr("height", 50)
           .style("opacity", 0)
