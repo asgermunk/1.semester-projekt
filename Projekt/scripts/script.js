@@ -167,6 +167,7 @@ console.log(sunPotentialValues);
           .attr("width", widthBar) //lav en ny funktion som tager landets sol potentiale
           .attr("height", 50)
           .style("opacity", 0)
+          .style("fill", "darkblue")
           .transition()
           .duration(500)
           .style("opacity", 1);
@@ -179,7 +180,7 @@ console.log(sunPotentialValues);
           .attr("width", widthBar - 20) //denne skal ændres til en ny funktion som tager landets energi forbrug
           .attr("height", 50)
           .style("opacity", 0)
-          .style("fill", "red")
+          .style("fill", "yellow")
           .transition()
           .duration(500)
           .style("opacity", 1);
@@ -192,7 +193,7 @@ console.log(sunPotentialValues);
           .attr("width", widthBar - 50) //denne skal ændres til en ny funktion som tager landets sol produktion
           .attr("height", 50)
           .style("opacity", 0)
-          .style("fill", "blue")
+          .style("fill", "orange")
           .transition()
           .duration(500)
           .style("opacity", 1);
