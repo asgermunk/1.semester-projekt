@@ -19,10 +19,6 @@ const projectionMap = d3 // Map and projection
   .translate([widthMap / 2, heightMap / 2]);
 const pathMap = d3.geoPath().projection(projectionMap);
 const dataMap = new Map(); // Data for map
-const colorScaleMap = d3 //midlertidig farve skala
-  .scaleThreshold()
-  .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
-  .range(["#FFFF00", "#FFD700", "#FFA500", "#FF8C00", "#FF4500", "#FF0000"]);
 const minOutputMap = 50; // Minimum rectangle width
 const maxOutputMap = 300; // Maximum rectangle width
 function colorGradientMap(d) {
@@ -32,25 +28,39 @@ function colorGradientMap(d) {
 Promise.all([
   // Load external data and boot for map
   d3.json(
-    "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson"
+    "dataset/world.geojson"
   ),
-  d3.csv(
-    "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv"
+  d3.json(
+    "http://localhost:4000/alldata"
   ),
-]).then(function ([topoData, populationData]) {
+]).then(function ([topoData, alldata]) {
   //topoData = world.geojson, populationData = world_population.csv
   topoData.features = topoData.features.filter(function (feature) {
     return feature.properties.name !== "Antarctica";
   });
-
+  console.log(alldata)
+  let sunPotentialByCountry = {};
+  alldata.forEach(d => {
+    sunPotentialByCountry[d.name] = +d.sunpotentialkwhyearm2; // convert to number
+  });
+  let sunPotentialValues = Object.values(sunPotentialByCountry);
+  let minSunPotential = d3.min(sunPotentialValues.filter(value => value >= 0));
+  let maxSunPotential = d3.max(sunPotentialValues);
+  const colorScaleMap = d3.scaleSequential()
+  .domain([minSunPotential, maxSunPotential])
+  .interpolator(d3.interpolateCubehelixLong("purple", "orange"));
+  const minOutputMap = 50; // Minimum rectangle width
+const maxOutputMap = 500; // Maximum rectangle width
+console.log(maxSunPotential)
+console.log(sunPotentialValues);
   // Process population data
-  populationData.forEach(function (d) {
-    dataMap.set(d.code, +d.pop);
+  alldata.forEach(function (d) {
+    dataMap.set(d.name, +d.sunpotentialkwhyearm2);
   });
 
   // Process population data
-  populationData.forEach(function (d) {
-    dataMap.set(d.code, +d.pop);
+  alldata.forEach(function (d) {
+    dataMap.set(d.name, +d.sunpotentialkwhyearm2);
   });
 
   // Draw the map
@@ -59,15 +69,15 @@ Promise.all([
     .data(topoData.features)
     .enter()
     .append("path")
-    .attr("position", "relative")
     .attr("d", pathMap)
     .attr("fill", function (d) {
-      d.total = dataMap.get(d.id) || 0;
-      return colorScaleMap(d.total);
+      let sunPotential = sunPotentialByCountry[d.properties.name] || 0;
+      // Set the color based on the sun potential
+      return sunPotential > 0 ? colorScaleMap(sunPotential) : "grey"; // Return grey for non-positive values
     })
     .style("stroke", "transparent")
     .attr("class", "Country");
-
+    
   function mouseClickMap(d) {
     // Calculate min and max total values
     const minTotalMap = d3.min(
@@ -154,7 +164,7 @@ Promise.all([
           .attr("x", 0)
           .attr("y", 0)
           .attr("class", "maxBar")
-          .attr("width", widthBar - scaleMap(sunMaxMap(dataCountry))) //lav en ny funktion som tager landets sol potentiale
+          .attr("width", widthBar) //lav en ny funktion som tager landets sol potentiale
           .attr("height", 50)
           .style("opacity", 0)
           .style("fill", "darkblue")
@@ -167,7 +177,7 @@ Promise.all([
           .attr("x", 0)
           .attr("y", 0)
           .attr("class", "energiConsBar")
-          .attr("width", widthBar - scaleMap(energiConsMap(dataCountry)) - 20) //denne skal ændres til en ny funktion som tager landets energi forbrug
+          .attr("width", widthBar - 20) //denne skal ændres til en ny funktion som tager landets energi forbrug
           .attr("height", 50)
           .style("opacity", 0)
           .style("fill", "yellow")
@@ -180,7 +190,7 @@ Promise.all([
           .attr("x", 0)
           .attr("y", 0)
           .attr("class", "sunProdBar")
-          .attr("width", widthBar - scaleMap(sunProdMap(dataCountry)) - 50) //denne skal ændres til en ny funktion som tager landets sol produktion
+          .attr("width", widthBar - 50) //denne skal ændres til en ny funktion som tager landets sol produktion
           .attr("height", 50)
           .style("opacity", 0)
           .style("fill", "orange")
