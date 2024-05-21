@@ -56,11 +56,12 @@
 .navbar ul li:hover::after {
   width: 100%;
 }
-.logo {
-  padding: 5px 10px;
-}
+
 .navbar a:hover {
   color: #000;
+}
+.logo {
+  padding: 5px 10px;
 }
 /* button styling*/
 .interactiveMap {
