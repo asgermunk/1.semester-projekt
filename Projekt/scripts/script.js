@@ -11,7 +11,7 @@ const svgBar = d3
 // Add a class to the SVG
 svgBar.attr("class", "mySvg");
 const widthBar = 350; // specify the width of the bar chart SVG
-const heightBar = 30; // specify the height of the bar chart SVG
+const heightBar = 200; // specify the height of the bar chart SVG
 
 const projectionMap = d3 // Map and projection
   .geoMercator()
@@ -136,13 +136,13 @@ Promise.all([
           .attr("class", "mySvgBar")
           .attr("width", widthBar)
           .attr("height", heightBar)
-          .style("position", "fixed");
+          .style("position", "flexc");
 
         d3.select("#contentText") // Add the name of the country to the content div
           .attr("x", widthMap / 1.25) // Position it at the center of the SVG
           .attr("y", 50) // A little bit down from the top
           .attr("text-anchor", "middle") // Center the text
-          .style("font-size", "24px") // Make the text a bit larger
+          .style("font-size", "48px") // Make the text a bit larger
           .style("fill", "black") // Make the text black
           .style("opacity", 0) // Set the opacity to 0
           .text(d.properties.name)
@@ -155,7 +155,7 @@ Promise.all([
           .attr("y", 0)
           .attr("class", "maxBar")
           .attr("width", widthBar - scaleMap(sunMaxMap(dataCountry))) //lav en ny funktion som tager landets sol potentiale
-          .attr("height", 50)
+          .attr("height", 30)
           .style("opacity", 0)
           .style("fill", "darkblue")
           .transition()
@@ -165,10 +165,10 @@ Promise.all([
         svgBar //bar for land energi forbrug
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
-          .attr("y", 0)
+          .attr("y", 50)
           .attr("class", "energiConsBar")
           .attr("width", widthBar - scaleMap(energiConsMap(dataCountry)) - 20) //denne skal ændres til en ny funktion som tager landets energi forbrug
-          .attr("height", 50)
+          .attr("height", 30)
           .style("opacity", 0)
           .style("fill", "yellow")
           .transition()
@@ -178,15 +178,38 @@ Promise.all([
         svgBar // bar for sol produktion
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
-          .attr("y", 0)
+          .attr("y", 100)
           .attr("class", "sunProdBar")
           .attr("width", widthBar - scaleMap(sunProdMap(dataCountry)) - 50) //denne skal ændres til en ny funktion som tager landets sol produktion
-          .attr("height", 50)
+          .attr("height", 30)
           .style("opacity", 0)
           .style("fill", "orange")
           .transition()
           .duration(500)
           .style("opacity", 1);
+        // For max sol potentiale
+svgBar.append("text")
+  .attr("x", widthBar - scaleMap(sunMaxMap(dataCountry)) + 10)
+  .attr("y", 15)
+  .attr("class", "maxBarText")
+  .style("fill", "white")
+  .text(sunMaxMap(dataCountry));
+
+// For land energi forbrug
+svgBar.append("text")
+  .attr("x", widthBar - scaleMap(energiConsMap(dataCountry)) - 10)
+  .attr("y", 65)
+  .attr("class", "energiConsBarText")
+  .style("fill", "black")
+  .text(energiConsMap(dataCountry));
+
+// For sol produktion
+svgBar.append("text")
+  .attr("x", widthBar - scaleMap(sunProdMap(dataCountry)) - 50)
+  .attr("y", 115)
+  .attr("class", "sunProdBarText")
+  .style("fill", "black")
+  .text(sunProdMap(dataCountry));
       });
     function sunMaxMap(d) {
       //Denne funktion skal retunere landets sol potentiale
