@@ -121,14 +121,14 @@ Promise.all([
           .style("opacity", 0); // Start with an opacity of 0
         // .style("z-index", "2"); // Set the z-index to 2
 
-        div.append("h1").text("Indhold");
+       
 
         div.append("p").text("").attr("id", "contentText");
         div
           .transition() // Start a transition
           .duration(750) // Make the transition last 0.75 seconds
           .style("opacity", 1); // End with an opacity of 1
-
+          div.append("h1").text("Indhold");
         const svgBar = d3
           .select("#content")
           .append("svg")
