@@ -1,4 +1,4 @@
-// Specify the API endpoint for food
+// Specify the API endpoint for Alldata
 const apiUrl = 'http://localhost:4000/Alldata';
 
 // Make a GET request using the Fetch API
@@ -10,13 +10,7 @@ fetch(apiUrl)
 return response.json();
 })
 .then(Alldata => {
-// Process the retrieved data
-let html = '<table>';
 
-
-//opretter overskrifter for tabellen
-/* html += '<tr><th>Country Id</th><th>Country</th><th>Country Area Km2</th><th>Sunpotential Kwh Year M2</th><th>Energy Production Kwh Year</th><th>Energy Sunproduction Year PJ<th></tr>'; */
-//kører gennem hver mad og opretter en række i tabellen for hver mad
 Alldata.forEach(Country  => {
     html += `<tr><td>${Country.countryid}</td>
             <t>${Country.country}</td>
@@ -26,10 +20,6 @@ Alldata.forEach(Country  => {
             <td>${Country.energysunproductionyearpj}</td></tr>`;
     console.log(Alldata);
 });
-/* html += '</table>';
-
-//centrer tekst i alle <td> elementer
-html = html.replace(/<td>/g, '<td style="text-align:center;">'); */
 
 document.getElementById("test").innerHTML = html; 
 })
