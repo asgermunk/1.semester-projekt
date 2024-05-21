@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const db = require('./queries');
+const db = require('./queries'); 
 const port = process.env.PORT || 4000;
 const cors = require('cors');
 
@@ -14,6 +14,10 @@ app.use(
     extended: true,
   })
 );
+
+/* app.get("/", (request, response) => {
+  response.json({ info: "Node.js, Express, and Postgres API" });
+}); */
 
 app.get('/', (request, response) => {
     response.sendFile(__dirname + '/index.html');
