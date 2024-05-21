@@ -91,7 +91,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  
 }
 span {
   color: #f0dca1cc;
@@ -133,4 +133,9 @@ span {
   font-weight: 450;
   line-height: 45px;
   color: #000;
+}
+#svgbar {
+  position: absolute;
+  top: 100;
+  left: 10px;
 }

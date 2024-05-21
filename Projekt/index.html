@@ -1,40 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
     <title>SolData</title>
-</head>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-<link rel="icon" href="photos/sun.png" type="image/x-icon">
-<body>
+  </head>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="icon" href="photos/sun.png" type="image/x-icon" />
+  <body>
     <div class="banner">
-        <div class="navbar">
-                <a href="https://www.eaaa.dk/">
-                    <img class="logo" src="photos/eaa_logo.png" alt="logo">
-                </a>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="map.html">Map</a></li>
-                <li><a href="chart.html">Chart</a></li>
-                <li><a href="sourceData.html">Source Data</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
+      <div class="navbar">
+        <a href="https://www.eaaa.dk/">
+          <img class="logo" src="photos/eaa_logo.png" alt="logo" />
+        </a>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="map.html">Map</a></li>
+          <li><a href="chart.html">Chart</a></li>
+          <li><a href="sourceData.html">Source Data</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="content">
+        <h1>Solar Energy Potential</h1>
+        <p>Click To View Data Visualisation</p>
+        <div>
+          <a>
+            <button
+              class="interactiveMap"
+              onclick="location.href='map.html';"
+              type="button"
+            >
+              <span></span>Map
+            </button>
+          </a>
         </div>
-        <div class="content">
-                <h1>Solar Energy Potential</h1>
-                <p>Click To View Data Visualisation</p>
-                <div>
-                    <a>
-                        <button class="interactiveMap" onclick="location.href='map.html';" type="button"><span></span>Map</button>
-                    </a>
-                </div>
-        </div>
+      </div>
     </div>
-<script src="/Projekt/database/client.js"></script>
-</body>
+
+    <!-- <div>
+        <div class="content">
+            <h1>Solar Energy Potential</h1>
+            <p>Click To View Data Visualisation</p>
+            <div>
+                <a>
+                    <button class="interactiveMap" onclick="location.href='map.html';" type="button"><span></span>Map</button>
+                </a>
+            </div>
+        </div>
+    </div> -->
+
+    <script src="/Projekt/database/client.js"></script>
+  </body>
 </html>
