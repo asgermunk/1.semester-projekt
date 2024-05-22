@@ -2,7 +2,7 @@
 // Existing code
 const widthMap = window.innerWidth;
 console.log("widthMap", widthMap);
-const heightMap = window.innerHeight;
+const heightMap = window.innerHeight + 50;
 const svgBar = d3
   .select("#svgmap")
   .attr("width", widthMap)
@@ -15,7 +15,7 @@ const heightBar = 30; // specify the height of the bar chart SVG
 // Define the width and height of the gradient bar
 const gradientWidth = 500;
 const gradientHeight = 20;
-const gradientMargin = 20;
+const gradientMargin = 30;
 
 // Create the SVG for the gradient bar
 const svgGradient = d3
@@ -23,9 +23,9 @@ const svgGradient = d3
   .append("svg")
   .attr("width", gradientWidth)
   .attr("height", gradientHeight + gradientMargin)
-  .style("position", "absolute")
+  .style("position", "fixed")
   .style("right", gradientMargin + "px")
-  .style("bottom", gradientMargin + "px");
+  .style("bottom", gradientMargin - 20 + "px");
 
 // Define the gradient
 const gradient = svgGradient
@@ -98,8 +98,6 @@ Promise.all([
     .domain([minSunPotential, maxSunPotential])
     .interpolator(d3.interpolateYlOrRd);
 
-  const minOutputMap = 50; // Minimum rectangle width
-  const maxOutputMap = 500; // Maximum rectangle width
   console.log(maxSunPotential);
   console.log(minSunPotential);
   console.log(sunPotentialValues);
@@ -120,6 +118,7 @@ Promise.all([
     .enter()
     .append("path")
     .attr("d", pathMap)
+
     .attr("fill", function (d) {
       let sunPotential = sunPotentialByCountry[d.properties.name] || 0;
       // Set the color based on the sun potential
@@ -164,16 +163,6 @@ Promise.all([
     .attr("text-anchor", "end")
     .text(maxSunPotential + " kWh/year/m2");
   function mouseClickMap(d) {
-    // Calculate min and max total values
-    const minTotalMap = d3.min(
-      Array.from(dataMap.values()).filter((value) => value > 50000)
-    );
-    const maxTotalMap = d3.max(Array.from(dataMap.values()));
-    // Create the scale
-    const scaleMap = d3
-      .scaleLinear()
-      .domain([minTotalMap, maxTotalMap])
-      .range([minOutputMap, maxOutputMap]);
     const dataCountry = d3.select(this).datum();
     // Calculate the bounding box of the clicked country
     const bboxMap = this.getBBox(); //bboxMap = {x, y, width, height} bounding box laver den mindste firkant omkring landet
@@ -330,132 +319,4 @@ Promise.all([
       .style("opacity", 0)
       .remove();
   });
-});
-//Start på chart
-// The svg for chart
-const svgChart = d3.select("#svgchart"),
-  widthChart = +svgChart.attr("width"),
-  heightChart = +svgChart.attr("height"),
-  margin = { top: 100, right: 0, bottom: 0, left: 0 },
-  width = widthChart - margin.left - margin.right,
-  height = heightChart - margin.top - margin.bottom,
-  innerRadius = 90,
-  outerRadius = Math.min(width, height) / 2;
-
-const svg = svgChart
-  .append("g")
-  .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-  .style("margin-top", "10000px");
-
-d3.csv(
-  "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum.csv"
-).then(function (dataChart) {
-  // X scale: common for 2 data series
-  var x = d3
-    .scaleBand()
-    .range([0, 2 * Math.PI])
-    .align(0)
-    .domain(
-      dataChart.map(function (d) {
-        return d.Country;
-      })
-    );
-
-  // Y scale outer variable
-  var y = d3.scaleRadial().range([innerRadius, outerRadius]).domain([0, 13000]);
-
-  // Second barplot Scales
-  var ybis = d3.scaleRadial().range([innerRadius, 5]).domain([0, 13000]);
-
-  // Add the bars
-  svg
-    .append("g")
-    .selectAll("path")
-    .data(dataChart)
-    .enter()
-    .append("path")
-
-    .attr("fill", "#69b3a2")
-    .attr("class", "yo")
-    .attr(
-      "d",
-      d3
-        .arc()
-        .innerRadius(innerRadius)
-        .outerRadius(function (d) {
-          return y(d["Value"]);
-        })
-        .startAngle(function (d) {
-          return x(d.Country);
-        })
-        .endAngle(function (d) {
-          return x(d.Country) + x.bandwidth();
-        })
-        .padAngle(0.01)
-        .padRadius(innerRadius)
-    );
-
-  // Add the labels
-  svg
-    .append("g")
-    .selectAll("g")
-    .data(dataChart)
-    .enter()
-    .append("g")
-    .attr("text-anchor", function (d) {
-      return (x(d.Country) + x.bandwidth() / 2 + Math.PI) % (2 * Math.PI) <
-        Math.PI
-        ? "end"
-        : "start";
-    })
-    .attr("transform", function (d) {
-      return (
-        "rotate(" +
-        (((x(d.Country) + x.bandwidth() / 2) * 180) / Math.PI - 90) +
-        ")" +
-        "translate(" +
-        (y(d["Value"]) + 10) +
-        ",0)"
-      );
-    })
-    .append("text")
-    .text(function (d) {
-      return d.Country;
-    })
-    .attr("transform", function (d) {
-      return (x(d.Country) + x.bandwidth() / 2 + Math.PI) % (2 * Math.PI) <
-        Math.PI
-        ? "rotate(180)"
-        : "rotate(0)";
-    })
-    .style("font-size", "11px")
-    .attr("alignment-baseline", "middle");
-
-  // Add the second series
-  svg
-    .append("g")
-    .selectAll("path")
-    .data(dataChart)
-    .enter()
-    .append("path")
-    .attr("fill", "red")
-    .attr(
-      "d",
-      d3
-        .arc()
-        .innerRadius(function (d) {
-          return ybis(0);
-        })
-        .outerRadius(function (d) {
-          return ybis(d["Value"]);
-        })
-        .startAngle(function (d) {
-          return x(d.Country);
-        })
-        .endAngle(function (d) {
-          return x(d.Country) + x.bandwidth();
-        })
-        .padAngle(0.01)
-        .padRadius(innerRadius)
-    );
 });
