@@ -12,6 +12,54 @@ const svgBar = d3
 svgBar.attr("class", "mySvg");
 const widthBar = 350; // specify the width of the bar chart SVG
 const heightBar = 30; // specify the height of the bar chart SVG
+// Define the width and height of the gradient bar
+const gradientWidth = 500;
+const gradientHeight = 20;
+const gradientMargin = 20;
+
+// Create the SVG for the gradient bar
+const svgGradient = d3
+  .select("#gradientBar")
+  .append("svg")
+  .attr("width", gradientWidth)
+  .attr("height", gradientHeight + gradientMargin)
+  .style("position", "absolute")
+  .style("right", gradientMargin + "px")
+  .style("bottom", gradientMargin + "px");
+
+// Define the gradient
+const gradient = svgGradient
+  .append("defs")
+  .append("linearGradient")
+  .attr("id", "gradient")
+  .attr("x1", "0%")
+  .attr("y1", "0%")
+  .attr("x2", "100%")
+  .attr("y2", "0%");
+const defs = svgGradient.append("defs");
+
+const filter = defs
+  .append("filter")
+  .attr("id", "dropshadow")
+  .attr("height", "130%");
+
+filter
+  .append("feGaussianBlur")
+  .attr("in", "SourceAlpha")
+  .attr("stdDeviation", 3)
+  .attr("result", "blur");
+
+filter
+  .append("feOffset")
+  .attr("in", "blur")
+  .attr("dx", 2)
+  .attr("dy", 2)
+  .attr("result", "offsetBlur");
+
+const feMerge = filter.append("feMerge");
+
+feMerge.append("feMergeNode").attr("in", "offsetBlur");
+feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
 const projectionMap = d3 // Map and projection
   .geoMercator()
@@ -21,38 +69,39 @@ const pathMap = d3.geoPath().projection(projectionMap);
 const dataMap = new Map(); // Data for map
 const minOutputMap = 50; // Minimum rectangle width
 const maxOutputMap = 300; // Maximum rectangle width
-function colorGradientMap(d) {
-  // Denne funktion skal tage landets sol potentiale og returnere en farve
-  return "red"; //Vi mangler data til denne funktion
-}
+
 Promise.all([
   // Load external data and boot for map
-  d3.json(
-    "dataset/world.geojson"
-  ),
-  d3.json(
-    "http://localhost:4000/alldata"
-  ),
+  d3.json("dataset/world.geojson"),
+  d3.json("http://localhost:4000/alldata"),
 ]).then(function ([topoData, alldata]) {
   //topoData = world.geojson, populationData = world_population.csv
   topoData.features = topoData.features.filter(function (feature) {
-    return feature.properties.name !== "Antarctica";
+    return (
+      feature.properties.name !== "Antarctica" &&
+      feature.properties.name !== "French Southern and Antarctic Lands" &&
+      feature.properties.name !== "Taiwan" &&
+      feature.properties.name !== "New Caledonia"
+    );
   });
-  console.log(alldata)
+  console.log(alldata);
   let sunPotentialByCountry = {};
-  alldata.forEach(d => {
+  alldata.forEach((d) => {
     sunPotentialByCountry[d.name] = +d.sunpotentialkwhyearm2; // convert to number
   });
   let sunPotentialValues = Object.values(sunPotentialByCountry);
-  let minSunPotential = d3.min(sunPotentialValues.filter(value => value >= 0));
+  let minSunPotential = d3.min(sunPotentialValues.filter((value) => value > 0));
   let maxSunPotential = d3.max(sunPotentialValues);
-  const colorScaleMap = d3.scaleSequential()
-  .domain([minSunPotential, maxSunPotential])
-  .interpolator(d3.interpolateCubehelixLong("purple", "orange"));
+  const colorScaleMap = d3
+    .scaleSequential()
+    .domain([minSunPotential, maxSunPotential])
+    .interpolator(d3.interpolateYlOrRd);
+
   const minOutputMap = 50; // Minimum rectangle width
-const maxOutputMap = 500; // Maximum rectangle width
-console.log(maxSunPotential)
-console.log(sunPotentialValues);
+  const maxOutputMap = 500; // Maximum rectangle width
+  console.log(maxSunPotential);
+  console.log(minSunPotential);
+  console.log(sunPotentialValues);
   // Process population data
   alldata.forEach(function (d) {
     dataMap.set(d.name, +d.sunpotentialkwhyearm2);
@@ -77,7 +126,42 @@ console.log(sunPotentialValues);
     })
     .style("stroke", "transparent")
     .attr("class", "Country");
-    
+  // Define the start of the gradient
+  gradient
+    .append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", colorScaleMap(minSunPotential));
+
+  // Define the end of the gradient
+  gradient
+    .append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", colorScaleMap(maxSunPotential));
+  console.log(colorScaleMap(minSunPotential)); // Log the color for the minimum sun potential
+  console.log(colorScaleMap(maxSunPotential));
+  // Add the gradient bar
+  // Add the gradient bar
+  svgGradient
+    .append("rect")
+    .attr("width", gradientWidth)
+    .attr("height", gradientHeight)
+    .style("fill", "url(#gradient)")
+
+    .style("stroke-width", 2)
+    .style("filter", "url(#dropshadow)");
+  // Add the min and max labels
+  svgGradient
+    .append("text")
+    .attr("x", 0)
+    .attr("y", gradientHeight + 20)
+    .text(minSunPotential + " kWh/year/m2");
+
+  svgGradient
+    .append("text")
+    .attr("x", gradientWidth)
+    .attr("y", gradientHeight + 20)
+    .attr("text-anchor", "end")
+    .text(maxSunPotential + " kWh/year/m2");
   function mouseClickMap(d) {
     // Calculate min and max total values
     const minTotalMap = d3.min(
