@@ -13,18 +13,19 @@ svgBar.attr("class", "mySvg");
 const widthBar = 350; // specify the width of the bar chart SVG
 const heightBar = 30; // specify the height of the bar chart SVG
 // Define the width and height of the gradient bar
-const gradientWidth = 300;
+const gradientWidth = 500;
 const gradientHeight = 20;
+const gradientMargin = 20;
 
 // Create the SVG for the gradient bar
 const svgGradient = d3
-  .select("body")
+  .select("#gradientBar")
   .append("svg")
   .attr("width", gradientWidth)
-  .attr("height", gradientHeight)
+  .attr("height", gradientHeight + gradientMargin)
   .style("position", "absolute")
-  .style("right", "0px")
-  .style("bottom", "0px");
+  .style("right", gradientMargin + "px")
+  .style("bottom", gradientMargin + "px");
 
 // Define the gradient
 const gradient = svgGradient
@@ -35,6 +36,30 @@ const gradient = svgGradient
   .attr("y1", "0%")
   .attr("x2", "100%")
   .attr("y2", "0%");
+const defs = svgGradient.append("defs");
+
+const filter = defs
+  .append("filter")
+  .attr("id", "dropshadow")
+  .attr("height", "130%");
+
+filter
+  .append("feGaussianBlur")
+  .attr("in", "SourceAlpha")
+  .attr("stdDeviation", 3)
+  .attr("result", "blur");
+
+filter
+  .append("feOffset")
+  .attr("in", "blur")
+  .attr("dx", 2)
+  .attr("dy", 2)
+  .attr("result", "offsetBlur");
+
+const feMerge = filter.append("feMerge");
+
+feMerge.append("feMergeNode").attr("in", "offsetBlur");
+feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
 const projectionMap = d3 // Map and projection
   .geoMercator()
@@ -71,6 +96,7 @@ Promise.all([
     .scaleSequential()
     .domain([minSunPotential, maxSunPotential])
     .interpolator(d3.interpolateYlOrRd);
+
   const minOutputMap = 50; // Minimum rectangle width
   const maxOutputMap = 500; // Maximum rectangle width
   console.log(maxSunPotential);
@@ -111,27 +137,31 @@ Promise.all([
     .append("stop")
     .attr("offset", "100%")
     .attr("stop-color", colorScaleMap(maxSunPotential));
-
+  console.log(colorScaleMap(minSunPotential)); // Log the color for the minimum sun potential
+  console.log(colorScaleMap(maxSunPotential));
+  // Add the gradient bar
   // Add the gradient bar
   svgGradient
     .append("rect")
     .attr("width", gradientWidth)
     .attr("height", gradientHeight)
-    .style("fill", "url(#gradient)");
+    .style("fill", "url(#gradient)")
 
+    .style("stroke-width", 2)
+    .style("filter", "url(#dropshadow)");
   // Add the min and max labels
   svgGradient
     .append("text")
     .attr("x", 0)
     .attr("y", gradientHeight + 20)
-    .text(minSunPotential);
+    .text(minSunPotential + " kWh/year/m2");
 
   svgGradient
     .append("text")
     .attr("x", gradientWidth)
     .attr("y", gradientHeight + 20)
     .attr("text-anchor", "end")
-    .text(maxSunPotential);
+    .text(maxSunPotential + " kWh/year/m2");
   function mouseClickMap(d) {
     // Calculate min and max total values
     const minTotalMap = d3.min(
