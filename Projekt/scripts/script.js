@@ -2,7 +2,7 @@
 // Existing code
 const widthMap = window.innerWidth;
 console.log("widthMap", widthMap);
-const heightMap = window.innerHeight;
+const heightMap = window.innerHeight + 50;
 const svgBar = d3
   .select("#svgmap")
   .attr("width", widthMap)
