@@ -84,6 +84,7 @@ Promise.all([
       feature.properties.name !== "New Caledonia"
     );
   });
+  //work
   console.log(alldata);
   let sunPotentialByCountry = {};
   alldata.forEach((d) => {
