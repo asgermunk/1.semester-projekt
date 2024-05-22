@@ -85,67 +85,65 @@ Promise.all([
   alldata.forEach(function (d) {
     dataMap.set(d.name, +d.sunpotentialkwhyearm2);
   });
-  // Add event listener for search box input
-const searchBox = d3.select("#countrySearch");
-const searchResults = d3.select("#searchResults");
 
-searchBox.on("input", function() {
+// Define the resetMap function
+function resetMap() {
+  d3.selectAll(".Country")
+    .transition()
+    .duration(1000)
+    .attr("transform", "scale(1)")
+    .style("opacity", 0.8)
+    .attr("stroke-width", 0.5);
+  svgBar
+    .selectAll("text")
+    .transition()
+    .duration(1000) 
+    .style("opacity", 0) 
+    .remove();
+
+  svgBar
+    .selectAll("rect")
+    .transition()
+    .duration(1000) 
+    .style("opacity", 0) 
+    .remove();
+
+  d3.select("#content")
+    .transition()
+    .duration(1000)
+    .style("opacity", 0)
+    .remove();
+}
+
+document.getElementById("searchBox").addEventListener("input", function () {
   const query = this.value.toLowerCase();
+  const dropdown = document.getElementById("dropdown");
+  dropdown.innerHTML = '';
   if (query.length > 0) {
-    const matchingCountries = topoData.features.filter(d => d.properties.name.toLowerCase().includes(query));
-    const resultItems = searchResults.selectAll("li")
-      .data(matchingCountries, d => d.properties.name);
-
-    resultItems.enter()
-      .append("li")
-      .merge(resultItems)
-      .text(d => d.properties.name)
-      .on("click", function(event, d) {
-        searchBox.property("value", "");
-        searchResults.selectAll("li").remove();
-        mouseClickMap(d.properties.name);
+    const filteredCountries = topoData.features
+      .map(d => d.properties.name)
+      .filter(name => name.toLowerCase().startsWith(query));
+    if (filteredCountries.length > 0) {
+      dropdown.style.display = 'block';
+      filteredCountries.forEach(name => {
+        const div = document.createElement("div");
+        div.textContent = name;
+        div.onclick = () => {
+          document.getElementById("searchBox").value = name;
+          dropdown.style.display = 'none';
+          svgBar.selectAll("path")
+          mouseClickMap(name);
+        };
+        dropdown.appendChild(div);
       });
-
-    resultItems.exit().remove();
-  } else {
-    searchResults.selectAll("li").remove();
-  }
-});
-
-  document.getElementById("searchBox").addEventListener("input", function () {
-    const query = this.value.toLowerCase();
-    const dropdown = document.getElementById("dropdown");
-    dropdown.innerHTML = '';
-    if (query.length > 0) {
-      const filteredCountries = topoData.features
-        .map(d => d.properties.name)
-        .filter(name => name.toLowerCase().includes(query));
-      if (filteredCountries.length > 0) {
-        dropdown.style.display = 'block';
-        filteredCountries.forEach(name => {
-          const div = document.createElement("div");
-          div.textContent = name;
-          div.onclick = () => {
-            document.getElementById("searchBox").value = name;
-            dropdown.style.display = 'none';
-            mouseClickMap(name);
-          };
-          dropdown.appendChild(div);
-        });
-      } else {
-        dropdown.style.display = 'none';
-      }
     } else {
       dropdown.style.display = 'none';
     }
-  });
-  
-  document.addEventListener("click", function (e) {
-    if (e.target !== document.getElementById("searchBox")) {
-      document.getElementById("dropdown").style.display = 'none';
-    }
-  });
-  
+  } else {
+    dropdown.style.display = 'none';
+    resetMap();
+  }
+});
   // Draw the map
   svgBar
     .selectAll("path")
@@ -194,6 +192,7 @@ searchBox.on("input", function() {
     .text(maxSunPotential);
   function mouseClickMap(countryName) {
     // Calculate min and max total values
+    d3.selectAll(".Country").interrupt();
     const countryPath = svgBar.selectAll(".Country").filter(d => d.properties.name === countryName).node();
     if (!countryPath) return;
     const minTotalMap = d3.min(

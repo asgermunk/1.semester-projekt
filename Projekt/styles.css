@@ -88,7 +88,7 @@
 }
 /*centrering af kort*/
 .svg-container {
-  display: flex;
+  display: relative;
   justify-content: center;
   align-items: center;
   
@@ -139,19 +139,34 @@ span {
   top: 100;
   left: 10px;
 }
-.dropdown {
-  position: absolute;
+#searchBox {
+  color: rgb(0, 0, 0);
+  width:300px;
+  height:40px;
+  font-size:20px;
+}
+
+#dropdown {
+  position: relative;
+  top: 0;
+  left: 0;
   background-color: rgb(243, 0, 0);
-  border: 1px solid #b11616;
+  border: 1px solid #707070;
   max-height: 150px;
   overflow-y: auto;
   z-index: 10;
 }
-.dropdown div {
+#dropdown div {
   padding: 10px;
   color:#000;
   cursor: pointer;
 }
-.dropdown div:hover {
+#dropdown div:hover {
   background-color: #ff0000;
+}
+#searchContainer {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
 }
