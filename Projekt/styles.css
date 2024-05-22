@@ -139,3 +139,19 @@ span {
   top: 100;
   left: 10px;
 }
+.dropdown {
+  position: absolute;
+  background-color: rgb(243, 0, 0);
+  border: 1px solid #b11616;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 10;
+}
+.dropdown div {
+  padding: 10px;
+  color:#000;
+  cursor: pointer;
+}
+.dropdown div:hover {
+  background-color: #ff0000;
+}

@@ -85,7 +85,67 @@ Promise.all([
   alldata.forEach(function (d) {
     dataMap.set(d.name, +d.sunpotentialkwhyearm2);
   });
+  // Add event listener for search box input
+const searchBox = d3.select("#countrySearch");
+const searchResults = d3.select("#searchResults");
 
+searchBox.on("input", function() {
+  const query = this.value.toLowerCase();
+  if (query.length > 0) {
+    const matchingCountries = topoData.features.filter(d => d.properties.name.toLowerCase().includes(query));
+    const resultItems = searchResults.selectAll("li")
+      .data(matchingCountries, d => d.properties.name);
+
+    resultItems.enter()
+      .append("li")
+      .merge(resultItems)
+      .text(d => d.properties.name)
+      .on("click", function(event, d) {
+        searchBox.property("value", "");
+        searchResults.selectAll("li").remove();
+        mouseClickMap(d.properties.name);
+      });
+
+    resultItems.exit().remove();
+  } else {
+    searchResults.selectAll("li").remove();
+  }
+});
+
+  document.getElementById("searchBox").addEventListener("input", function () {
+    const query = this.value.toLowerCase();
+    const dropdown = document.getElementById("dropdown");
+    dropdown.innerHTML = '';
+    if (query.length > 0) {
+      const filteredCountries = topoData.features
+        .map(d => d.properties.name)
+        .filter(name => name.toLowerCase().includes(query));
+      if (filteredCountries.length > 0) {
+        dropdown.style.display = 'block';
+        filteredCountries.forEach(name => {
+          const div = document.createElement("div");
+          div.textContent = name;
+          div.onclick = () => {
+            document.getElementById("searchBox").value = name;
+            dropdown.style.display = 'none';
+            mouseClickMap(name);
+          };
+          dropdown.appendChild(div);
+        });
+      } else {
+        dropdown.style.display = 'none';
+      }
+    } else {
+      dropdown.style.display = 'none';
+    }
+  });
+  
+  document.addEventListener("click", function (e) {
+    if (e.target !== document.getElementById("searchBox")) {
+      document.getElementById("dropdown").style.display = 'none';
+    }
+  });
+  
   // Draw the map
   svgBar
     .selectAll("path")
@@ -132,8 +192,10 @@ Promise.all([
     .attr("y", gradientHeight + 20)
     .attr("text-anchor", "end")
     .text(maxSunPotential);
-  function mouseClickMap(d) {
+  function mouseClickMap(countryName) {
     // Calculate min and max total values
+    const countryPath = svgBar.selectAll(".Country").filter(d => d.properties.name === countryName).node();
+    if (!countryPath) return;
     const minTotalMap = d3.min(
       Array.from(dataMap.values()).filter((value) => value > 50000)
     );
@@ -143,9 +205,9 @@ Promise.all([
       .scaleLinear()
       .domain([minTotalMap, maxTotalMap])
       .range([minOutputMap, maxOutputMap]);
-    const dataCountry = d3.select(this).datum();
+    const dataCountry = d3.select(countryPath).datum();
     // Calculate the bounding box of the clicked country
-    const bboxMap = this.getBBox(); //bboxMap = {x, y, width, height} bounding box laver den mindste firkant omkring landet
+    const bboxMap = countryPath.getBBox(); //bboxMap = {x, y, width, height} bounding box laver den mindste firkant omkring landet
     const bboxWidthMap = bboxMap.width;
     const bboxHeightMap = bboxMap.height;
     // Calculate the scale factor based on the size of the country
@@ -164,7 +226,7 @@ Promise.all([
       .style("opacity", 0)
       .attr("transform", "scale(0)");
     // gør det valgte land synligt og gør det stort, samt få det til at være i midten
-    d3.select(this)
+    d3.select(countryPath)
       .transition()
       .duration(750)
       .attr(
@@ -264,12 +326,11 @@ Promise.all([
       //Denne funktion skal retunere landets energi forbrug
       return d.total; //Vi mangler data til denne funktion
     }
-
     console.log("this is d1", sunMaxMap(dataCountry));
   }
 
   // Attach the mouseClick function to the click event
-  svgBar.selectAll(".Country").on("click", mouseClickMap);
+  svgBar.selectAll(".Country").on("click", function(event, d) { mouseClickMap(d.properties.name); });
   // Add an event listener for a double click event
   svgBar.on("dblclick", function () {
     // Transition all countries back to their original scale and set their opacity back to 0.8
@@ -300,6 +361,7 @@ Promise.all([
       .remove();
   });
 });
+
 //Start på chart
 // The svg for chart
 const svgChart = d3.select("#svgchart"),
