@@ -3,8 +3,8 @@
   margin: 0;
   padding: 0;
   font-family: "Montserrat", sans-serif;
-  color: #f0dca1cc;
-  background-color: #f0dca1;
+  color: #fbe8a6;
+  background-color: #fbe8a6  ;
 }
 /* background image*/
 .banner {
@@ -56,11 +56,12 @@
 .navbar ul li:hover::after {
   width: 100%;
 }
-.logo {
-  padding: 5px 10px;
-}
+
 .navbar a:hover {
   color: #000;
+}
+.logo {
+  padding: 5px 10px;
 }
 /* button styling*/
 .interactiveMap {
@@ -114,7 +115,6 @@ span {
   margin-top: 25%;
   transform: translateY(-50%);
   text-align: center;
-  color: #000;
   border-radius: 20px;
   padding: 10px;
   padding-bottom: 20px;
