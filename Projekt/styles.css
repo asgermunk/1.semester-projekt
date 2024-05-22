@@ -164,3 +164,13 @@ span {
   width: 10%; /* Decrease this to make the popup smaller */
   color: #000000;
 }
+
+.welcome-heading {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  font-size: 40px;
+  font-weight: bold;
+  font-style: italic;
+}
+

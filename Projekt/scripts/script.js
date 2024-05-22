@@ -234,6 +234,8 @@ Promise.all([
       .duration(1000)
       .style("opacity", 0)
       .remove();
+
+
   });
 });
 //Start på chart
@@ -377,7 +379,7 @@ var span = document.getElementsByClassName("popupClose")[0];
 // When the user clicks  
 function popupOpen(){
   modal.style.display = "block";
-}
+  }
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
@@ -385,3 +387,32 @@ window.onclick = function(event) {
     modal.style.display = "none";
   }
 }
+
+
+/* 
+let welcomeHeading = document.getElementById("welcome-heading")
+
+if(welcomeHeading) {
+  welcomeHeading.style.display = "none";
+} */
+
+const welcomeHeading = d3.select("#welcome-heading");
+
+function hideWelcomeHeading() {
+  welcomeHeading.style("display", "none");
+}
+
+function showWelcomeHeading() {
+  welcomeHeading.style("display", "block");
+}
+
+d3.selectAll("path.Country").on("click", function(event, d) {
+  hideWelcomeHeading();
+});
+
+d3.select("#map").on("click", function(event) {
+  if(event.target.tagName !== "path" && event.target.classList.contains("country") == false) {
+    showWelcomeHeading();
+  }
+});
+
