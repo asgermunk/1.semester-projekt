@@ -88,7 +88,7 @@
 }
 /*centrering af kort*/
 .svg-container {
-  display: flex;
+  display: relative;
   justify-content: center;
   align-items: center;
   
@@ -172,4 +172,52 @@ span {
   font-size: 40px;
   font-weight: bold;
   font-style: italic;
+}
+#searchContainer {
+  position: absolute;
+  top:9%;
+  left: 100px;
+  width: 400px; 
+}
+
+#searchBox {
+  width: 75%;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: 1px solid #dfe1e5;
+  border-radius: 24px;
+  box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+  outline: none;
+}
+
+#searchBox:focus {
+  border-color: #4285f4;
+}
+
+#dropdown {
+  position: absolute;
+  width: 100%;
+  background: white;
+  border: 1px solid #dfe1e5;
+  border-top: none;
+  box-shadow: 0 4px 6px rgba(32, 33, 36, 0.28);
+  max-height: 300px;
+  overflow-y: auto;
+  display: none;
+  border-radius: 0 0 24px 24px;
+  z-index: 1000;
+}
+
+#dropdown div {
+  padding: 12px 20px;
+  cursor: pointer;
+}
+
+#dropdown div:hover {
+  background: #f1f1f1;
+}
+
+.svg-container {
+  margin-top: 50px;
+  text-align: center;
 }
