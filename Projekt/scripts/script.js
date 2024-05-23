@@ -341,3 +341,15 @@ Promise.all([
 
   });
 });
+
+// darkmode
+function darkMode() {
+  var element = document.body;
+  element.classList.toggle("dark-mode");
+}
+function popupOpen(){
+  document.getElementById("popup").style.display = "block";
+}
+function popupClose(){
+  document.getElementById("popup").style.display = "none";
+}

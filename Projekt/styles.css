@@ -4,7 +4,12 @@
   padding: 0;
   font-family: "Montserrat", sans-serif;
   color: #000;
-  background-color: #fbe8a6  ;
+  background-color: white  ;
+}
+/* Dark mode */
+.dark-mode {
+  background-color: black;
+  color: white;
 }
 /* background image*/
 .banner {
@@ -29,6 +34,7 @@
   justify-content: space-between;
   color: #000000;
   border-bottom: 1px solid #000;
+  
 }
 /* List attributes (forskellige knapper) */
 .navbar ul li {
@@ -91,7 +97,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
 }
 span {
   color: #f0dca1cc;
@@ -172,4 +178,38 @@ span {
   font-size: 40px;
   font-weight: bold;
   font-style: italic;
+}
+
+.darkMode{
+  display: inline-block;
+  font-size: 16px;
+  padding: 10px 20px;
+  margin: 10px 2px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #000; /* Changed to match the color of the rest of your page */
+  background-color: #fff; /* Changed to match the background color of the rest of your page */
+  border: 2px solid #000; /* Added to match the border style of .popupPage */
+  border-radius: 10px; /* Changed to match the border radius of .popupPage */
+  box-shadow: none; /* Removed to match the flat design of the rest of your page */
+}
+.darkMode:hover {  background-color: #f8f8f8; /* Lighter shade when hovered */
+}
+
+.darkMode:active {
+  background-color: #000; /* Even lighter shade when active */
+  transform: none;
+}
+.dark-mode .mySvg{
+  color: white;
+  background-color: black;
+}
+.dark-mode .welcome-heading{
+  color: white;
+  background-color: black;
+}
+.dark-mode .image {
+  filter: invert()
 }
