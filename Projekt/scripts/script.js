@@ -183,6 +183,16 @@ Promise.all([
       .attr("transform", "")
       .style("opacity", 0)
       .attr("transform", "scale(0)");
+    
+      d3.select("#welcome-heading")
+      .transition()
+      .duration(750)
+      .style("opacity", 0)
+      .on("end", function() {
+        d3.select(this).style("display", "none")
+      });
+      
+      //hallo?
     // gør det valgte land synligt og gør det stort, samt få det til at være i midten
     d3.select(this)
       .transition()
@@ -290,6 +300,7 @@ Promise.all([
 
   // Attach the mouseClick function to the click event
   svgBar.selectAll(".Country").on("click", mouseClickMap);
+  
   // Add an event listener for a double click event
   svgBar.on("dblclick", function () {
     // Transition all countries back to their original scale and set their opacity back to 0.8
@@ -306,6 +317,14 @@ Promise.all([
       .style("opacity", 0) // transition to transparent before removing
       .remove();
 
+     d3.select("#welcome-heading")
+     .transition()
+      .duration(1000)
+      .style("display", "flex")
+      .attr("transform", "scale(1)")
+      .style("opacity", 1);
+
+
     svgBar
       .selectAll("rect")
       .transition()
@@ -318,5 +337,7 @@ Promise.all([
       .duration(1000)
       .style("opacity", 0)
       .remove();
+
+
   });
 });
