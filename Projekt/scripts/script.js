@@ -192,7 +192,7 @@ Promise.all([
         d3.select(this).style("display", "none")
       });
       
-      //hallo?
+
     // gør det valgte land synligt og gør det stort, samt få det til at være i midten
     d3.select(this)
       .transition()
