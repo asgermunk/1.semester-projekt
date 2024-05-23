@@ -2,7 +2,7 @@
 // Existing code
 const widthMap = window.innerWidth;
 console.log("widthMap", widthMap);
-const heightMap = window.innerHeight;
+const heightMap = window.innerHeight + 50;
 const svgBar = d3
   .select("#svgmap")
   .attr("width", widthMap)
@@ -13,18 +13,19 @@ svgBar.attr("class", "mySvg");
 const widthBar = 350; // specify the width of the bar chart SVG
 const heightBar = 30; // specify the height of the bar chart SVG
 // Define the width and height of the gradient bar
-const gradientWidth = 300;
+const gradientWidth = 500;
 const gradientHeight = 20;
+const gradientMargin = 30;
 
 // Create the SVG for the gradient bar
 const svgGradient = d3
-  .select("body")
+  .select("#gradientBar")
   .append("svg")
   .attr("width", gradientWidth)
-  .attr("height", gradientHeight)
-  .style("position", "absolute")
-  .style("right", "0px")
-  .style("bottom", "0px");
+  .attr("height", gradientHeight + gradientMargin)
+  .style("position", "fixed")
+  .style("right", gradientMargin + "px")
+  .style("bottom", gradientMargin - 20 + "px");
 
 // Define the gradient
 const gradient = svgGradient
@@ -35,6 +36,30 @@ const gradient = svgGradient
   .attr("y1", "0%")
   .attr("x2", "100%")
   .attr("y2", "0%");
+const defs = svgGradient.append("defs");
+
+const filter = defs
+  .append("filter")
+  .attr("id", "dropshadow")
+  .attr("height", "130%");
+
+filter
+  .append("feGaussianBlur")
+  .attr("in", "SourceAlpha")
+  .attr("stdDeviation", 3)
+  .attr("result", "blur");
+
+filter
+  .append("feOffset")
+  .attr("in", "blur")
+  .attr("dx", 2)
+  .attr("dy", 2)
+  .attr("result", "offsetBlur");
+
+const feMerge = filter.append("feMerge");
+
+feMerge.append("feMergeNode").attr("in", "offsetBlur");
+feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
 const projectionMap = d3 // Map and projection
   .geoMercator()
@@ -59,6 +84,7 @@ Promise.all([
       feature.properties.name !== "New Caledonia"
     );
   });
+  //work
   console.log(alldata);
   let sunPotentialByCountry = {};
   alldata.forEach((d) => {
@@ -71,8 +97,7 @@ Promise.all([
     .scaleSequential()
     .domain([minSunPotential, maxSunPotential])
     .interpolator(d3.interpolateYlOrRd);
-  const minOutputMap = 50; // Minimum rectangle width
-  const maxOutputMap = 500; // Maximum rectangle width
+
   console.log(maxSunPotential);
   console.log(minSunPotential);
   console.log(sunPotentialValues);
@@ -151,6 +176,7 @@ document.getElementById("searchBox").addEventListener("input", function () {
     .enter()
     .append("path")
     .attr("d", pathMap)
+
     .attr("fill", function (d) {
       let sunPotential = sunPotentialByCountry[d.properties.name] || 0;
       // Set the color based on the sun potential
@@ -169,20 +195,24 @@ document.getElementById("searchBox").addEventListener("input", function () {
     .append("stop")
     .attr("offset", "100%")
     .attr("stop-color", colorScaleMap(maxSunPotential));
-
+  console.log(colorScaleMap(minSunPotential)); // Log the color for the minimum sun potential
+  console.log(colorScaleMap(maxSunPotential));
+  // Add the gradient bar
   // Add the gradient bar
   svgGradient
     .append("rect")
     .attr("width", gradientWidth)
     .attr("height", gradientHeight)
-    .style("fill", "url(#gradient)");
+    .style("fill", "url(#gradient)")
 
+    .style("stroke-width", 2)
+    .style("filter", "url(#dropshadow)");
   // Add the min and max labels
   svgGradient
     .append("text")
     .attr("x", 0)
     .attr("y", gradientHeight + 20)
-    .text(minSunPotential);
+    .text(minSunPotential + " kWh/year/m2");
 
   svgGradient
     .append("text")
@@ -224,6 +254,16 @@ document.getElementById("searchBox").addEventListener("input", function () {
       .attr("transform", "")
       .style("opacity", 0)
       .attr("transform", "scale(0)");
+    
+      d3.select("#welcome-heading")
+      .transition()
+      .duration(750)
+      .style("opacity", 0)
+      .on("end", function() {
+        d3.select(this).style("display", "none")
+      });
+      
+      //hallo?
     // gør det valgte land synligt og gør det stort, samt få det til at være i midten
     d3.select(countryPath)
       .transition()
@@ -346,6 +386,14 @@ document.getElementById("searchBox").addEventListener("input", function () {
       .style("opacity", 0) // transition to transparent before removing
       .remove();
 
+     d3.select("#welcome-heading")
+     .transition()
+      .duration(1000)
+      .style("display", "flex")
+      .attr("transform", "scale(1)")
+      .style("opacity", 1);
+
+
     svgBar
       .selectAll("rect")
       .transition()
@@ -358,6 +406,8 @@ document.getElementById("searchBox").addEventListener("input", function () {
       .duration(1000)
       .style("opacity", 0)
       .remove();
+
+
   });
 });
 
