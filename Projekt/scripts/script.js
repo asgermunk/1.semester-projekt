@@ -449,3 +449,12 @@ Promise.all([
       .remove();
   });
 });
+function popupOpen() {
+  const popupBox = document.getElementById("popup");
+  popupBox.style.display = "block";
+}
+
+const popupBox = document.getElementById("popup");
+popupBox.addEventListener("click", function () {
+  this.style.display = "none";
+});
