@@ -1,6 +1,6 @@
 // The svg for map
 // Existing code
-const widthMap = window.innerWidth;
+const widthMap = window.innerWidth - 25;
 
 const heightMap = window.innerHeight + 50;
 const svgBar = d3
@@ -103,6 +103,7 @@ Promise.all([
   });
 
   let sunPotentialValues = Object.values(sunPotentialByCountry);
+  console.log("this is sunpotentialvalues", sunPotentialValues);
   let minSunPotential = d3.min(sunPotentialValues.filter((value) => value > 0));
   let maxSunPotential = d3.max(sunPotentialValues);
 
