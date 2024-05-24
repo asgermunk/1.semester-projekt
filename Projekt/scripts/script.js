@@ -87,32 +87,32 @@ Promise.all([
     );
   });
   let sunProdByCountry = {};
-let energyConsByCountry = {};
-let sunPotentialByCountry = {};
+  let energyConsByCountry = {};
+  let sunPotentialByCountry = {};
 
-alldata.forEach((d) => {
-  sunPotentialByCountry[d.name] = +d.sunpotentialkwhyearm2; // convert to number
-});
+  alldata.forEach((d) => {
+    sunPotentialByCountry[d.name] = +d.sunpotentialkwhyearm2; // convert to number
+  });
 
-alldata.forEach((d) => {
-  sunProdByCountry[d.name] = +d.energysunproductionyearpj; // convert to number
-});
+  alldata.forEach((d) => {
+    sunProdByCountry[d.name] = +d.energysunproductionyearpj; // convert to number
+  });
 
-alldata.forEach((d) => {
-  energyConsByCountry[d.name] = +d.energyproductionkwhyear; // convert to number
-});
+  alldata.forEach((d) => {
+    energyConsByCountry[d.name] = +d.energyproductionkwhyear; // convert to number
+  });
 
-let sunPotentialValues = Object.values(sunPotentialByCountry);
-let minSunPotential = d3.min(sunPotentialValues.filter((value) => value > 0));
-let maxSunPotential = d3.max(sunPotentialValues);
+  let sunPotentialValues = Object.values(sunPotentialByCountry);
+  let minSunPotential = d3.min(sunPotentialValues.filter((value) => value > 0));
+  let maxSunPotential = d3.max(sunPotentialValues);
 
-let sunProdValues = Object.values(sunProdByCountry);
-let minSunProd = d3.min(sunProdValues.filter((value) => value > 0));
-let maxSunProd = d3.max(sunProdValues);
+  let sunProdValues = Object.values(sunProdByCountry);
+  let minSunProd = d3.min(sunProdValues.filter((value) => value > 0));
+  let maxSunProd = d3.max(sunProdValues);
 
-let energyConsValues = Object.values(energyConsByCountry);
-let minEnergiCons = d3.min(energyConsValues.filter((value) => value > 0));
-let maxEnergiCons = d3.max(energyConsValues);
+  let energyConsValues = Object.values(energyConsByCountry);
+  let minEnergiCons = d3.min(energyConsValues.filter((value) => value > 0));
+  let maxEnergiCons = d3.max(energyConsValues);
   const colorScaleMap = d3
     .scaleSequential()
     .domain([minSunPotential, maxSunPotential])
@@ -153,7 +153,7 @@ let maxEnergiCons = d3.max(energyConsValues);
     .append("stop")
     .attr("offset", "100%")
     .attr("stop-color", colorScaleMap(maxSunPotential));
-  
+
   // Add the gradient bar
   // Add the gradient bar
   svgGradient
@@ -179,7 +179,7 @@ let maxEnergiCons = d3.max(energyConsValues);
     .text(maxSunPotential + " kWh/year/m2");
   function mouseClickMap(d) {
     const dataCountry = d3.select(this).datum();
-  
+
     const clickedCountryName = dataCountry.properties.name;
     const clickedCountryData = alldata.filter(
       (data) => data.name === clickedCountryName
@@ -204,15 +204,14 @@ let maxEnergiCons = d3.max(energyConsValues);
       .attr("transform", "")
       .style("opacity", 0)
       .attr("transform", "scale(0)");
-    
-      d3.select("#welcome-heading")
+
+    d3.select("#welcome-heading")
       .transition()
       .duration(750)
       .style("opacity", 0)
-      .on("end", function() {
-        d3.select(this).style("display", "none")
+      .on("end", function () {
+        d3.select(this).style("display", "none");
       });
-      
 
     // gør det valgte land synligt og gør det stort, samt få det til at være i midten
     d3.select(this)
@@ -280,14 +279,13 @@ let maxEnergiCons = d3.max(energyConsValues);
           .attr("x", 0)
           .attr("y", 50)
           .attr("class", "energiConsBar")
-          .attr("width", + energiConsBarScale(dataCountry) ) //denne skal ændres til en ny funktion som tager landets energi forbrug widthBar - scaleMap(energiConsMap(dataCountry)) - 20
+          .attr("width", +energiConsBarScale(dataCountry)) //denne skal ændres til en ny funktion som tager landets energi forbrug widthBar - scaleMap(energiConsMap(dataCountry)) - 20
           .attr("height", 30)
           .style("opacity", 0)
           .style("fill", "yellow")
           .transition()
           .duration(500)
           .style("opacity", 1);
-
 
         svgBar // bar for sol produktion
           .append("rect") // Append a rectangle to the SVG
@@ -301,7 +299,7 @@ let maxEnergiCons = d3.max(energyConsValues);
           .transition()
           .duration(500)
           .style("opacity", 1);
-       
+
         svgBar //show the value of the solar potential
           .append("text")
           .attr("x", sunPotentialBarScale(dataCountry) + "px")
@@ -326,51 +324,60 @@ let maxEnergiCons = d3.max(energyConsValues);
           .style("fill", "black")
           .text(sunProdMap(dataCountry) + " TWh");
 
-          svgBar // Description for solar potential
-  .append("text")
-  .attr("x", 0)
-  .attr("y", 45)
-  .style("fill", "black")
-  .text("Solar Potential");
+        svgBar // Description for solar potential
+          .append("text")
+          .attr("x", 0)
+          .attr("y", 45)
+          .style("fill", "black")
+          .text("Solar Potential");
 
-svgBar // Description for energy consumption
-  .append("text")
-  .attr("x", 0)
-  .attr("y", 95)
-  .style("fill", "black")
-  .text("Energy Consumption");
+        svgBar // Description for energy consumption
+          .append("text")
+          .attr("x", 0)
+          .attr("y", 95)
+          .style("fill", "black")
+          .text("Energy Consumption");
 
-svgBar // Description for solar production
-  .append("text")
-  .attr("x", 0)
-  .attr("y", 145)
-  .style("fill", "black")
-  .text("Solar Production");
+        svgBar // Description for solar production
+          .append("text")
+          .attr("x", 0)
+          .attr("y", 145)
+          .style("fill", "black")
+          .text("Solar Production");
       });
 
-      function sunPotentialBarScale(d) {
-        // This function returns the width of the rectangle based on the sun potential
-        const result = clickedCountryData.sunpotentialkwhyearm2; // Get the sun potential of the country
-        const scale = d3.scaleLinear().domain([minSunPotential, maxSunPotential]).range([minOutputMap, maxOutputMap]); // Create a linear scale
-        return scale(result); // Return the width of the rectangle
-      }
-      console.log("this is sunpotentialbar", sunPotentialBarScale(dataCountry));
+    function sunPotentialBarScale(d) {
+      // This function returns the width of the rectangle based on the sun potential
+      const result = clickedCountryData.sunpotentialkwhyearm2; // Get the sun potential of the country
+      const scale = d3
+        .scaleLinear()
+        .domain([minSunPotential, maxSunPotential])
+        .range([minOutputMap, maxOutputMap]); // Create a linear scale
+      return scale(result); // Return the width of the rectangle
+    }
+    console.log("this is sunpotentialbar", sunPotentialBarScale(dataCountry));
 
-      function sunProdBarScale(d) {
-        // This function returns the width of the rectangle based on the sun production
-        const result = clickedCountryData.energysunproductionyearpj; // Get the sun production of the country
-        const scale = d3.scaleLinear().domain([minSunProd, maxSunProd]).range([minOutputMap, maxOutputMap]); // Create a linear scale
-        return scale(result); // Return the width of the rectangle
-      }
-      console.log("this is sunprodBar", sunProdBarScale(dataCountry));
+    function sunProdBarScale(d) {
+      // This function returns the width of the rectangle based on the sun production
+      const result = clickedCountryData.energysunproductionyearpj; // Get the sun production of the country
+      const scale = d3
+        .scaleLinear()
+        .domain([minSunProd, maxSunProd])
+        .range([minOutputMap, maxOutputMap]); // Create a linear scale
+      return scale(result); // Return the width of the rectangle
+    }
+    console.log("this is sunprodBar", sunProdBarScale(dataCountry));
 
-      function energiConsBarScale(d) {
-        // This function returns the width of the rectangle based on the energy consumption
-        const result = clickedCountryData.energyproductionkwhyear; // Get the energy consumption of the country
-        const scale = d3.scaleLinear().domain([minEnergiCons, maxEnergiCons]).range([minOutputMap, maxOutputMap]); // Create a linear scale
-        return scale(result); // Return the width of the rectangle
-      }
-      console.log("this is energiConsBar", energiConsBarScale(dataCountry));
+    function energiConsBarScale(d) {
+      // This function returns the width of the rectangle based on the energy consumption
+      const result = clickedCountryData.energyproductionkwhyear; // Get the energy consumption of the country
+      const scale = d3
+        .scaleLinear()
+        .domain([minEnergiCons, maxEnergiCons])
+        .range([minOutputMap, maxOutputMap]); // Create a linear scale
+      return scale(result); // Return the width of the rectangle
+    }
+    console.log("this is energiConsBar", energiConsBarScale(dataCountry));
 
     function sunPotential(d) {
       // This function returns the country's solar potential in PWh
@@ -382,7 +389,7 @@ svgBar // Description for solar production
       return resultInPWh;
     }
     console.log("this is sunpotential", sunPotential(dataCountry));
-    
+
     function sunProdMap(d) {
       //This function returns the country's solar production in PWh
       const result = clickedCountryData.energysunproductionyearpj;
@@ -393,9 +400,9 @@ svgBar // Description for solar production
     function energiConsMap(d) {
       //This function returns the country's energy consumption in PWh
       const result = clickedCountryData.energyproductionkwhyear;
-    
+
       const resultInPWh = result * 1e-12; // Convert kWh to PWh
-      
+
       return resultInPWh;
     }
 
@@ -404,7 +411,7 @@ svgBar // Description for solar production
 
   // Attach the mouseClick function to the click event
   svgBar.selectAll(".Country").on("click", mouseClickMap);
-  
+
   // Add an event listener for a double click event
   svgBar.on("dblclick", function () {
     // Transition all countries back to their original scale and set their opacity back to 0.8
@@ -421,13 +428,12 @@ svgBar // Description for solar production
       .style("opacity", 0) // transition to transparent before removing
       .remove();
 
-     d3.select("#welcome-heading")
-     .transition()
+    d3.select("#welcome-heading")
+      .transition()
       .duration(1000)
       .style("display", "flex")
       .attr("transform", "scale(1)")
       .style("opacity", 1);
-
 
     svgBar
       .selectAll("rect")
@@ -441,7 +447,5 @@ svgBar // Description for solar production
       .duration(1000)
       .style("opacity", 0)
       .remove();
-
-
   });
 });
