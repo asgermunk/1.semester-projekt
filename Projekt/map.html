@@ -43,10 +43,18 @@
     
 
     <script src="https://d3js.org/d3.v6.js"></script>
-    <div class="svg-container">
-      <svg id="svgmap" width="1920" height="1080"></svg>
-    </div>
-
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <div id="searchContainer">
+      <input type="text" id="searchBox" placeholder="Search for a country...">
+      <div id="dropdown"></div>
+  </div>
+  <div class="svg-container">
+      <svg id="svgmap" width="2000" height="1080"></svg>
+  </div>
+  <div class="svg-container">
+      <svg id="svgchart" width="2000" height="1080" style="margin-top: 750"></svg>
+  </div>
     <script src="scripts/script.js"></script>
   </body>
 </html>

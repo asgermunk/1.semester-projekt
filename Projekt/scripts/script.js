@@ -127,6 +127,64 @@ Promise.all([
     dataMap.set(d.name, +d.sunpotentialkwhyearm2);
   });
 
+  // Define the resetMap function
+  function resetMap() {
+    d3.selectAll(".Country")
+      .transition()
+      .duration(1000)
+      .attr("transform", "scale(1)")
+      .style("opacity", 0.8)
+      .attr("stroke-width", 0.5);
+    svgBar
+      .selectAll("text")
+      .transition()
+      .duration(1000)
+      .style("opacity", 0)
+      .remove();
+
+    svgBar
+      .selectAll("rect")
+      .transition()
+      .duration(1000)
+      .style("opacity", 0)
+      .remove();
+
+    d3.select("#content")
+      .transition()
+      .duration(1000)
+      .style("opacity", 0)
+      .remove();
+  }
+
+  document.getElementById("searchBox").addEventListener("input", function () {
+    const query = this.value.toLowerCase();
+    const dropdown = document.getElementById("dropdown");
+    dropdown.innerHTML = "";
+    if (query.length > 0) {
+      const filteredCountries = topoData.features
+        .map((d) => d.properties.name)
+        .filter((name) => name.toLowerCase().startsWith(query));
+      if (filteredCountries.length > 0) {
+        dropdown.style.display = "block";
+        filteredCountries.forEach((name) => {
+          const div = document.createElement("div");
+          div.textContent = name;
+          div.onclick = () => {
+            document.getElementById("searchBox").value = name;
+            dropdown.style.display = "none";
+            svgBar.selectAll("path");
+            mouseClickMap(name);
+          };
+          dropdown.appendChild(div);
+        });
+      } else {
+        dropdown.style.display = "none";
+      }
+    } else {
+      dropdown.style.display = "none";
+      resetMap();
+    }
+  });
   // Draw the map
   svgBar
     .selectAll("path")
@@ -186,7 +244,7 @@ Promise.all([
     )[0];
     console.log("this is the clicked country data", clickedCountryData);
     // Calculate the bounding box of the clicked country
-    const bboxMap = this.getBBox(); //bboxMap = {x, y, width, height} bounding box laver den mindste firkant omkring landet
+    const bboxMap = countryPath.getBBox(); //bboxMap = {x, y, width, height} bounding box laver den mindste firkant omkring landet
     const bboxWidthMap = bboxMap.width;
     const bboxHeightMap = bboxMap.height;
     // Calculate the scale factor based on the size of the country
@@ -214,7 +272,7 @@ Promise.all([
       });
 
     // gør det valgte land synligt og gør det stort, samt få det til at være i midten
-    d3.select(this)
+    d3.select(countryPath)
       .transition()
       .duration(750)
       .attr(
@@ -412,6 +470,9 @@ Promise.all([
   // Attach the mouseClick function to the click event
   svgBar.selectAll(".Country").on("click", mouseClickMap);
 
+  svgBar.selectAll(".Country").on("click", function (event, d) {
+    mouseClickMap(d.properties.name);
+  });
   // Add an event listener for a double click event
   svgBar.on("dblclick", function () {
     // Transition all countries back to their original scale and set their opacity back to 0.8
@@ -448,4 +509,133 @@ Promise.all([
       .style("opacity", 0)
       .remove();
   });
+});
+
+//Start på chart
+// The svg for chart
+const svgChart = d3.select("#svgchart"),
+  widthChart = +svgChart.attr("width"),
+  heightChart = +svgChart.attr("height"),
+  margin = { top: 100, right: 0, bottom: 0, left: 0 },
+  width = widthChart - margin.left - margin.right,
+  height = heightChart - margin.top - margin.bottom,
+  innerRadius = 90,
+  outerRadius = Math.min(width, height) / 2;
+
+const svg = svgChart
+  .append("g")
+  .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+  .style("margin-top", "10000px");
+
+d3.csv(
+  "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum.csv"
+).then(function (dataChart) {
+  // X scale: common for 2 data series
+  var x = d3
+    .scaleBand()
+    .range([0, 2 * Math.PI])
+    .align(0)
+    .domain(
+      dataChart.map(function (d) {
+        return d.Country;
+      })
+    );
+
+  // Y scale outer variable
+  var y = d3.scaleRadial().range([innerRadius, outerRadius]).domain([0, 13000]);
+
+  // Second barplot Scales
+  var ybis = d3.scaleRadial().range([innerRadius, 5]).domain([0, 13000]);
+
+  // Add the bars
+  svg
+    .append("g")
+    .selectAll("path")
+    .data(dataChart)
+    .enter()
+    .append("path")
+
+    .attr("fill", "#69b3a2")
+    .attr("class", "yo")
+    .attr(
+      "d",
+      d3
+        .arc()
+        .innerRadius(innerRadius)
+        .outerRadius(function (d) {
+          return y(d["Value"]);
+        })
+        .startAngle(function (d) {
+          return x(d.Country);
+        })
+        .endAngle(function (d) {
+          return x(d.Country) + x.bandwidth();
+        })
+        .padAngle(0.01)
+        .padRadius(innerRadius)
+    );
+
+  // Add the labels
+  svg
+    .append("g")
+    .selectAll("g")
+    .data(dataChart)
+    .enter()
+    .append("g")
+    .attr("text-anchor", function (d) {
+      return (x(d.Country) + x.bandwidth() / 2 + Math.PI) % (2 * Math.PI) <
+        Math.PI
+        ? "end"
+        : "start";
+    })
+    .attr("transform", function (d) {
+      return (
+        "rotate(" +
+        (((x(d.Country) + x.bandwidth() / 2) * 180) / Math.PI - 90) +
+        ")" +
+        "translate(" +
+        (y(d["Value"]) + 10) +
+        ",0)"
+      );
+    })
+    .append("text")
+    .text(function (d) {
+      return d.Country;
+    })
+    .attr("transform", function (d) {
+      return (x(d.Country) + x.bandwidth() / 2 + Math.PI) % (2 * Math.PI) <
+        Math.PI
+        ? "rotate(180)"
+        : "rotate(0)";
+    })
+    .style("font-size", "11px")
+    .attr("alignment-baseline", "middle");
+
+  // Add the second series
+  svg
+    .append("g")
+    .selectAll("path")
+    .data(dataChart)
+    .enter()
+    .append("path")
+    .attr("fill", "red")
+    .attr(
+      "d",
+      d3
+        .arc()
+        .innerRadius(function (d) {
+          return ybis(0);
+        })
+        .outerRadius(function (d) {
+          return ybis(d["Value"]);
+        })
+        .startAngle(function (d) {
+          return x(d.Country);
+        })
+        .endAngle(function (d) {
+          return x(d.Country) + x.bandwidth();
+        })
+        .padAngle(0.01)
+        .padRadius(innerRadius)
+    );
 });
