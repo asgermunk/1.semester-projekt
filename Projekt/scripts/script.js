@@ -213,7 +213,6 @@ Promise.all([
     .attr("stop-color", colorScaleMap(maxSunPotential));
 
   // Add the gradient bar
-  // Add the gradient bar
   svgGradient
     .append("rect")
     .attr("width", gradientWidth)
@@ -237,6 +236,7 @@ Promise.all([
     .text(maxSunPotential + " kWh/year/m2");
   function mouseClickMap(d) {
     const dataCountry = d3.select(this).datum();
+    console.log("this is the clicked country", dataCountry);
 
     const clickedCountryName = dataCountry.properties.name;
     const clickedCountryData = alldata.filter(
@@ -509,133 +509,4 @@ Promise.all([
       .style("opacity", 0)
       .remove();
   });
-});
-
-//Start på chart
-// The svg for chart
-const svgChart = d3.select("#svgchart"),
-  widthChart = +svgChart.attr("width"),
-  heightChart = +svgChart.attr("height"),
-  margin = { top: 100, right: 0, bottom: 0, left: 0 },
-  width = widthChart - margin.left - margin.right,
-  height = heightChart - margin.top - margin.bottom,
-  innerRadius = 90,
-  outerRadius = Math.min(width, height) / 2;
-
-const svg = svgChart
-  .append("g")
-  .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-  .style("margin-top", "10000px");
-
-d3.csv(
-  "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum.csv"
-).then(function (dataChart) {
-  // X scale: common for 2 data series
-  var x = d3
-    .scaleBand()
-    .range([0, 2 * Math.PI])
-    .align(0)
-    .domain(
-      dataChart.map(function (d) {
-        return d.Country;
-      })
-    );
-
-  // Y scale outer variable
-  var y = d3.scaleRadial().range([innerRadius, outerRadius]).domain([0, 13000]);
-
-  // Second barplot Scales
-  var ybis = d3.scaleRadial().range([innerRadius, 5]).domain([0, 13000]);
-
-  // Add the bars
-  svg
-    .append("g")
-    .selectAll("path")
-    .data(dataChart)
-    .enter()
-    .append("path")
-
-    .attr("fill", "#69b3a2")
-    .attr("class", "yo")
-    .attr(
-      "d",
-      d3
-        .arc()
-        .innerRadius(innerRadius)
-        .outerRadius(function (d) {
-          return y(d["Value"]);
-        })
-        .startAngle(function (d) {
-          return x(d.Country);
-        })
-        .endAngle(function (d) {
-          return x(d.Country) + x.bandwidth();
-        })
-        .padAngle(0.01)
-        .padRadius(innerRadius)
-    );
-
-  // Add the labels
-  svg
-    .append("g")
-    .selectAll("g")
-    .data(dataChart)
-    .enter()
-    .append("g")
-    .attr("text-anchor", function (d) {
-      return (x(d.Country) + x.bandwidth() / 2 + Math.PI) % (2 * Math.PI) <
-        Math.PI
-        ? "end"
-        : "start";
-    })
-    .attr("transform", function (d) {
-      return (
-        "rotate(" +
-        (((x(d.Country) + x.bandwidth() / 2) * 180) / Math.PI - 90) +
-        ")" +
-        "translate(" +
-        (y(d["Value"]) + 10) +
-        ",0)"
-      );
-    })
-    .append("text")
-    .text(function (d) {
-      return d.Country;
-    })
-    .attr("transform", function (d) {
-      return (x(d.Country) + x.bandwidth() / 2 + Math.PI) % (2 * Math.PI) <
-        Math.PI
-        ? "rotate(180)"
-        : "rotate(0)";
-    })
-    .style("font-size", "11px")
-    .attr("alignment-baseline", "middle");
-
-  // Add the second series
-  svg
-    .append("g")
-    .selectAll("path")
-    .data(dataChart)
-    .enter()
-    .append("path")
-    .attr("fill", "red")
-    .attr(
-      "d",
-      d3
-        .arc()
-        .innerRadius(function (d) {
-          return ybis(0);
-        })
-        .outerRadius(function (d) {
-          return ybis(d["Value"]);
-        })
-        .startAngle(function (d) {
-          return x(d.Country);
-        })
-        .endAngle(function (d) {
-          return x(d.Country) + x.bandwidth();
-        })
-        .padAngle(0.01)
-        .padRadius(innerRadius)
-    );
 });
