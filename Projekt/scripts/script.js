@@ -127,64 +127,6 @@ Promise.all([
     dataMap.set(d.name, +d.sunpotentialkwhyearm2);
   });
 
-  // Define the resetMap function
-  function resetMap() {
-    d3.selectAll(".Country")
-      .transition()
-      .duration(1000)
-      .attr("transform", "scale(1)")
-      .style("opacity", 0.8)
-      .attr("stroke-width", 0.5);
-    svgBar
-      .selectAll("text")
-      .transition()
-      .duration(1000)
-      .style("opacity", 0)
-      .remove();
-
-    svgBar
-      .selectAll("rect")
-      .transition()
-      .duration(1000)
-      .style("opacity", 0)
-      .remove();
-
-    d3.select("#content")
-      .transition()
-      .duration(1000)
-      .style("opacity", 0)
-      .remove();
-  }
-
-  document.getElementById("searchBox").addEventListener("input", function () {
-    const query = this.value.toLowerCase();
-    const dropdown = document.getElementById("dropdown");
-    dropdown.innerHTML = "";
-    if (query.length > 0) {
-      const filteredCountries = topoData.features
-        .map((d) => d.properties.name)
-        .filter((name) => name.toLowerCase().startsWith(query));
-      if (filteredCountries.length > 0) {
-        dropdown.style.display = "block";
-        filteredCountries.forEach((name) => {
-          const div = document.createElement("div");
-          div.textContent = name;
-          div.onclick = () => {
-            document.getElementById("searchBox").value = name;
-            dropdown.style.display = "none";
-            svgBar.selectAll("path");
-            mouseClickMap(name);
-          };
-          dropdown.appendChild(div);
-        });
-      } else {
-        dropdown.style.display = "none";
-      }
-    } else {
-      dropdown.style.display = "none";
-      resetMap();
-    }
-  });
   // Draw the map
   svgBar
     .selectAll("path")
@@ -213,6 +155,7 @@ Promise.all([
     .attr("stop-color", colorScaleMap(maxSunPotential));
 
   // Add the gradient bar
+  // Add the gradient bar
   svgGradient
     .append("rect")
     .attr("width", gradientWidth)
@@ -236,7 +179,6 @@ Promise.all([
     .text(maxSunPotential + " kWh/year/m2");
   function mouseClickMap(d) {
     const dataCountry = d3.select(this).datum();
-    console.log("this is the clicked country", dataCountry);
 
     const clickedCountryName = dataCountry.properties.name;
     const clickedCountryData = alldata.filter(
@@ -244,7 +186,7 @@ Promise.all([
     )[0];
     console.log("this is the clicked country data", clickedCountryData);
     // Calculate the bounding box of the clicked country
-    const bboxMap = countryPath.getBBox(); //bboxMap = {x, y, width, height} bounding box laver den mindste firkant omkring landet
+    const bboxMap = this.getBBox(); //bboxMap = {x, y, width, height} bounding box laver den mindste firkant omkring landet
     const bboxWidthMap = bboxMap.width;
     const bboxHeightMap = bboxMap.height;
     // Calculate the scale factor based on the size of the country
@@ -272,7 +214,7 @@ Promise.all([
       });
 
     // gør det valgte land synligt og gør det stort, samt få det til at være i midten
-    d3.select(countryPath)
+    d3.select(this)
       .transition()
       .duration(750)
       .attr(
@@ -470,9 +412,6 @@ Promise.all([
   // Attach the mouseClick function to the click event
   svgBar.selectAll(".Country").on("click", mouseClickMap);
 
-  svgBar.selectAll(".Country").on("click", function (event, d) {
-    mouseClickMap(d.properties.name);
-  });
   // Add an event listener for a double click event
   svgBar.on("dblclick", function () {
     // Transition all countries back to their original scale and set their opacity back to 0.8
