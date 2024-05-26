@@ -179,7 +179,7 @@ span {
   margin: 20px auto 0;
 }
 
-#searchBox {
+#search-box {
   width: 75%;
   padding: 12px 20px;
   font-size: 16px;
@@ -189,14 +189,14 @@ span {
   outline: none;
 }
 
-#searchBox:focus {
+#search-box:focus {
   border-color: #4285f4;
 }
 
 #dropdown {
   position: absolute;
   width: 100%;
-  background: white;
+  background:#fbe8a6;
   border: 1px solid #dfe1e5;
   border-top: none;
   box-shadow: 0 4px 6px rgba(32, 33, 36, 0.28);
@@ -205,6 +205,7 @@ span {
   display: none;
   border-radius: 0 0 24px 24px;
   z-index: 1000;
+  padding: 5px 10px;
 }
 
 #dropdown div {
