@@ -1,7 +1,8 @@
 // The svg for map
 // Existing code
 const widthMap = window.innerWidth - 25;
-
+const searchBox = d3.select("#search-box");
+const dropdown = d3.select("#dropdown");
 const heightMap = window.innerHeight + 50;
 const svgBar = d3
   .select("#svgmap")
@@ -127,7 +128,104 @@ Promise.all([
   alldata.forEach(function (d) {
     dataMap.set(d.name, +d.sunpotentialkwhyearm2);
   });
+// Listen for changes in the input field
+searchBox.on("input", function () {
+  // Save the input field's value in lowercase
+  const searchTerm = searchBox.property("value").toLowerCase();
+  
+  // Filter countries based on the input field's value
+  const filteredCountries = topoData.features
+    .map((d) => d.properties.name)
+    .filter((name) => name.toLowerCase().startsWith(searchTerm));
+  
+  // Update the dropdown menu with the filtered countries
+  updateDropdown(filteredCountries);
 
+  // If the input field is empty, call the function to reset the dropdown menu
+  if (!searchTerm) {
+    resetDropdown();
+    resetMap(); // You can also choose to reset the map if the input field is empty
+  }
+});
+
+// Function to update the dropdown menu with filtered countries
+function updateDropdown(filteredCountries) {
+  // Remove all existing elements from the dropdown menu
+  dropdown.selectAll("li").remove();
+  
+  // Show or hide the dropdown menu based on the number of filtered countries
+  dropdown.style("display", filteredCountries.length ? "block" : "none");
+  
+  // Add the filtered countries to the dropdown menu
+  dropdown.selectAll("li")
+    .data(filteredCountries)
+    .enter()
+    .append("li")
+    .text((d) => d)
+    .on("click", function (event, d) {
+      const country = d;
+      const countryPath = svgBar
+        .selectAll("path")
+        .filter((d) => d.properties.name === country)
+        .node();
+      
+      // If the country exists, perform the click action on the map
+      if (countryPath) {
+        mouseClickMap.call(countryPath, countryPath.__data__);
+      }
+      
+      // Autofill the input field with the selected country
+      searchBox.property("value", country);
+      
+      // Hide the dropdown menu
+      dropdown.style("display", "none");
+    });
+}
+
+// Function to reset the dropdown menu
+function resetDropdown() {
+  dropdown.selectAll("li").remove(); // Remove all elements from the dropdown menu
+  dropdown.style("display", "none"); // Hide the dropdown menu
+}
+
+// Function to reset the map
+function resetMap() {
+  // Transition all countries back to their original scale and set their opacity back to 0.8
+  d3.selectAll(".Country")
+    .transition()
+    .duration(1000)
+    .attr("transform", "scale(1)")
+    .style("opacity", 0.8)
+    .attr("stroke-width", 0.5);
+
+  // Remove country names from the map
+  svgBar.selectAll("text")
+    .transition()
+    .duration(1000)
+    .style("opacity", 0)
+    .remove();
+
+  // Show the welcome text again
+  d3.select("#welcome-heading")
+    .transition()
+    .duration(1000)
+    .style("display", "flex")
+    .style("opacity", 1);
+
+  // Remove all rectangles from the map
+  svgBar.selectAll("rect")
+    .transition()
+    .duration(1000)
+    .style("opacity", 0)
+    .remove();
+
+  // Remove content from the map
+  d3.select("#content")
+    .transition()
+    .duration(1000)
+    .style("opacity", 0)
+    .remove();
+}
   // Draw the map
   svgBar
     .selectAll("path")
