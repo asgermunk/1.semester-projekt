@@ -11,7 +11,7 @@ const svgBar = d3
 
 // Add a class to the SVG
 svgBar.attr("class", "mySvg");
-const widthBar = 430; // specify the width of the bar chart SVG
+const widthBar = 350; // specify the width of the bar chart SVG
 const heightBar = 300; // specify the height of the bar chart SVG
 // Define the width and height of the gradient bar
 const gradientWidth = 500;
@@ -70,7 +70,7 @@ Promise.all([
   alldata.forEach((d) => {
     sunPotentialByCountry[d.country] = +d.sunpotentialkwhyearm2; // convert to number
   });
-
+  console.log("this is sunpotentialbycountry", sunPotentialByCountry);
   alldata.forEach((d) => {
     sunProdByCountry[d.country] = +d.solarproductionterawatthoursyear; // convert to number
   });
@@ -78,9 +78,9 @@ Promise.all([
   alldata.forEach((d) => {
     energyConsByCountry[d.country] = +d.energyproductionkwhyear; // convert to number
   });
-
+  console.log(allData);
   let sunPotentialValues = Object.values(sunPotentialByCountry);
-
+  console.log("this is sunpotentialvalues", sunPotentialValues);
   let minSunPotential = d3.min(sunPotentialValues.filter((value) => value > 0));
   let maxSunPotential = d3.max(sunPotentialValues);
 
@@ -100,6 +100,7 @@ Promise.all([
     dataMap.set(d.country, +d.sunpotentialkwhyearm2);
   });
 
+  console.log("this is dataMap", dataMap);
   // Listen for changes in the input field
   searchBox.on("input", function () {
     resetMap();
@@ -252,7 +253,15 @@ document.getElementById('dropdown').addEventListener('change', function(event) {
     const clickedCountryData = alldata.filter(
         (data) => data.country === clickedCountryName
     )[0];
+    console.log("this is the clicked country data", clickedCountryData);
 
+    const countryCode = mapCountryNameCode(clickedCountryName);
+    if (countryCode) {
+        updateFlag(countryCode);
+        displayCountryData(clickedCountryData, clickedCountryName, countryCode);
+    } else {
+        console.log("Landekode ikke fundet for", clickedCountryName);
+    }
     // Calculate the bounding box of the clicked country
     const bboxMap = this.getBBox(); //bboxMap = {x, y, width, height} bounding box laver den mindste firkant omkring landet
     const bboxWidthMap = bboxMap.width;
@@ -515,6 +524,7 @@ flagContainer
         .range([minOutputMap, maxOutputMap]); // Create a linear scale
       return scale(result); // Return the width of the rectangle
     }
+    console.log("this is sunpotentialbar", sunPotentialBarScale(dataCountry));
 
     function sunProdBarScale(d) {
       // This function returns the width of the rectangle based on the sun production
@@ -525,6 +535,7 @@ flagContainer
         .range([minOutputMap, maxOutputMap]); // Create a linear scale
       return scale(result); // Return the width of the rectangle
     }
+    console.log("this is sunprodBar", sunProdBarScale(dataCountry));
 
     function energiConsBarScale(d) {
       // This function returns the width of the rectangle based on the energy consumption
@@ -535,6 +546,7 @@ flagContainer
         .range([minOutputMap, maxOutputMap]); // Create a linear scale
       return scale(result); // Return the width of the rectangle
     }
+    console.log("this is energiConsBar", energiConsBarScale(dataCountry));
 
     function sunPotential(d) {
       // This function returns the country's solar potential in PWh
@@ -545,13 +557,14 @@ flagContainer
       const resultInPWh = parseInt(Math.floor(result) * 1e-12); // Convert kWh to PWh and remove decimals
       return resultInPWh;
     }
+    console.log("this is sunpotential", sunPotential(dataCountry));
 
     function sunProdMap(d) {
       //This function returns the country's solar production in PWh
       const result = clickedCountryData.solarproductionterawatthoursyear;
       return result;
     }
-
+    console.log("this is sunprod", sunProdMap(dataCountry));
     function energiConsMap(d) {
       //This function returns the country's energy consumption in PWh
       const result = clickedCountryData.energyproductionkwhyear;
@@ -560,6 +573,8 @@ flagContainer
 
       return resultInPWh;
     }
+
+    console.log("this is energiCons", energiConsMap(dataCountry));
   }
 
   // Attach the mouseClick function to the click event
