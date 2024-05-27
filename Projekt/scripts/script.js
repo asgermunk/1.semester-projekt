@@ -3,7 +3,7 @@
 const widthMap = window.innerWidth - 25;
 const searchBox = d3.select("#search-box");
 const dropdown = d3.select("#dropdown");
-const heightMap = window.innerHeight + 50;
+const heightMap = window.innerHeight -200;
 const svgBar = d3
   .select("#svgmap")
   .attr("width", widthMap)
@@ -78,9 +78,89 @@ Promise.all([
   alldata.forEach((d) => {
     energyConsByCountry[d.country] = +d.energyproductionkwhyear; // convert to number
   });
-  console.log(allData);
+  // Convert the object to an array of objects
+ let barChartData = Object.entries(sunProdByCountry).map(([country, value]) => ({country, value}));
+// Sort data in descending order and limit to top 10
+barChartData.sort((a, b) => d3.descending(a.value, b.value));
+barChartData = barChartData.slice(0, 20);
+
+const margin = {top: 20, right: 20, bottom: 50, left: 70}; // Define margins
+const widthBar = 700 - margin.left - margin.right;
+const heightBar = 500 - margin.top - margin.bottom;
+
+const svgBarChart = d3
+  .select("#barchart")
+  .append("svg")
+  .attr("width", widthBar + margin.left + margin.right)
+  .attr("height", heightBar + margin.top + margin.bottom + 50)
+  .append("g")
+  .attr("transform", `translate(${margin.left},${margin.top})`);
+  d3.select("#barchart")
+  .style("display", "flex")
+  .style("justify-content", "center")
+  .style("align-items", "center")
+  .style("margin-bottom", "50px")
+  .style("margin-left", "50px");
+
+// Create scales
+const xScale = d3.scaleBand().range([0, widthBar]).padding(0.4);
+const yScale = d3.scaleLinear().range([heightBar, 0]);
+
+xScale.domain(barChartData.map((d) => d.country));
+yScale.domain([0, d3.max(barChartData, (d) => d.value)]);
+
+// Add Y-axis to the SVG
+svgBarChart
+  .append("g")
+  .attr("class", "axis")
+  .call(d3.axisLeft(yScale));
+
+// Add X-axis to the SVG
+svgBarChart
+  .append("g")
+  .attr("class", "axis")
+  .attr("transform", `translate(0,${heightBar})`)
+  .call(d3.axisBottom(xScale))
+  .selectAll("text")
+  .attr("transform", "translate(-10,0)rotate(-45)")
+  .style("text-anchor", "end");
+
+// Add bars to the SVG
+svgBarChart
+  .selectAll(".barChart")
+  .data(barChartData)
+  .enter()
+  .append("rect")
+  .attr("class", "barChart")
+  .attr("x", (d) => xScale(d.country))
+  .attr("y", (d) => yScale(d.value))
+  .attr("width", xScale.bandwidth())
+  .attr("height", (d) => heightBar - yScale(d.value));
+
+// Add title to the SVG
+svgBarChart
+  .append("text")
+  .attr("transform", "translate(100,0)")
+  .attr("x", -50) // Move title to the left
+  .attr("y", 50)
+  .attr("font-size", "24px")
+  .text("Top 20 Countries by Solar Production");
+
+
+    console.log("this is barChartData", barChartData);
+
+
+  
+
+
+
+
+
+
+
+
+
   let sunPotentialValues = Object.values(sunPotentialByCountry);
-  console.log("this is sunpotentialvalues", sunPotentialValues);
   let minSunPotential = d3.min(sunPotentialValues.filter((value) => value > 0));
   let maxSunPotential = d3.max(sunPotentialValues);
 

@@ -272,3 +272,19 @@ span {
   background-color: black;
   color: white;
 }
+/* Style the bars */
+.barChart {
+  fill: steelblue;
+}
+/* Style the axes */
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  font-family: sans-serif;
+  font-size: 11px;
+}
