@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const db = require('./queries'); 
 const port = process.env.PORT || 4000;
 const cors = require('cors');
+const path = require('path');
 
 require('dotenv').config();
 
@@ -19,8 +20,10 @@ app.use(
   response.json({ info: "Node.js, Express, and Postgres API" });
 }); */
 
+app.use(express.static(path.join(__dirname, '..')));
+
 app.get('/', (request, response) => {
-    response.sendFile(__dirname + '/index.html');
+    response.sendFile(path.join(__dirname, '..', '/index.html'));
 });
 
 

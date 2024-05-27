@@ -14,7 +14,12 @@
   />
   <link rel="icon" href="photos/sun.png" type="image/x-icon" />
   <body>
-    <div id="gradientBar"></div>
+    <div
+      id="minText"
+      style="position: fixed; right: calc(40px + 330px); bottom: 50px"
+    ></div>
+    <div id="maxText" style="position: fixed; right: 40px; bottom: 50px"></div>
+    <div><div class="gradientBar" id="gradientBar"></div></div>
     <div class="navbar">
       <a href="https://www.eaaa.dk/">
         <img class="logo" src="photos/eaa_logo.png" alt="logo" />
@@ -28,16 +33,17 @@
       </ul>
     </div>
     <input
+      class="image"
       type="image"
       src="photos/info.png"
       alt="Info"
-      style="position: fixed; left: 1%; bottom: 1%"
+      style="position: absolute; left: 20px; top: 111px"
       width="50"
       height="50"
       onclick="popupOpen()"
     />
     <div id="popup" class="popup">
-      <div class="popupPage">
+      <div class="popupPage" onclick="popupClose()">
         <h1>Welcome to the Map!</h1>
         <p>
           Explore the solar energy potential of different countries with the
@@ -52,6 +58,13 @@
         </p>
       </div>
     </div>
+    <button
+      class="darkMode"
+      style="position: absolute; left: 80px; top: 105px"
+      onclick="darkMode()"
+    >
+      Dark Mode
+    </button>
 
     <div id="welcome-heading" class="welcome-heading">
       Potential solar energy production
@@ -61,8 +74,12 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <div id="searchContainer">
-      <input type="text" id="search-box" placeholder="Search for a country...">
-      <ul id="dropdown" ></ul>
+      <input
+        type="text"
+        id="search-box"
+        placeholder="Search for a country..."
+      />
+      <ul id="dropdown"></ul>
     </div>
     <div class="svg-container">
       <svg id="svgmap" width="2000" height="1080"></svg>

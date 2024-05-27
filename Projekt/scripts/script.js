@@ -16,14 +16,14 @@ const heightBar = 300; // specify the height of the bar chart SVG
 // Define the width and height of the gradient bar
 const gradientWidth = 500;
 const gradientHeight = 20;
-const gradientMargin = 30;
+const gradientMargin = 40;
 
 // Create the SVG for the gradient bar
 const svgGradient = d3
   .select("#gradientBar")
   .append("svg")
   .attr("width", gradientWidth)
-  .attr("height", gradientHeight + gradientMargin)
+  .attr("height", gradientHeight)
   .style("position", "fixed")
   .style("right", gradientMargin + "px")
   .style("bottom", gradientMargin - 20 + "px");
@@ -37,30 +37,6 @@ const gradient = svgGradient
   .attr("y1", "0%")
   .attr("x2", "100%")
   .attr("y2", "0%");
-const defs = svgGradient.append("defs");
-
-const filter = defs
-  .append("filter")
-  .attr("id", "dropshadow")
-  .attr("height", "130%");
-
-filter
-  .append("feGaussianBlur")
-  .attr("in", "SourceAlpha")
-  .attr("stdDeviation", 3)
-  .attr("result", "blur");
-
-filter
-  .append("feOffset")
-  .attr("in", "blur")
-  .attr("dx", 2)
-  .attr("dy", 2)
-  .attr("result", "offsetBlur");
-
-const feMerge = filter.append("feMerge");
-
-feMerge.append("feMergeNode").attr("in", "offsetBlur");
-feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
 const projectionMap = d3 // Map and projection
   .geoMercator()
@@ -92,17 +68,17 @@ Promise.all([
   let sunPotentialByCountry = {};
 
   alldata.forEach((d) => {
-    sunPotentialByCountry[d.name] = +d.sunpotentialkwhyearm2; // convert to number
+    sunPotentialByCountry[d.country] = +d.sunpotentialkwhyearm2; // convert to number
+  });
+  console.log("this is sunpotentialbycountry", sunPotentialByCountry);
+  alldata.forEach((d) => {
+    sunProdByCountry[d.country] = +d.solarproductionterawatthoursyear; // convert to number
   });
 
   alldata.forEach((d) => {
-    sunProdByCountry[d.name] = +d.energysunproductionyearpj; // convert to number
+    energyConsByCountry[d.country] = +d.energyproductionkwhyear; // convert to number
   });
-
-  alldata.forEach((d) => {
-    energyConsByCountry[d.name] = +d.energyproductionkwhyear; // convert to number
-  });
-
+  console.log(allData);
   let sunPotentialValues = Object.values(sunPotentialByCountry);
   console.log("this is sunpotentialvalues", sunPotentialValues);
   let minSunPotential = d3.min(sunPotentialValues.filter((value) => value > 0));
@@ -121,111 +97,111 @@ Promise.all([
     .interpolator(d3.interpolateYlOrRd);
   // Process population data
   alldata.forEach(function (d) {
-    dataMap.set(d.name, +d.sunpotentialkwhyearm2);
+    dataMap.set(d.country, +d.sunpotentialkwhyearm2);
   });
 
-  // Process population data
-  alldata.forEach(function (d) {
-    dataMap.set(d.name, +d.sunpotentialkwhyearm2);
-  });
-// Listen for changes in the input field
-searchBox.on("input", function () {
-  // Save the input field's value in lowercase
-  const searchTerm = searchBox.property("value").toLowerCase();
-  
-  // Filter countries based on the input field's value
-  const filteredCountries = topoData.features
-    .map((d) => d.properties.name)
-    .filter((name) => name.toLowerCase().startsWith(searchTerm));
-  
-  // Update the dropdown menu with the filtered countries
-  updateDropdown(filteredCountries);
+  console.log("this is dataMap", dataMap);
+  // Listen for changes in the input field
+  searchBox.on("input", function () {
+    // Save the input field's value in lowercase
+    const searchTerm = searchBox.property("value").toLowerCase();
 
-  // If the input field is empty, call the function to reset the dropdown menu
-  if (!searchTerm) {
-    resetDropdown();
-    resetMap(); // You can also choose to reset the map if the input field is empty
+    // Filter countries based on the input field's value
+    const filteredCountries = topoData.features
+      .map((d) => d.properties.name)
+      .filter((name) => name.toLowerCase().startsWith(searchTerm));
+
+    // Update the dropdown menu with the filtered countries
+    updateDropdown(filteredCountries);
+
+    // If the input field is empty, call the function to reset the dropdown menu
+    if (!searchTerm) {
+      resetDropdown();
+      resetMap(); // You can also choose to reset the map if the input field is empty
+    }
+  });
+
+  // Function to update the dropdown menu with filtered countries
+  function updateDropdown(filteredCountries) {
+    // Remove all existing elements from the dropdown menu
+    dropdown.selectAll("li").remove();
+
+    // Show or hide the dropdown menu based on the number of filtered countries
+    dropdown.style("display", filteredCountries.length ? "block" : "none");
+
+    // Add the filtered countries to the dropdown menu
+    dropdown
+      .selectAll("li")
+      .data(filteredCountries)
+      .enter()
+      .append("li")
+      .text((d) => d)
+      .on("click", function (event, d) {
+        const country = d;
+        const countryPath = svgBar
+          .selectAll("path")
+          .filter((d) => d.properties.name === country)
+          .node();
+
+        // If the country exists, perform the click action on the map
+        if (countryPath) {
+          mouseClickMap.call(countryPath, countryPath.__data__);
+        }
+
+        // Autofill the input field with the selected country
+        searchBox.property("value", country);
+
+        // Hide the dropdown menu
+        dropdown.style("display", "none");
+      });
   }
-});
 
-// Function to update the dropdown menu with filtered countries
-function updateDropdown(filteredCountries) {
-  // Remove all existing elements from the dropdown menu
-  dropdown.selectAll("li").remove();
-  
-  // Show or hide the dropdown menu based on the number of filtered countries
-  dropdown.style("display", filteredCountries.length ? "block" : "none");
-  
-  // Add the filtered countries to the dropdown menu
-  dropdown.selectAll("li")
-    .data(filteredCountries)
-    .enter()
-    .append("li")
-    .text((d) => d)
-    .on("click", function (event, d) {
-      const country = d;
-      const countryPath = svgBar
-        .selectAll("path")
-        .filter((d) => d.properties.name === country)
-        .node();
-      
-      // If the country exists, perform the click action on the map
-      if (countryPath) {
-        mouseClickMap.call(countryPath, countryPath.__data__);
-      }
-      
-      // Autofill the input field with the selected country
-      searchBox.property("value", country);
-      
-      // Hide the dropdown menu
-      dropdown.style("display", "none");
-    });
-}
+  // Function to reset the dropdown menu
+  function resetDropdown() {
+    dropdown.selectAll("li").remove(); // Remove all elements from the dropdown menu
+    dropdown.style("display", "none"); // Hide the dropdown menu
+  }
 
-// Function to reset the dropdown menu
-function resetDropdown() {
-  dropdown.selectAll("li").remove(); // Remove all elements from the dropdown menu
-  dropdown.style("display", "none"); // Hide the dropdown menu
-}
+  // Function to reset the map
+  function resetMap() {
+    // Transition all countries back to their original scale and set their opacity back to 0.8
+    d3.selectAll(".Country")
+      .transition()
+      .duration(1000)
+      .attr("transform", "scale(1)")
+      .style("opacity", 0.8)
+      .attr("stroke-width", 0.5);
 
-// Function to reset the map
-function resetMap() {
-  // Transition all countries back to their original scale and set their opacity back to 0.8
-  d3.selectAll(".Country")
-    .transition()
-    .duration(1000)
-    .attr("transform", "scale(1)")
-    .style("opacity", 0.8)
-    .attr("stroke-width", 0.5);
+    // Remove country names from the map
+    svgBar
+      .selectAll("text")
+      .transition()
+      .duration(1000)
+      .style("opacity", 0)
+      .remove();
 
-  // Remove country names from the map
-  svgBar.selectAll("text")
-    .transition()
-    .duration(1000)
-    .style("opacity", 0)
-    .remove();
+    // Show the welcome text again
+    d3.select("#welcome-heading")
+      .transition()
+      .duration(1000)
+      .style("display", "flex")
+      .style("opacity", 1);
 
-  // Show the welcome text again
-  d3.select("#welcome-heading")
-    .transition()
-    .duration(1000)
-    .style("display", "flex")
-    .style("opacity", 1);
+    // Remove all rectangles from the map
+    svgBar
+      .selectAll("rect")
+      .transition()
+      .duration(1000)
+      .style("opacity", 0)
+      .remove();
 
-  // Remove all rectangles from the map
-  svgBar.selectAll("rect")
-    .transition()
-    .duration(1000)
-    .style("opacity", 0)
-    .remove();
-
-  // Remove content from the map
-  d3.select("#content")
-    .transition()
-    .duration(1000)
-    .style("opacity", 0)
-    .remove();
-}
+    // Remove content from the map
+    d3.select("#content")
+      .transition()
+      .duration(1000)
+      .style("opacity", 0)
+      .remove();
+  }
   // Draw the map
   svgBar
     .selectAll("path")
@@ -264,24 +240,16 @@ function resetMap() {
     .style("stroke-width", 2)
     .style("filter", "url(#dropshadow)");
   // Add the min and max labels
-  svgGradient
-    .append("text")
-    .attr("x", 0)
-    .attr("y", gradientHeight + 20)
-    .text(minSunPotential + " kWh/year/m2");
-
-  svgGradient
-    .append("text")
-    .attr("x", gradientWidth)
-    .attr("y", gradientHeight + 20)
-    .attr("text-anchor", "end")
-    .text(maxSunPotential + " kWh/year/m2");
+  document.getElementById("minText").innerText =
+    minSunPotential + " kWh/year/m2";
+  document.getElementById("maxText").innerText =
+    maxSunPotential + " kWh/year/m2";
   function mouseClickMap(d) {
     const dataCountry = d3.select(this).datum();
 
     const clickedCountryName = dataCountry.properties.name;
     const clickedCountryData = alldata.filter(
-      (data) => data.name === clickedCountryName
+      (data) => data.country === clickedCountryName
     )[0];
     console.log("this is the clicked country data", clickedCountryData);
     // Calculate the bounding box of the clicked country
@@ -329,8 +297,8 @@ function resetMap() {
           .style("position", "absolute") // Position it fixed
           .style("left", "50px") // Position it to the left of the SVG
           .style("top", "50px") // Position it at the top of the page
-          .style("width", widthBar + 20 + "px") // Limit the width to the remaining space or the SVG width, whichever is smaller
-          .style("height", "60%") // Make it take up 80% of the height
+          .style("width", widthBar + 50 + "px") // Limit the width to the remaining space or the SVG width, whichever is smaller
+          .style("height", "70%") // Make it take up 80% of the height
           .style("opacity", 0); // Start with an opacity of 0
         // .style("z-index", "2"); // Set the z-index to 2
 
@@ -339,7 +307,7 @@ function resetMap() {
           .transition() // Start a transition
           .duration(750) // Make the transition last 0.75 seconds
           .style("opacity", 1); // End with an opacity of 1
-        div.append("h1").text("Indhold");
+
         const svgBar = d3
           .select("#content")
           .append("svg")
@@ -376,7 +344,7 @@ function resetMap() {
         svgBar //bar for land energi forbrug
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
-          .attr("y", 50)
+          .attr("y", 80)
           .attr("class", "energiConsBar")
           .attr("width", +energiConsBarScale(dataCountry)) //denne skal ændres til en ny funktion som tager landets energi forbrug widthBar - scaleMap(energiConsMap(dataCountry)) - 20
           .attr("height", 30)
@@ -389,7 +357,7 @@ function resetMap() {
         svgBar // bar for sol produktion
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
-          .attr("y", 100)
+          .attr("y", 160)
           .attr("class", "sunProdBar")
           .attr("width", sunProdBarScale(dataCountry)) //denne skal ændres til en ny funktion som tager landets sol produktion
           .attr("height", 30)
@@ -399,50 +367,118 @@ function resetMap() {
           .duration(500)
           .style("opacity", 1);
 
-        svgBar //show the value of the solar potential
+        // For solar potential
+        var sunPotentialValue = sunPotential(dataCountry);
+        svgBar
           .append("text")
           .attr("x", sunPotentialBarScale(dataCountry) + "px")
           .attr("y", 15)
           .attr("class", "maxBarText")
           .style("fill", "black")
-          .text(sunPotential(dataCountry) + " PWh");
+          .text(
+            sunPotentialValue === null || sunPotentialValue === 0
+              ? "No data available"
+              : sunPotentialValue + " PWh"
+          );
 
-        svgBar //show the energy consumption
+        // For energy consumption
+        var energiConsValue = energiConsMap(dataCountry);
+        svgBar
           .append("text")
           .attr("x", energiConsBarScale(dataCountry))
-          .attr("y", 65)
+          .attr("y", 100)
           .attr("class", "energiConsText")
           .style("fill", "black")
-          .text(energiConsMap(dataCountry) + " PWh");
+          .text(
+            energiConsValue === null || energiConsValue === 0
+              ? "No data available"
+              : energiConsValue + " PWh"
+          );
 
-        svgBar //show the sun energy production
+        // For sun energy production
+        var sunProdValue = sunProdMap(dataCountry);
+        svgBar
           .append("text")
           .attr("x", sunProdBarScale(dataCountry))
-          .attr("y", 115)
+          .attr("y", 180)
           .attr("class", "sunProdText")
           .style("fill", "black")
-          .text(sunProdMap(dataCountry) + " TWh");
+          .text(
+            sunProdValue === null || sunProdValue === 0
+              ? "No data available"
+              : sunProdValue + " TWh"
+          );
+
+        var svgWidth = svgBar.node().getBoundingClientRect().width; // Get the width of the SVG
 
         svgBar // Description for solar potential
           .append("text")
           .attr("x", 0)
           .attr("y", 45)
           .style("fill", "black")
-          .text("Solar Potential");
+          .text("The theoretical solar production potential of ")
+          .append("tspan")
+          .attr("x", 0)
+          .attr("dy", "1.2em")
+          .text(clickedCountryName);
+
+        svgBar // Line under the text
+          .append("line")
+          .attr("x1", 0)
+          .attr("y1", 70)
+          .attr("x2", svgWidth)
+          .attr("y2", 70)
+          .style("stroke", "black")
+          .style("stroke-width", 2);
 
         svgBar // Description for energy consumption
           .append("text")
           .attr("x", 0)
-          .attr("y", 95)
+          .attr("y", 130)
           .style("fill", "black")
-          .text("Energy Consumption");
+          .text("The total energy consumption ")
+          .append("tspan")
+          .attr("x", 0)
+          .attr("dy", "1.2em")
+          .text("from all sources in PWh");
+
+        svgBar // Line under the text
+          .append("line")
+          .attr("x1", 0)
+          .attr("y1", 0)
+          .attr("x2", svgWidth)
+          .attr("y2", 0)
+          .style("stroke", "black")
+          .style("stroke-width", 2);
+
+        svgBar // Line under the text
+          .append("line")
+          .attr("x1", 0)
+          .attr("y1", 155)
+          .attr("x2", svgWidth)
+          .attr("y2", 155)
+          .style("stroke", "black")
+          .style("stroke-width", 2);
 
         svgBar // Description for solar production
           .append("text")
           .attr("x", 0)
-          .attr("y", 145)
+          .attr("y", 210)
           .style("fill", "black")
-          .text("Solar Production");
+          .text("The total solar energy production ")
+          .append("tspan")
+          .attr("x", 0)
+          .attr("dy", "1.2em")
+          .text("in TWh");
+
+        svgBar // Line under the text
+          .append("line")
+          .attr("x1", 0)
+          .attr("y1", 235)
+          .attr("x2", svgWidth)
+          .attr("y2", 235)
+          .style("stroke", "black")
+          .style("stroke-width", 2);
       });
 
     function sunPotentialBarScale(d) {
@@ -458,7 +494,7 @@ function resetMap() {
 
     function sunProdBarScale(d) {
       // This function returns the width of the rectangle based on the sun production
-      const result = clickedCountryData.energysunproductionyearpj; // Get the sun production of the country
+      const result = clickedCountryData.solarproductionterawatthoursyear; // Get the sun production of the country
       const scale = d3
         .scaleLinear()
         .domain([minSunProd, maxSunProd])
@@ -491,9 +527,8 @@ function resetMap() {
 
     function sunProdMap(d) {
       //This function returns the country's solar production in PWh
-      const result = clickedCountryData.energysunproductionyearpj;
-      const conversionFactor = 1e-9; // Convert from kwh to PWh
-      return result * conversionFactor; //Vi mangler data til denne funktion
+      const result = clickedCountryData.solarproductionterawatthoursyear;
+      return result;
     }
     console.log("this is sunprod", sunProdMap(dataCountry));
     function energiConsMap(d) {
@@ -510,18 +545,19 @@ function resetMap() {
 
   // Attach the mouseClick function to the click event
   svgBar.selectAll(".Country").on("click", mouseClickMap);
-// Add mouseover and mouseout event listeners
-svgBar.selectAll(".Country")
-  .on("mouseover", function() {
-    d3.select(this)
-      .style("stroke-width", "3") // Set the border thickness
-      .style("stroke", "black"); // Set the border color
-  })
-  .on("mouseout", function() {
-    d3.select(this)
-      .style("stroke-width", "1") // Reset the border thickness
-      .style("stroke", "none"); // Reset the border color
-  });
+  // Add mouseover and mouseout event listeners
+  svgBar
+    .selectAll(".Country")
+    .on("mouseover", function () {
+      d3.select(this)
+        .style("stroke-width", "3") // Set the border thickness
+        .style("stroke", "black"); // Set the border color
+    })
+    .on("mouseout", function () {
+      d3.select(this)
+        .style("stroke-width", "1") // Reset the border thickness
+        .style("stroke", "none"); // Reset the border color
+    });
   // Add an event listener for a double click event
   svgBar.on("dblclick", function () {
     // Transition all countries back to their original scale and set their opacity back to 0.8
@@ -559,12 +595,20 @@ svgBar.selectAll(".Country")
       .remove();
   });
 });
-function popupOpen() {
-  const popupBox = document.getElementById("popup");
-  popupBox.style.display = "block";
-}
 
 const popupBox = document.getElementById("popup");
 popupBox.addEventListener("click", function () {
   this.style.display = "none";
 });
+
+// darkmode
+function darkMode() {
+  var element = document.body;
+  element.classList.toggle("dark-mode");
+}
+function popupOpen() {
+  document.getElementById("popup").style.display = "block";
+}
+function popupClose() {
+  document.getElementById("popup").style.display = "none";
+}
