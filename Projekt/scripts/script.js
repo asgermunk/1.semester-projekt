@@ -68,17 +68,17 @@ Promise.all([
   let sunPotentialByCountry = {};
 
   alldata.forEach((d) => {
-    sunPotentialByCountry[d.name] = +d.sunpotentialkwhyearm2; // convert to number
+    sunPotentialByCountry[d.country] = +d.sunpotentialkwhyearm2; // convert to number
+  });
+  console.log("this is sunpotentialbycountry", sunPotentialByCountry);
+  alldata.forEach((d) => {
+    sunProdByCountry[d.country] = +d.solarproductionterawatthoursyear; // convert to number
   });
 
   alldata.forEach((d) => {
-    sunProdByCountry[d.name] = +d.energysunproductionyearpj; // convert to number
+    energyConsByCountry[d.country] = +d.energyproductionkwhyear; // convert to number
   });
-
-  alldata.forEach((d) => {
-    energyConsByCountry[d.name] = +d.energyproductionkwhyear; // convert to number
-  });
-
+  console.log(allData);
   let sunPotentialValues = Object.values(sunPotentialByCountry);
   console.log("this is sunpotentialvalues", sunPotentialValues);
   let minSunPotential = d3.min(sunPotentialValues.filter((value) => value > 0));
@@ -97,13 +97,9 @@ Promise.all([
     .interpolator(d3.interpolateYlOrRd);
   // Process population data
   alldata.forEach(function (d) {
-    dataMap.set(d.name, +d.sunpotentialkwhyearm2);
+    dataMap.set(d.country, +d.sunpotentialkwhyearm2);
   });
 
-  // Process population data
-  alldata.forEach(function (d) {
-    dataMap.set(d.name, +d.sunpotentialkwhyearm2);
-  });
   console.log("this is dataMap", dataMap);
   // Listen for changes in the input field
   searchBox.on("input", function () {
@@ -253,7 +249,7 @@ Promise.all([
 
     const clickedCountryName = dataCountry.properties.name;
     const clickedCountryData = alldata.filter(
-      (data) => data.name === clickedCountryName
+      (data) => data.country === clickedCountryName
     )[0];
     console.log("this is the clicked country data", clickedCountryData);
     // Calculate the bounding box of the clicked country
@@ -430,7 +426,7 @@ Promise.all([
 
     function sunProdBarScale(d) {
       // This function returns the width of the rectangle based on the sun production
-      const result = clickedCountryData.energysunproductionyearpj; // Get the sun production of the country
+      const result = clickedCountryData.solarproductionterawatthoursyear; // Get the sun production of the country
       const scale = d3
         .scaleLinear()
         .domain([minSunProd, maxSunProd])
@@ -463,9 +459,8 @@ Promise.all([
 
     function sunProdMap(d) {
       //This function returns the country's solar production in PWh
-      const result = clickedCountryData.energysunproductionyearpj;
-      const conversionFactor = 1e-9; // Convert from kwh to PWh
-      return result * conversionFactor; //Vi mangler data til denne funktion
+      const result = clickedCountryData.solarproductionterawatthoursyear;
+      return result;
     }
     console.log("this is sunprod", sunProdMap(dataCountry));
     function energiConsMap(d) {
@@ -482,18 +477,19 @@ Promise.all([
 
   // Attach the mouseClick function to the click event
   svgBar.selectAll(".Country").on("click", mouseClickMap);
-// Add mouseover and mouseout event listeners
-svgBar.selectAll(".Country")
-  .on("mouseover", function() {
-    d3.select(this)
-      .style("stroke-width", "3") // Set the border thickness
-      .style("stroke", "black"); // Set the border color
-  })
-  .on("mouseout", function() {
-    d3.select(this)
-      .style("stroke-width", "1") // Reset the border thickness
-      .style("stroke", "none"); // Reset the border color
-  });
+  // Add mouseover and mouseout event listeners
+  svgBar
+    .selectAll(".Country")
+    .on("mouseover", function () {
+      d3.select(this)
+        .style("stroke-width", "3") // Set the border thickness
+        .style("stroke", "black"); // Set the border color
+    })
+    .on("mouseout", function () {
+      d3.select(this)
+        .style("stroke-width", "1") // Reset the border thickness
+        .style("stroke", "none"); // Reset the border color
+    });
   // Add an event listener for a double click event
   svgBar.on("dblclick", function () {
     // Transition all countries back to their original scale and set their opacity back to 0.8
