@@ -9,7 +9,7 @@ fetch(apiUrl)
 }
 return response.json();
 })
-.then(Alldata => {
+/* .then(Alldata => {
 // Process the retrieved data
 let html = '<table>';
 
@@ -32,7 +32,7 @@ html += '</table>';
 html = html.replace(/<td>/g, '<td style="text-align:center;">'); 
 
 document.getElementById("test").innerHTML = html; 
-})
+}) */
 .catch(error => {
 console.error('Error:', error);
 });
