@@ -16,14 +16,14 @@ const heightBar = 300; // specify the height of the bar chart SVG
 // Define the width and height of the gradient bar
 const gradientWidth = 500;
 const gradientHeight = 20;
-const gradientMargin = 30;
+const gradientMargin = 40;
 
 // Create the SVG for the gradient bar
 const svgGradient = d3
   .select("#gradientBar")
   .append("svg")
   .attr("width", gradientWidth)
-  .attr("height", gradientHeight + gradientMargin)
+  .attr("height", gradientHeight)
   .style("position", "fixed")
   .style("right", gradientMargin + "px")
   .style("bottom", gradientMargin - 20 + "px");
@@ -37,30 +37,6 @@ const gradient = svgGradient
   .attr("y1", "0%")
   .attr("x2", "100%")
   .attr("y2", "0%");
-const defs = svgGradient.append("defs");
-
-const filter = defs
-  .append("filter")
-  .attr("id", "dropshadow")
-  .attr("height", "130%");
-
-filter
-  .append("feGaussianBlur")
-  .attr("in", "SourceAlpha")
-  .attr("stdDeviation", 3)
-  .attr("result", "blur");
-
-filter
-  .append("feOffset")
-  .attr("in", "blur")
-  .attr("dx", 2)
-  .attr("dy", 2)
-  .attr("result", "offsetBlur");
-
-const feMerge = filter.append("feMerge");
-
-feMerge.append("feMergeNode").attr("in", "offsetBlur");
-feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
 const projectionMap = d3 // Map and projection
   .geoMercator()
@@ -128,104 +104,108 @@ Promise.all([
   alldata.forEach(function (d) {
     dataMap.set(d.name, +d.sunpotentialkwhyearm2);
   });
-// Listen for changes in the input field
-searchBox.on("input", function () {
-  // Save the input field's value in lowercase
-  const searchTerm = searchBox.property("value").toLowerCase();
-  
-  // Filter countries based on the input field's value
-  const filteredCountries = topoData.features
-    .map((d) => d.properties.name)
-    .filter((name) => name.toLowerCase().startsWith(searchTerm));
-  
-  // Update the dropdown menu with the filtered countries
-  updateDropdown(filteredCountries);
+  console.log("this is dataMap", dataMap);
+  // Listen for changes in the input field
+  searchBox.on("input", function () {
+    // Save the input field's value in lowercase
+    const searchTerm = searchBox.property("value").toLowerCase();
 
-  // If the input field is empty, call the function to reset the dropdown menu
-  if (!searchTerm) {
-    resetDropdown();
-    resetMap(); // You can also choose to reset the map if the input field is empty
+    // Filter countries based on the input field's value
+    const filteredCountries = topoData.features
+      .map((d) => d.properties.name)
+      .filter((name) => name.toLowerCase().startsWith(searchTerm));
+
+    // Update the dropdown menu with the filtered countries
+    updateDropdown(filteredCountries);
+
+    // If the input field is empty, call the function to reset the dropdown menu
+    if (!searchTerm) {
+      resetDropdown();
+      resetMap(); // You can also choose to reset the map if the input field is empty
+    }
+  });
+
+  // Function to update the dropdown menu with filtered countries
+  function updateDropdown(filteredCountries) {
+    // Remove all existing elements from the dropdown menu
+    dropdown.selectAll("li").remove();
+
+    // Show or hide the dropdown menu based on the number of filtered countries
+    dropdown.style("display", filteredCountries.length ? "block" : "none");
+
+    // Add the filtered countries to the dropdown menu
+    dropdown
+      .selectAll("li")
+      .data(filteredCountries)
+      .enter()
+      .append("li")
+      .text((d) => d)
+      .on("click", function (event, d) {
+        const country = d;
+        const countryPath = svgBar
+          .selectAll("path")
+          .filter((d) => d.properties.name === country)
+          .node();
+
+        // If the country exists, perform the click action on the map
+        if (countryPath) {
+          mouseClickMap.call(countryPath, countryPath.__data__);
+        }
+
+        // Autofill the input field with the selected country
+        searchBox.property("value", country);
+
+        // Hide the dropdown menu
+        dropdown.style("display", "none");
+      });
   }
-});
 
-// Function to update the dropdown menu with filtered countries
-function updateDropdown(filteredCountries) {
-  // Remove all existing elements from the dropdown menu
-  dropdown.selectAll("li").remove();
-  
-  // Show or hide the dropdown menu based on the number of filtered countries
-  dropdown.style("display", filteredCountries.length ? "block" : "none");
-  
-  // Add the filtered countries to the dropdown menu
-  dropdown.selectAll("li")
-    .data(filteredCountries)
-    .enter()
-    .append("li")
-    .text((d) => d)
-    .on("click", function (event, d) {
-      const country = d;
-      const countryPath = svgBar
-        .selectAll("path")
-        .filter((d) => d.properties.name === country)
-        .node();
-      
-      // If the country exists, perform the click action on the map
-      if (countryPath) {
-        mouseClickMap.call(countryPath, countryPath.__data__);
-      }
-      
-      // Autofill the input field with the selected country
-      searchBox.property("value", country);
-      
-      // Hide the dropdown menu
-      dropdown.style("display", "none");
-    });
-}
+  // Function to reset the dropdown menu
+  function resetDropdown() {
+    dropdown.selectAll("li").remove(); // Remove all elements from the dropdown menu
+    dropdown.style("display", "none"); // Hide the dropdown menu
+  }
 
-// Function to reset the dropdown menu
-function resetDropdown() {
-  dropdown.selectAll("li").remove(); // Remove all elements from the dropdown menu
-  dropdown.style("display", "none"); // Hide the dropdown menu
-}
+  // Function to reset the map
+  function resetMap() {
+    // Transition all countries back to their original scale and set their opacity back to 0.8
+    d3.selectAll(".Country")
+      .transition()
+      .duration(1000)
+      .attr("transform", "scale(1)")
+      .style("opacity", 0.8)
+      .attr("stroke-width", 0.5);
 
-// Function to reset the map
-function resetMap() {
-  // Transition all countries back to their original scale and set their opacity back to 0.8
-  d3.selectAll(".Country")
-    .transition()
-    .duration(1000)
-    .attr("transform", "scale(1)")
-    .style("opacity", 0.8)
-    .attr("stroke-width", 0.5);
+    // Remove country names from the map
+    svgBar
+      .selectAll("text")
+      .transition()
+      .duration(1000)
+      .style("opacity", 0)
+      .remove();
 
-  // Remove country names from the map
-  svgBar.selectAll("text")
-    .transition()
-    .duration(1000)
-    .style("opacity", 0)
-    .remove();
+    // Show the welcome text again
+    d3.select("#welcome-heading")
+      .transition()
+      .duration(1000)
+      .style("display", "flex")
+      .style("opacity", 1);
 
-  // Show the welcome text again
-  d3.select("#welcome-heading")
-    .transition()
-    .duration(1000)
-    .style("display", "flex")
-    .style("opacity", 1);
+    // Remove all rectangles from the map
+    svgBar
+      .selectAll("rect")
+      .transition()
+      .duration(1000)
+      .style("opacity", 0)
+      .remove();
 
-  // Remove all rectangles from the map
-  svgBar.selectAll("rect")
-    .transition()
-    .duration(1000)
-    .style("opacity", 0)
-    .remove();
-
-  // Remove content from the map
-  d3.select("#content")
-    .transition()
-    .duration(1000)
-    .style("opacity", 0)
-    .remove();
-}
+    // Remove content from the map
+    d3.select("#content")
+      .transition()
+      .duration(1000)
+      .style("opacity", 0)
+      .remove();
+  }
   // Draw the map
   svgBar
     .selectAll("path")
@@ -264,18 +244,10 @@ function resetMap() {
     .style("stroke-width", 2)
     .style("filter", "url(#dropshadow)");
   // Add the min and max labels
-  svgGradient
-    .append("text")
-    .attr("x", 0)
-    .attr("y", gradientHeight + 20)
-    .text(minSunPotential + " kWh/year/m2");
-
-  svgGradient
-    .append("text")
-    .attr("x", gradientWidth)
-    .attr("y", gradientHeight + 20)
-    .attr("text-anchor", "end")
-    .text(maxSunPotential + " kWh/year/m2");
+  document.getElementById("minText").innerText =
+    minSunPotential + " kWh/year/m2";
+  document.getElementById("maxText").innerText =
+    maxSunPotential + " kWh/year/m2";
   function mouseClickMap(d) {
     const dataCountry = d3.select(this).datum();
 
@@ -559,12 +531,20 @@ svgBar.selectAll(".Country")
       .remove();
   });
 });
-function popupOpen() {
-  const popupBox = document.getElementById("popup");
-  popupBox.style.display = "block";
-}
 
 const popupBox = document.getElementById("popup");
 popupBox.addEventListener("click", function () {
   this.style.display = "none";
 });
+
+// darkmode
+function darkMode() {
+  var element = document.body;
+  element.classList.toggle("dark-mode");
+}
+function popupOpen() {
+  document.getElementById("popup").style.display = "block";
+}
+function popupClose() {
+  document.getElementById("popup").style.display = "none";
+}

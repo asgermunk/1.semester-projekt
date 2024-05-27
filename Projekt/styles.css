@@ -4,14 +4,19 @@
   padding: 0;
   font-family: "Montserrat", sans-serif;
   color: #000;
-  background-color: #fbe8a6;
+  background-color: white;
+}
+/* Dark mode */
+.dark-mode {
+  background-color: black;
+  color: white;
 }
 /* background image*/
 .banner {
   width: 100%;
   height: 100vh;
   background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
-    url(photos/placeholderBanner.png);
+    url(photos/banner.png);
   background-size: cover;
   background-position: center;
   position: relative;
@@ -152,11 +157,14 @@ span {
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
 /* Modal Content/Box */
 .popupPage {
   margin-top: 5%;
+  margin-left: 5%; /* 15% from the top and centered */
   margin-left: 5%; /* 15% from the top and centered */
   padding: 10px;
   border: 1px solid #888;
@@ -196,7 +204,7 @@ span {
 #dropdown {
   position: absolute;
   width: 100%;
-  background:#fbe8a6;
+  background: #fbe8a6;
   border: 1px solid #dfe1e5;
   border-top: none;
   box-shadow: 0 4px 6px rgba(32, 33, 36, 0.28);
@@ -219,4 +227,47 @@ span {
 
 .svg-container {
   text-align: center;
+}
+
+.darkMode {
+  display: inline-block;
+  font-size: 16px;
+  padding: 10px 20px;
+  margin: 10px 2px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #000; /* Changed to match the color of the rest of your page */
+  background-color: #fff; /* Changed to match the background color of the rest of your page */
+  border: 2px solid #000; /* Added to match the border style of .popupPage */
+  border-radius: 10px; /* Changed to match the border radius of .popupPage */
+  box-shadow: none; /* Removed to match the flat design of the rest of your page */
+}
+.darkMode:hover {
+  background-color: #f8f8f8; /* Lighter shade when hovered */
+}
+
+.darkMode:active {
+  background-color: #000; /* Even lighter shade when active */
+  transform: none;
+}
+.dark-mode .mySvg {
+  color: white;
+  background-color: black;
+}
+.dark-mode .welcome-heading {
+  color: white;
+  background-color: black;
+}
+.dark-mode .image {
+  filter: invert();
+}
+.dark-mode #minText {
+  color: white;
+  background-color: black;
+}
+.dark-mode #maxText {
+  background-color: black;
+  color: white;
 }
