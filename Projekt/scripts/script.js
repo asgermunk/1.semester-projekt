@@ -510,7 +510,18 @@ function resetMap() {
 
   // Attach the mouseClick function to the click event
   svgBar.selectAll(".Country").on("click", mouseClickMap);
-
+// Add mouseover and mouseout event listeners
+svgBar.selectAll(".Country")
+  .on("mouseover", function() {
+    d3.select(this)
+      .style("stroke-width", "3") // Set the border thickness
+      .style("stroke", "black"); // Set the border color
+  })
+  .on("mouseout", function() {
+    d3.select(this)
+      .style("stroke-width", "1") // Reset the border thickness
+      .style("stroke", "none"); // Reset the border color
+  });
   // Add an event listener for a double click event
   svgBar.on("dblclick", function () {
     // Transition all countries back to their original scale and set their opacity back to 0.8
