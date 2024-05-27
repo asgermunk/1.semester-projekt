@@ -23,10 +23,10 @@ const getAlldata = (request, response) => {
 //Alldata.csv
 // route for /insert-alldata  
 const insertAlldata = (request, response) => {
-  const { Country, CountryAreaKm2, SunPotentialKwhYearM2, EnergyProductionKwhYear, EnergySunProductionYearPJ } = request.body;
+  const { Country, CountryAreaKm2, SunPotentialKwhYearM2, EnergyProductionKwhYear, Solarproductionterawatthoursyear } = request.body;
   pool.query(
-    `INSERT INTO Country (Country, CountryAreaKm2, SunPotentialKwhYearM2, EnergyProductionKwhYear, EnergySunProductionYearPJ) VALUES ($1, $2, $3, $4, $5)`,
-    [Country, CountryAreaKm2, SunPotentialKwhYearM2, EnergyProductionKwhYear, EnergySunProductionYearPJ ],
+    `INSERT INTO Country (Country, CountryAreaKm2, SunPotentialKwhYearM2, EnergyProductionKwhYear, Solarproductionterawatthoursyear) VALUES ($1, $2, $3, $4, $5)`,
+    [Country, CountryAreaKm2, SunPotentialKwhYearM2, EnergyProductionKwhYear, Solarproductionterawatthoursyear ],
     (error, results) => {
       if (error) {
         throw error;
@@ -53,13 +53,13 @@ const Alldata = "Alldata.csv";
         const CountryAreaKm2 = row['Country Area(Km2)'] || null;
         const SunPotentialKwhYearM2 = row['kwh/yearprm2'] || null;
         const EnergyProductionKwhYear = row['total energy production (kwh) year'] || null;
-        const EnergySunProductionYearPJ = row['Petajoule'] || null;
+        const Solarproductionterawatthoursyear = row['Solar production terawatt hours year'] || null;
 
   
         // Add all data to the database
         pool.query(
-          `INSERT INTO Country (Country, CountryAreaKm2, SunPotentialKwhYearM2, EnergyProductionKwhYear, EnergySunProductionYearPJ) VALUES ($1, $2, $3, $4, $5)`,
-          [Country, CountryAreaKm2, SunPotentialKwhYearM2, EnergyProductionKwhYear, EnergySunProductionYearPJ ],
+          `INSERT INTO Country (Country, CountryAreaKm2, SunPotentialKwhYearM2, EnergyProductionKwhYear, Solarproductionterawatthoursyear) VALUES ($1, $2, $3, $4, $5)`,
+          [Country, CountryAreaKm2, SunPotentialKwhYearM2, EnergyProductionKwhYear, Solarproductionterawatthoursyear ],
           (error, results) => {
             if (error) {
               console.error("Error:", error);
