@@ -205,6 +205,7 @@ span {
   position: absolute;
   width: 100%;
   background: #fbe8a6;
+  background-color: #fff;
   border: 1px solid #dfe1e5;
   border-top: none;
   box-shadow: 0 4px 6px rgba(32, 33, 36, 0.28);
