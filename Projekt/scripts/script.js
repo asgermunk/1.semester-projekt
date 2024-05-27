@@ -113,7 +113,7 @@ yScale.domain([0, d3.max(barChartData, (d) => d.value)]);
 svgBarChart
   .append("g")
   .attr("class", "axis")
-  .call(d3.axisLeft(yScale));
+  .call(d3.axisLeft(yScale).tickFormat(d => `${d} TWh`));
 
 // Add X-axis to the SVG
 svgBarChart
