@@ -297,8 +297,8 @@ Promise.all([
           .style("position", "absolute") // Position it fixed
           .style("left", "50px") // Position it to the left of the SVG
           .style("top", "50px") // Position it at the top of the page
-          .style("width", widthBar + 20 + "px") // Limit the width to the remaining space or the SVG width, whichever is smaller
-          .style("height", "60%") // Make it take up 80% of the height
+          .style("width", widthBar + 50 + "px") // Limit the width to the remaining space or the SVG width, whichever is smaller
+          .style("height", "70%") // Make it take up 80% of the height
           .style("opacity", 0); // Start with an opacity of 0
         // .style("z-index", "2"); // Set the z-index to 2
 
@@ -307,7 +307,7 @@ Promise.all([
           .transition() // Start a transition
           .duration(750) // Make the transition last 0.75 seconds
           .style("opacity", 1); // End with an opacity of 1
-        div.append("h1").text("Indhold");
+
         const svgBar = d3
           .select("#content")
           .append("svg")
@@ -344,7 +344,7 @@ Promise.all([
         svgBar //bar for land energi forbrug
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
-          .attr("y", 50)
+          .attr("y", 80)
           .attr("class", "energiConsBar")
           .attr("width", +energiConsBarScale(dataCountry)) //denne skal ændres til en ny funktion som tager landets energi forbrug widthBar - scaleMap(energiConsMap(dataCountry)) - 20
           .attr("height", 30)
@@ -357,7 +357,7 @@ Promise.all([
         svgBar // bar for sol produktion
           .append("rect") // Append a rectangle to the SVG
           .attr("x", 0)
-          .attr("y", 100)
+          .attr("y", 160)
           .attr("class", "sunProdBar")
           .attr("width", sunProdBarScale(dataCountry)) //denne skal ændres til en ny funktion som tager landets sol produktion
           .attr("height", 30)
@@ -367,50 +367,118 @@ Promise.all([
           .duration(500)
           .style("opacity", 1);
 
-        svgBar //show the value of the solar potential
+        // For solar potential
+        var sunPotentialValue = sunPotential(dataCountry);
+        svgBar
           .append("text")
           .attr("x", sunPotentialBarScale(dataCountry) + "px")
           .attr("y", 15)
           .attr("class", "maxBarText")
           .style("fill", "black")
-          .text(sunPotential(dataCountry) + " PWh");
+          .text(
+            sunPotentialValue === null || sunPotentialValue === 0
+              ? "No data available"
+              : sunPotentialValue + " PWh"
+          );
 
-        svgBar //show the energy consumption
+        // For energy consumption
+        var energiConsValue = energiConsMap(dataCountry);
+        svgBar
           .append("text")
           .attr("x", energiConsBarScale(dataCountry))
-          .attr("y", 65)
+          .attr("y", 100)
           .attr("class", "energiConsText")
           .style("fill", "black")
-          .text(energiConsMap(dataCountry) + " PWh");
+          .text(
+            energiConsValue === null || energiConsValue === 0
+              ? "No data available"
+              : energiConsValue + " PWh"
+          );
 
-        svgBar //show the sun energy production
+        // For sun energy production
+        var sunProdValue = sunProdMap(dataCountry);
+        svgBar
           .append("text")
           .attr("x", sunProdBarScale(dataCountry))
-          .attr("y", 115)
+          .attr("y", 180)
           .attr("class", "sunProdText")
           .style("fill", "black")
-          .text(sunProdMap(dataCountry) + " TWh");
+          .text(
+            sunProdValue === null || sunProdValue === 0
+              ? "No data available"
+              : sunProdValue + " TWh"
+          );
+
+        var svgWidth = svgBar.node().getBoundingClientRect().width; // Get the width of the SVG
 
         svgBar // Description for solar potential
           .append("text")
           .attr("x", 0)
           .attr("y", 45)
           .style("fill", "black")
-          .text("Solar Potential");
+          .text("The theoretical solar production potential of ")
+          .append("tspan")
+          .attr("x", 0)
+          .attr("dy", "1.2em")
+          .text(clickedCountryName);
+
+        svgBar // Line under the text
+          .append("line")
+          .attr("x1", 0)
+          .attr("y1", 70)
+          .attr("x2", svgWidth)
+          .attr("y2", 70)
+          .style("stroke", "black")
+          .style("stroke-width", 2);
 
         svgBar // Description for energy consumption
           .append("text")
           .attr("x", 0)
-          .attr("y", 95)
+          .attr("y", 130)
           .style("fill", "black")
-          .text("Energy Consumption");
+          .text("The total energy consumption ")
+          .append("tspan")
+          .attr("x", 0)
+          .attr("dy", "1.2em")
+          .text("from all sources in PWh");
+
+        svgBar // Line under the text
+          .append("line")
+          .attr("x1", 0)
+          .attr("y1", 0)
+          .attr("x2", svgWidth)
+          .attr("y2", 0)
+          .style("stroke", "black")
+          .style("stroke-width", 2);
+
+        svgBar // Line under the text
+          .append("line")
+          .attr("x1", 0)
+          .attr("y1", 155)
+          .attr("x2", svgWidth)
+          .attr("y2", 155)
+          .style("stroke", "black")
+          .style("stroke-width", 2);
 
         svgBar // Description for solar production
           .append("text")
           .attr("x", 0)
-          .attr("y", 145)
+          .attr("y", 210)
           .style("fill", "black")
-          .text("Solar Production");
+          .text("The total solar energy production ")
+          .append("tspan")
+          .attr("x", 0)
+          .attr("dy", "1.2em")
+          .text("in TWh");
+
+        svgBar // Line under the text
+          .append("line")
+          .attr("x1", 0)
+          .attr("y1", 235)
+          .attr("x2", svgWidth)
+          .attr("y2", 235)
+          .style("stroke", "black")
+          .style("stroke-width", 2);
       });
 
     function sunPotentialBarScale(d) {
