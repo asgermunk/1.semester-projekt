@@ -14,6 +14,11 @@
   />
   <link rel="icon" href="photos/sun.png" type="image/x-icon" />
   <body>
+    <div
+      id="minText"
+      style="position: fixed; right: calc(40px + 330px); bottom: 50px"
+    ></div>
+    <div id="maxText" style="position: fixed; right: 40px; bottom: 50px"></div>
     <div><div class="gradientBar" id="gradientBar"></div></div>
     <div class="navbar">
       <a href="https://www.eaaa.dk/">
@@ -28,20 +33,43 @@
         <li><a href="contact.html">Contact</a></li>
       </ul>
     </div>
-    <input class="image" type="image" src="photos/info.png" 
-    alt="Info" style="position: absolute; left: 20px; top:111px ;" width="50" height="50" onclick="popupOpen()">    
+    <input
+      class="image"
+      type="image"
+      src="photos/info.png"
+      alt="Info"
+      style="position: absolute; left: 20px; top: 111px"
+      width="50"
+      height="50"
+      onclick="popupOpen()"
+    />
     <div id="popup" class="popup">
       <div class="popupPage" onclick="popupClose()">
         <h1>Welcome to the Map!</h1>
-        <p>Explore the solar energy potential of different countries with the interactive map. The map visualises the solar energy potential of the world's countries, helping you understand energy generation capacity in various regions.</p>
-          <hr>
-          <p><b>How to use:</b> Hover over & click on a country, or use the search bar to find specific data.</p>     
+        <p>
+          Explore the solar energy potential of different countries with the
+          interactive map. The map visualises the solar energy potential of the
+          world's countries, helping you understand energy generation capacity
+          in various regions.
+        </p>
+        <hr />
+        <p>
+          <b>How to use:</b> Hover over & click on a country, or use the search
+          bar to find specific data.
+        </p>
       </div>
     </div>
-    <button class="darkMode" style="position: absolute; left: 80px; top:105px ;" onclick="darkMode()">Dark Mode</button>
-    
-    <div id="welcome-heading" class="welcome-heading">Potential solar energy production</div>
-    
+    <button
+      class="darkMode"
+      style="position: absolute; left: 80px; top: 105px"
+      onclick="darkMode()"
+    >
+      Dark Mode
+    </button>
+
+    <div id="welcome-heading" class="welcome-heading">
+      Potential solar energy production
+    </div>
 
     <script src="https://d3js.org/d3.v6.js"></script>
     <div class="svg-container">

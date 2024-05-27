@@ -15,14 +15,14 @@ const heightBar = 30; // specify the height of the bar chart SVG
 // Define the width and height of the gradient bar
 const gradientWidth = 500;
 const gradientHeight = 20;
-const gradientMargin = 30;
+const gradientMargin = 40;
 
 // Create the SVG for the gradient bar
 const svgGradient = d3
   .select("#gradientBar")
   .append("svg")
   .attr("width", gradientWidth)
-  .attr("height", gradientHeight + gradientMargin)
+  .attr("height", gradientHeight)
   .style("position", "fixed")
   .style("right", gradientMargin + "px")
   .style("bottom", gradientMargin - 20 + "px");
@@ -36,30 +36,6 @@ const gradient = svgGradient
   .attr("y1", "0%")
   .attr("x2", "100%")
   .attr("y2", "0%");
-const defs = svgGradient.append("defs");
-
-const filter = defs
-  .append("filter")
-  .attr("id", "dropshadow")
-  .attr("height", "130%");
-
-filter
-  .append("feGaussianBlur")
-  .attr("in", "SourceAlpha")
-  .attr("stdDeviation", 3)
-  .attr("result", "blur");
-
-filter
-  .append("feOffset")
-  .attr("in", "blur")
-  .attr("dx", 2)
-  .attr("dy", 2)
-  .attr("result", "offsetBlur");
-
-const feMerge = filter.append("feMerge");
-
-feMerge.append("feMergeNode").attr("in", "offsetBlur");
-feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
 const projectionMap = d3 // Map and projection
   .geoMercator()
@@ -97,10 +73,6 @@ Promise.all([
     .scaleSequential()
     .domain([minSunPotential, maxSunPotential])
     .interpolator(d3.interpolateYlOrRd);
-
-  console.log(maxSunPotential);
-  console.log(minSunPotential);
-  console.log(sunPotentialValues);
   // Process population data
   alldata.forEach(function (d) {
     dataMap.set(d.name, +d.sunpotentialkwhyearm2);
@@ -140,7 +112,6 @@ Promise.all([
   console.log(colorScaleMap(minSunPotential)); // Log the color for the minimum sun potential
   console.log(colorScaleMap(maxSunPotential));
   // Add the gradient bar
-  // Add the gradient bar
   svgGradient
     .append("rect")
     .attr("width", gradientWidth)
@@ -150,18 +121,10 @@ Promise.all([
     .style("stroke-width", 2)
     .style("filter", "url(#dropshadow)");
   // Add the min and max labels
-  svgGradient
-    .append("text")
-    .attr("x", 0)
-    .attr("y", gradientHeight + 20)
-    .text(minSunPotential + " kWh/year/m2");
-
-  svgGradient
-    .append("text")
-    .attr("x", gradientWidth)
-    .attr("y", gradientHeight + 20)
-    .attr("text-anchor", "end")
-    .text(maxSunPotential + " kWh/year/m2");
+  document.getElementById("minText").innerText =
+    minSunPotential + " kWh/year/m2";
+  document.getElementById("maxText").innerText =
+    maxSunPotential + " kWh/year/m2";
   function mouseClickMap(d) {
     const dataCountry = d3.select(this).datum();
     // Calculate the bounding box of the clicked country
@@ -183,15 +146,14 @@ Promise.all([
       .attr("transform", "")
       .style("opacity", 0)
       .attr("transform", "scale(0)");
-    
-      d3.select("#welcome-heading")
+
+    d3.select("#welcome-heading")
       .transition()
       .duration(750)
       .style("opacity", 0)
-      .on("end", function() {
-        d3.select(this).style("display", "none")
+      .on("end", function () {
+        d3.select(this).style("display", "none");
       });
-      
 
     // gør det valgte land synligt og gør det stort, samt få det til at være i midten
     d3.select(this)
@@ -300,7 +262,7 @@ Promise.all([
 
   // Attach the mouseClick function to the click event
   svgBar.selectAll(".Country").on("click", mouseClickMap);
-  
+
   // Add an event listener for a double click event
   svgBar.on("dblclick", function () {
     // Transition all countries back to their original scale and set their opacity back to 0.8
@@ -317,13 +279,12 @@ Promise.all([
       .style("opacity", 0) // transition to transparent before removing
       .remove();
 
-     d3.select("#welcome-heading")
-     .transition()
+    d3.select("#welcome-heading")
+      .transition()
       .duration(1000)
       .style("display", "flex")
       .attr("transform", "scale(1)")
       .style("opacity", 1);
-
 
     svgBar
       .selectAll("rect")
@@ -337,8 +298,6 @@ Promise.all([
       .duration(1000)
       .style("opacity", 0)
       .remove();
-
-
   });
 });
 
@@ -347,9 +306,9 @@ function darkMode() {
   var element = document.body;
   element.classList.toggle("dark-mode");
 }
-function popupOpen(){
+function popupOpen() {
   document.getElementById("popup").style.display = "block";
 }
-function popupClose(){
+function popupClose() {
   document.getElementById("popup").style.display = "none";
 }

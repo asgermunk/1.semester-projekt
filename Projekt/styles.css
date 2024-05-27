@@ -4,7 +4,7 @@
   padding: 0;
   font-family: "Montserrat", sans-serif;
   color: #000;
-  background-color: white  ;
+  background-color: white;
 }
 /* Dark mode */
 .dark-mode {
@@ -34,7 +34,6 @@
   justify-content: space-between;
   color: #000000;
   border-bottom: 1px solid #000;
-  
 }
 /* List attributes (forskellige knapper) */
 .navbar ul li {
@@ -97,7 +96,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 span {
   color: #f0dca1cc;
@@ -156,14 +154,14 @@ span {
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
 /* Modal Content/Box */
 .popupPage {
   margin-top: 5%;
-  margin-left: 5% ; /* 15% from the top and centered */
+  margin-left: 5%; /* 15% from the top and centered */
   padding: 10px;
   border: 1px solid #888;
   border-radius: 10px;
@@ -180,7 +178,7 @@ span {
   font-style: italic;
 }
 
-.darkMode{
+.darkMode {
   display: inline-block;
   font-size: 16px;
   padding: 10px 20px;
@@ -195,21 +193,30 @@ span {
   border-radius: 10px; /* Changed to match the border radius of .popupPage */
   box-shadow: none; /* Removed to match the flat design of the rest of your page */
 }
-.darkMode:hover {  background-color: #f8f8f8; /* Lighter shade when hovered */
+.darkMode:hover {
+  background-color: #f8f8f8; /* Lighter shade when hovered */
 }
 
 .darkMode:active {
   background-color: #000; /* Even lighter shade when active */
   transform: none;
 }
-.dark-mode .mySvg{
+.dark-mode .mySvg {
   color: white;
   background-color: black;
 }
-.dark-mode .welcome-heading{
+.dark-mode .welcome-heading {
   color: white;
   background-color: black;
 }
 .dark-mode .image {
-  filter: invert()
+  filter: invert();
+}
+.dark-mode #minText {
+  color: white;
+  background-color: black;
+}
+.dark-mode #maxText {
+  background-color: black;
+  color: white;
 }
