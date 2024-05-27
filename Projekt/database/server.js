@@ -15,13 +15,13 @@ app.use(
   })
 );
 
-app.get("/", (request, response) => {
+/* app.get("/", (request, response) => {
   response.json({ info: "Node.js, Express, and Postgres API" });
-});
-
-/* app.get('/', (request, response) => {
-    response.sendFile(__dirname + '/index.html');
 }); */
+
+app.get('/', (request, response) => {
+    response.sendFile(__dirname + '/index.html');
+});
 
 
 app.get('/Alldata', db.getAlldata);
