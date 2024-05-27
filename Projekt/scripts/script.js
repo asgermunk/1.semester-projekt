@@ -103,6 +103,7 @@ Promise.all([
   console.log("this is dataMap", dataMap);
   // Listen for changes in the input field
   searchBox.on("input", function () {
+    resetMap();
     // Save the input field's value in lowercase
     const searchTerm = searchBox.property("value").toLowerCase();
 
@@ -137,6 +138,7 @@ Promise.all([
       .append("li")
       .text((d) => d)
       .on("click", function (event, d) {
+        resetMap(); 
         const country = d;
         const countryPath = svgBar
           .selectAll("path")
@@ -164,44 +166,30 @@ Promise.all([
 
   // Function to reset the map
   function resetMap() {
-    // Transition all countries back to their original scale and set their opacity back to 0.8
     d3.selectAll(".Country")
-      .transition()
-      .duration(1000)
-      .attr("transform", "scale(1)")
-      .style("opacity", 0.8)
-      .attr("stroke-width", 0.5);
+        .transition()
+        .duration(750)
+        .attr("transform", "scale(1)")
+        .style("opacity", 0.8)
+        .attr("stroke-width", 0.5);
 
-    // Remove country names from the map
-    svgBar
-      .selectAll("text")
-      .transition()
-      .duration(1000)
-      .style("opacity", 0)
-      .remove();
-
-    // Show the welcome text again
     d3.select("#welcome-heading")
-      .transition()
-      .duration(1000)
-      .style("display", "flex")
-      .style("opacity", 1);
+        .transition()
+        .duration(750)
+        .style("display", "flex")
+        .style("opacity", 1);
 
-    // Remove all rectangles from the map
-    svgBar
-      .selectAll("rect")
-      .transition()
-      .duration(1000)
-      .style("opacity", 0)
-      .remove();
-
-    // Remove content from the map
     d3.select("#content")
-      .transition()
-      .duration(1000)
-      .style("opacity", 0)
-      .remove();
-  }
+        .transition()
+        .duration(750)
+        .style("opacity", 0)
+        .remove();
+}
+document.getElementById('dropdown').addEventListener('change', function(event) {
+  let selectedCountry = event.target.value;
+  resetMap(); 
+  updateMap(selectedCountry); 
+});
   // Draw the map
   svgBar
     .selectAll("path")
@@ -244,14 +232,36 @@ Promise.all([
     minSunPotential + " kWh/year/m2";
   document.getElementById("maxText").innerText =
     maxSunPotential + " kWh/year/m2";
+    function resetDisplayedData() {
+      d3.select("#content") // Select the content div
+          .transition()
+          .duration(500)
+          .style("opacity", 0) // Fade out the content
+          .remove(); // Remove the content
+  }
+  
+  // Function to handle displaying data for a country
+  function displayCountryData(clickedCountryData, clickedCountryName, countryCode) {
+      // Display the data for the selected country here
+      // This function can be used to update the content div with the relevant data
+  }
   function mouseClickMap(d) {
     const dataCountry = d3.select(this).datum();
+    resetMap(); // Nulstil kortet først
 
     const clickedCountryName = dataCountry.properties.name;
     const clickedCountryData = alldata.filter(
-      (data) => data.country === clickedCountryName
+        (data) => data.country === clickedCountryName
     )[0];
     console.log("this is the clicked country data", clickedCountryData);
+
+    const countryCode = mapCountryNameCode(clickedCountryName);
+    if (countryCode) {
+        updateFlag(countryCode);
+        displayCountryData(clickedCountryData, clickedCountryName, countryCode);
+    } else {
+        console.log("Landekode ikke fundet for", clickedCountryName);
+    }
     // Calculate the bounding box of the clicked country
     const bboxMap = this.getBBox(); //bboxMap = {x, y, width, height} bounding box laver den mindste firkant omkring landet
     const bboxWidthMap = bboxMap.width;
@@ -301,7 +311,6 @@ Promise.all([
           .style("height", "70%") // Make it take up 80% of the height
           .style("opacity", 0); // Start with an opacity of 0
         // .style("z-index", "2"); // Set the z-index to 2
-
         div.append("p").text("").attr("id", "contentText");
         div
           .transition() // Start a transition
@@ -479,6 +488,31 @@ Promise.all([
           .attr("y2", 235)
           .style("stroke", "black")
           .style("stroke-width", 2);
+// Tilføj div til HTML-dokumentet og positioner den relativt til svgBar
+const flagContainer = d3
+  .select("#content") // Vælg din content div
+  .append("div")
+  .attr("id", "flag-container")
+  .style("position", "absolute")
+  .style("left", "50%")
+  .style("bottom", "0") // Placer nederst
+  .style("transform", "translateX(-50%)") // Center vandret
+  .style("text-align", "center")
+  .style("margin", "20px 0px")
+  .style("display", "block")
+  .style("visibility", "visible");
+
+// Tilføj flag til flag-container
+const flagURL = `photos/flags/${countryCode.toLowerCase()}.png`;
+flagContainer
+  .append("img")
+  .attr("id", "flag")
+  .attr("alt", `${clickedCountryName} Flag`)
+  .attr("src", flagURL)
+  .style("width", "250px")
+  .style("height", "auto")
+  .style("border", "3px solid black");
+
       });
 
     function sunPotentialBarScale(d) {
@@ -611,4 +645,92 @@ function popupOpen() {
 }
 function popupClose() {
   document.getElementById("popup").style.display = "none";
+}
+// Funktion til at indlæse countries.json og oprette mapping fra landenavne til landekoder
+// Definér en global variabel til at gemme landeoplysningerne
+let countriesData;
+// Funktion til at indlæse landeoplysninger fra JSON-filen
+function loadCountriesData() {
+  // Foretag en HTTP-anmodning for at indlæse countries.json
+  // Her er et eksempel på, hvordan du kan gøre det med fetch API
+  fetch('scripts/countries.json')
+    .then(response => response.json())
+    .then(data => {
+      // Gem landeoplysningerne i countriesData
+      countriesData = data;
+      console.log('Landeoplysninger indlæst:', countriesData);
+    })
+    .catch(error => console.error('Fejl ved indlæsning af landeoplysninger:', error));
+}
+
+// Funktion til at mappe landenavne til landekoder
+function mapCountryNameCode(countryName) {
+  console.log("Landenavn før mapping til kode:", countryName);
+  
+  // Tjek om countriesData er defineret og ikke null eller undefined
+  if (countriesData && typeof countriesData === 'object') {
+    // Tjek om landenavnet findes i countriesData
+    const countryCode = Object.keys(countriesData).find(
+      key => countriesData[key].toLowerCase() === countryName.toLowerCase()
+    );
+
+    // Hvis landekoden findes, returner den
+    if (countryCode) {
+      console.log("Landekode fra kort:", countryCode);
+      return countryCode;
+    } else {
+      // Hvis landenavnet ikke findes, udskriv en fejlmeddelelse
+      console.log("Landenavnet blev ikke fundet i kortet.");
+      return null; // eller hvad der er passende for din logik
+    }
+  } else {
+    // Hvis countriesData ikke er defineret eller ikke er et objekt, udskriv en fejlmeddelelse
+    console.error("countriesData er ikke defineret eller ikke et objekt.");
+    return null; // eller hvad der er passende for din logik
+  }
+}
+
+// Kald funktionen til indlæsning af landeoplysninger
+loadCountriesData();
+
+
+
+// Funktion til at opdatere flaget baseret på landekoden
+function updateFlag(countryCode) {
+  console.log("Received country code:", countryCode);
+  if (typeof countryCode === 'string') {
+    const flagURL = `photos/flags/${countryCode.toLowerCase()}.png`;
+    console.log("Constructed flag URL:", flagURL);
+    // Vælg det relevante <img> element og indstil src-attributten til flagets URL
+    d3.select("#flag").attr("src", flagURL);
+  } else {
+    console.log("Invalid country code.");
+  }
+}
+function selectCountryFromDropdown(countryName) {
+  // Reset the map
+  resetMap();
+
+  // Find the country code for the selected country
+  const countryCode = mapCountryNameCode(countryName);
+
+  // Check if countryCode exists
+  if (countryCode) {
+    updateFlag(countryCode);
+    mouseClickMap.call(d3.select("#" + countryCode).node());
+
+    // Zoom and pan to the selected country
+    zoomToCountry(countryCode);
+  } else {
+    console.log("Landekode ikke fundet for", countryName);
+  }
+}
+
+// Function to handle selecting a country from the search box
+function selectCountryFromSearchBox() {
+  const countryName = document.getElementById("search").value;
+
+  if (countryName !== "") {
+      selectCountryFromDropdown(countryName);
+  }
 }
