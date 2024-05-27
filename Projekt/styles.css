@@ -93,7 +93,7 @@
 }
 /*centrering af kort*/
 .svg-container {
-  display: flex;
+  display: relative;
   justify-content: center;
   align-items: center;
 }
@@ -128,8 +128,9 @@ span {
   z-index: 1;
 }
 .content h1 {
-  font-size: 70px;
-  margin-top: 30px;
+  font-size: 24px;
+  margin-top: 15px;
+  margin-bottom: 15px;
   color: #000;
 }
 .content p {
@@ -156,11 +157,14 @@ span {
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
 /* Modal Content/Box */
 .popupPage {
   margin-top: 5%;
+  margin-left: 5%; /* 15% from the top and centered */
   margin-left: 5%; /* 15% from the top and centered */
   padding: 10px;
   border: 1px solid #888;
@@ -176,6 +180,53 @@ span {
   font-size: 40px;
   font-weight: bold;
   font-style: italic;
+}
+#searchContainer {
+  position: relative;
+  width: 400px;
+  margin: 20px auto 0;
+}
+
+#search-box {
+  width: 75%;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: 1px solid #dfe1e5;
+  border-radius: 24px;
+  box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+  outline: none;
+}
+
+#search-box:focus {
+  border-color: #4285f4;
+}
+
+#dropdown {
+  position: absolute;
+  width: 100%;
+  background: #fbe8a6;
+  border: 1px solid #dfe1e5;
+  border-top: none;
+  box-shadow: 0 4px 6px rgba(32, 33, 36, 0.28);
+  max-height: 300px;
+  overflow-y: auto;
+  display: none;
+  border-radius: 0 0 24px 24px;
+  z-index: 1000;
+  padding: 5px 10px;
+}
+
+#dropdown div {
+  padding: 12px 20px;
+  cursor: pointer;
+}
+
+#dropdown div:hover {
+  background: #f1f1f1;
+}
+
+.svg-container {
+  text-align: center;
 }
 
 .darkMode {
