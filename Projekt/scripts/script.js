@@ -104,6 +104,7 @@ Promise.all([
   alldata.forEach(function (d) {
     dataMap.set(d.name, +d.sunpotentialkwhyearm2);
   });
+  console.log("this is dataMap", dataMap);
   // Listen for changes in the input field
   searchBox.on("input", function () {
     // Save the input field's value in lowercase
@@ -518,26 +519,21 @@ Promise.all([
       .style("opacity", 0)
       .remove();
   });
-
-  function popupOpen() {
-    const popupBox = document.getElementById("popup");
-    popupBox.style.display = "block";
-  }
-
-  const popupBox = document.getElementById("popup");
-  popupBox.addEventListener("click", function () {
-    this.style.display = "none";
-  });
-
-  // darkmode
-  function darkMode() {
-    var element = document.body;
-    element.classList.toggle("dark-mode");
-  }
-  function popupOpen() {
-    document.getElementById("popup").style.display = "block";
-  }
-  function popupClose() {
-    document.getElementById("popup").style.display = "none";
-  }
 });
+
+const popupBox = document.getElementById("popup");
+popupBox.addEventListener("click", function () {
+  this.style.display = "none";
+});
+
+// darkmode
+function darkMode() {
+  var element = document.body;
+  element.classList.toggle("dark-mode");
+}
+function popupOpen() {
+  document.getElementById("popup").style.display = "block";
+}
+function popupClose() {
+  document.getElementById("popup").style.display = "none";
+}
