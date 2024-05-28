@@ -329,8 +329,7 @@ document.getElementById('dropdown').addEventListener('change', function(event) {
           .attr("class", "mySvgBar")
           .attr("width", widthBar)
           .attr("height", heightBar)
-          .style("position", "flexc");
-
+          .style("position", "flex");
         d3.select("#contentText") // Add the name of the country to the content div
           .attr("x", widthMap / 1.25) // Position it at the center of the SVG
           .attr("y", 50) // A little bit down from the top
