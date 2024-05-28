@@ -1,5 +1,4 @@
-// The svg for map
-// Existing code
+// Globale variables for the map,svgbar and searchbox.
 const widthMap = window.innerWidth - 25;
 const searchBox = d3.select("#search-box");
 const dropdown = d3.select("#dropdown");
@@ -11,9 +10,8 @@ const svgBar = d3
 
 // Add a class to the SVG
 svgBar.attr("class", "mySvg");
-const widthBar = 350; // specify the width of the bar chart SVG
-const heightBar = 300; // specify the height of the bar chart SVG
-// Define the width and height of the gradient bar
+const widthBar = 350; 
+const heightBar = 300; 
 const gradientWidth = 500;
 const gradientHeight = 20;
 const gradientMargin = 40;
@@ -48,13 +46,15 @@ const minOutputMap = 50; // Minimum rectangle width
 const maxOutputMap = 300; // Maximum rectangle width
 let allData;
 
+// Loading data, promise.all is used to load multiple data sources at the same time and will first run when both data is loaded.
 Promise.all([
-  // Load external data and boot for map
   d3.json("dataset/world.geojson"),
   d3.json("http://localhost:4000/alldata"),
 ]).then(function ([topoData, alldata]) {
   allData = alldata;
-  //topoData = world.geojson, populationData = world_population.csv
+  //topoData = world.geojson, allData = http://localhost:4000/alldata
+
+  // Filter out countries that have no relevance for the visualization
   topoData.features = topoData.features.filter(function (feature) {
     return (
       feature.properties.name !== "Antarctica" &&
@@ -64,6 +64,7 @@ Promise.all([
       feature.properties.name !== "Greenland"
     );
   });
+  // Initialize an empty object to store e.g the solar production data by country
   let sunProdByCountry = {};
   let energyConsByCountry = {};
   let sunPotentialByCountry = {};
@@ -80,26 +81,28 @@ Promise.all([
     energyConsByCountry[d.country] = +d.energyproductionkwhyear; // convert to number
   });
   console.log(allData);
-  let sunPotentialValues = Object.values(sunPotentialByCountry);
+  let sunPotentialValues = Object.values(sunPotentialByCountry); // Get the values of the sun potential
   console.log("this is sunpotentialvalues", sunPotentialValues);
-  let minSunPotential = d3.min(sunPotentialValues.filter((value) => value > 0));
-  let maxSunPotential = d3.max(sunPotentialValues);
+  let minSunPotential = d3.min(sunPotentialValues.filter((value) => value > 0)); // Find the minimum value
+  let maxSunPotential = d3.max(sunPotentialValues); // Find the maximum value
 
-  let sunProdValues = Object.values(sunProdByCountry);
-  let minSunProd = d3.min(sunProdValues.filter((value) => value > 0));
-  let maxSunProd = d3.max(sunProdValues);
+  let sunProdValues = Object.values(sunProdByCountry); // Get the values of the sun production
+  let minSunProd = d3.min(sunProdValues.filter((value) => value > 0)); // Find the minimum value
+  let maxSunProd = d3.max(sunProdValues); // Find the maximum value
 
-  let energyConsValues = Object.values(energyConsByCountry);
-  let minEnergiCons = d3.min(energyConsValues.filter((value) => value > 0));
-  let maxEnergiCons = d3.max(energyConsValues);
+  let energyConsValues = Object.values(energyConsByCountry); // Get the values of the energy consumption
+  let minEnergiCons = d3.min(energyConsValues.filter((value) => value > 0)); // Find the minimum value
+  let maxEnergiCons = d3.max(energyConsValues); // Find the maximum value
+
+  // Create a color scale for the map
   const colorScaleMap = d3
-    .scaleSequential()
-    .domain([minSunPotential, maxSunPotential])
-    .interpolator(d3.interpolateYlOrRd);
+    .scaleSequential() 
+    .domain([minSunPotential, maxSunPotential]) // Set the domain to the min and max sun potential values
+    .interpolator(d3.interpolateYlOrRd); // Use the YlOrRd color scheme
   // Process population data
   alldata.forEach(function (d) {
     dataMap.set(d.country, +d.sunpotentialkwhyearm2);
-  });
+  }); //
 
   console.log("this is dataMap", dataMap);
   // Listen for changes in the input field
@@ -131,8 +134,7 @@ Promise.all([
     // Show or hide the dropdown menu based on the number of filtered countries
     dropdown.style("display", filteredCountries.length ? "block" : "none");
 
-    // Add the filtered countries to the dropdown menu
-// Your existing dropdown script
+    // Add the filtered countries to the dropdown menu as list items
 dropdown
   .selectAll("li")
   .data(filteredCountries)
@@ -493,12 +495,12 @@ document.getElementById('dropdown').addEventListener('change', function(event) {
           .style("stroke-width", 2);
 // Tilføj div til HTML-dokumentet og positioner den relativt til svgBar
 const flagContainer = d3
-  .select("#content") // Vælg din content div
+  .select("#content") // selecting content div
   .append("div")
   .attr("id", "flag-container")
   .style("position", "absolute")
   .style("left", "50%")
-  .style("bottom", "0") // Placer nederst
+  .style("bottom", "0") 
   .style("transform", "translateX(-50%)") // Center vandret
   .style("text-align", "center")
   .style("margin", "20px 0px")
@@ -587,7 +589,7 @@ flagContainer
     .selectAll(".Country")
     .on("mouseover", function () {
       d3.select(this)
-        .style("stroke-width", "3") // Set the border thickness
+        .style("stroke-width", "1.5") // Set the border thickness
         .style("stroke", "black"); // Set the border color
     })
     .on("mouseout", function () {
