@@ -60,7 +60,8 @@ Promise.all([
       feature.properties.name !== "Antarctica" &&
       feature.properties.name !== "French Southern and Antarctic Lands" &&
       feature.properties.name !== "Taiwan" &&
-      feature.properties.name !== "New Caledonia"
+      feature.properties.name !== "New Caledonia" &&
+      feature.properties.name !== "Greenland"
     );
   });
   let sunProdByCountry = {};
