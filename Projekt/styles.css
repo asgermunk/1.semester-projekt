@@ -272,3 +272,19 @@ span {
   background-color: black;
   color: white;
 }
+.dark-mode #searchContainer {
+  background-color: black;
+  color: white;
+}
+.dark-mode #search-box {
+  background-color: black;
+  color: white;
+}
+.dark-mode #dropdown {
+  background-color: black;
+  color: white;
+}
+.dark-mode #dropdown-item {
+  background-color: black;
+  color: white;
+}
