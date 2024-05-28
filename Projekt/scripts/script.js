@@ -131,19 +131,21 @@ Promise.all([
     dropdown.style("display", filteredCountries.length ? "block" : "none");
 
     // Add the filtered countries to the dropdown menu
-    dropdown
-      .selectAll("li")
-      .data(filteredCountries)
-      .enter()
-      .append("li")
-      .text((d) => d)
-      .on("click", function (event, d) {
-        resetMap(); 
-        const country = d;
-        const countryPath = svgBar
-          .selectAll("path")
-          .filter((d) => d.properties.name === country)
-          .node();
+// Your existing dropdown script
+dropdown
+  .selectAll("li")
+  .data(filteredCountries)
+  .enter()
+  .append("li")
+  .attr("id", "dropdown-item")
+  .text((d) => d)
+  .on("click", function (event, d) {
+    resetMap(); 
+    const country = d;
+    const countryPath = svgBar
+      .selectAll("path")
+      .filter((d) => d.properties.name === country)
+      .node();
 
         // If the country exists, perform the click action on the map
         if (countryPath) {
