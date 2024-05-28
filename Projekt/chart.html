@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Map - Sundata</title>
+  </head>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="icon" href="photos/sun.png" type="image/x-icon" />
+  <body>
+    <div class="navbar">
+      <a href="https://www.eaaa.dk/">
+        <img class="logo" src="photos/eaa_logo.png" alt="logo" />
+      </a>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="map.html">Map</a></li>
+        <li><a href="chart.html">Chart</a></li>
+        <li><a href="sourceData.html">Source Data</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="heading-container">
+      <div id="welcome-heading-solar" class="welcome-heading">
+        Top 20 Countries by Solar Production
+      </div>
+      <div id="welcome-heading-energy" class="welcome-heading">
+        Top 20 Countries by Total Energy Consumption
+      </div>
+    </div>
+    <script src="https://d3js.org/d3.v6.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <div id="barchartSunProd" class="barchart"></div>
+
+    <div id="barchartEnergyCons" class="barchart"></div>
+
+    <script src="scripts/script.js"></script>
+  </body>
+</html>

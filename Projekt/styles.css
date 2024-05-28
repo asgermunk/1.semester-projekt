@@ -273,7 +273,10 @@ span {
   color: white;
 }
 /* Style the bars */
-.barChart {
+#barchartSunProd {
+  fill: steelblue;
+}
+#barchartEnergyCons {
   fill: steelblue;
 }
 /* Style the axes */
@@ -287,4 +290,12 @@ span {
 .axis text {
   font-family: sans-serif;
   font-size: 11px;
+}
+.heading-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.welcome-heading {
+  width: 50%;
 }
