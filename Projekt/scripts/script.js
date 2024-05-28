@@ -60,7 +60,8 @@ Promise.all([
       feature.properties.name !== "Antarctica" &&
       feature.properties.name !== "French Southern and Antarctic Lands" &&
       feature.properties.name !== "Taiwan" &&
-      feature.properties.name !== "New Caledonia"
+      feature.properties.name !== "New Caledonia" &&
+      feature.properties.name !== "Greenland"
     );
   });
   let sunProdByCountry = {};
@@ -267,11 +268,13 @@ Promise.all([
     dropdown.style("display", filteredCountries.length ? "block" : "none");
 
     // Add the filtered countries to the dropdown menu
+    // Your existing dropdown script
     dropdown
       .selectAll("li")
       .data(filteredCountries)
       .enter()
       .append("li")
+      .attr("id", "dropdown-item")
       .text((d) => d)
       .on("click", function (event, d) {
         resetMap();
