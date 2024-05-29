@@ -300,7 +300,7 @@ span {
   fill: steelblue;
 }
 #barchartEnergyCons {
-  fill: steelblue;
+  fill: orange;
 }
 /* Style the axes */
 .axis path,
@@ -350,4 +350,7 @@ span {
 .button-container button:active {
   background-color: #004494;
   transform: translateY(0);
+}
+.bold-text {
+  font-weight: bold;
 }
