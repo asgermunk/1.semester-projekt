@@ -473,6 +473,7 @@ Promise.all([
 
         div.append("p").text("").attr("id", "contentText");
         div.transition().duration(750).style("opacity", 1);
+        
 
         d3.select("#contentText") // Add the name of the country to the content div
           .attr("x", widthMap / 1.25) // Position it at the center of the SVG
@@ -664,7 +665,7 @@ Promise.all([
           .attr("id", "flag-container")
           .style("position", "absolute")
           .style("left", "50%")
-          .style("bottom", "0")
+          .style("bottom", "40px")
           .style("transform", "translateX(-50%)")
           .style("text-align", "center")
           .style("margin", "20px 0px")
@@ -681,6 +682,12 @@ Promise.all([
           .style("width", "250px")
           .style("height", "auto")
           .style("border", "3px solid black");
+          // Add a close button
+         
+div.append("button")
+  .text("Close")
+  .attr("id", "closeButton") 
+  .on("click", resetMap);
       });
 
     function sunPotentialBarScale(d) {
@@ -757,9 +764,10 @@ Promise.all([
         .style("stroke", "none"); // Reset the border color
     });
   // Add an event listener for a double click event
-  svgBar.on("dblclick", function () {
-    // Transition all countries back to their original scale and set their opacity back to 0.8
-    d3.selectAll(".Country")
+  svgBar.on("dblclick",resetMap)
+});
+function resetMap() {
+  d3.selectAll(".Country")
       .transition()
       .duration(1000)
       .attr("transform", "scale(1)")
@@ -792,8 +800,7 @@ Promise.all([
       .duration(1000)
       .style("opacity", 0)
       .remove();
-  });
-});
+}
 // Create a new SVG element for the map
 const popupBox = document.getElementById("popup");
 popupBox.addEventListener("click", function () {
