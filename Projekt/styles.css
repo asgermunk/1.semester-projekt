@@ -322,3 +322,32 @@ span {
 .welcome-heading-bar {
   width: 50%;
 }
+/* CSS for Button Container */
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+/* CSS for Buttons */
+.button-container button {
+  background-color: #007bff; /* Bootstrap Primary Blue */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.button-container button:hover {
+  background-color: #0056b3; /* Darker Blue */
+  transform: translateY(-2px);
+}
+
+.button-container button:active {
+  background-color: #004494; /* Even Darker Blue */
+  transform: translateY(0);
+}
