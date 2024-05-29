@@ -1,5 +1,5 @@
 // Specify the API endpoint for food
-const apiUrl = 'http://localhost:4000/Alldata';
+const apiUrl = 'https://solarenergy-xkhs.onrender.com/Alldata';
 
 // Make a GET request using the Fetch API
 fetch(apiUrl)
