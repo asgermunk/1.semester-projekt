@@ -332,7 +332,7 @@ span {
 
 /* CSS for Buttons */
 .button-container button {
-  background-color: #007bff; /* Bootstrap Primary Blue */
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
@@ -343,11 +343,11 @@ span {
 }
 
 .button-container button:hover {
-  background-color: #0056b3; /* Darker Blue */
+  background-color: #0056b3;
   transform: translateY(-2px);
 }
 
 .button-container button:active {
-  background-color: #004494; /* Even Darker Blue */
+  background-color: #004494;
   transform: translateY(0);
 }
