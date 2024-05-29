@@ -48,7 +48,7 @@ let allData;
 // Loading data, promise.all is used to load multiple data sources at the same time and will first run when both data is loaded.
 Promise.all([
   d3.json("dataset/world.geojson"),
-  d3.json("http://localhost:4000/alldata"),
+  d3.json("https://solarenergy-xkhs.onrender.com"),
 ]).then(function ([topoData, alldata]) {
   allData = alldata;
   //topoData = world.geojson, allData = http://localhost:4000/alldata
