@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="styles.css" />
     <title>Map - Sundata</title>
   </head>
+  <!-- Import of the Montserrat font from Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -14,6 +15,7 @@
   />
   <link rel="icon" href="photos/sun.png" type="image/x-icon" />
   <body>
+    <!-- Navigation bar with logo and links to other pages -->
     <div class="navbar">
       <a href="https://www.eaaa.dk/">
         <img class="logo" src="photos/eaa_logo.png" alt="logo" />
@@ -28,7 +30,8 @@
       </ul>
     </div>
 
-    <div class="heading-container">
+    <!-- title for the top 20 countries by solar production and total energy consumption -->
+      <div class="heading-container">
       <div id="welcome-heading-solar" class="welcome-heading-bar">
         Top 20 Countries by Solar Production
       </div>
@@ -36,14 +39,15 @@
         Top 20 Countries by Total Energy Consumption
       </div>
     </div>
+    
+    <!-- div container element til styling af specifikt chart -->
+    <div id="barchartSunProd" class="barchart"></div>
+    <!-- div container element til styling af specifikt chart -->
+    <div id="barchartEnergyCons" class="barchart"></div>
+    <!-- scripts -->
     <script src="https://d3js.org/d3.v6.js"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-    <div id="barchartSunProd" class="barchart"></div>
-
-    <div id="barchartEnergyCons" class="barchart"></div>
-
     <script src="scripts/script.js"></script>
   </body>
 </html>

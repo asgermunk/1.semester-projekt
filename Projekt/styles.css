@@ -1,4 +1,4 @@
-/*Baseline css værdier til styles dokumentet*/
+/*Baseline css values for the styles document*/
 * {
   margin: 0;
   padding: 0;
@@ -23,7 +23,7 @@
   z-index: 100;
 }
 
-/*navigations bar til tilgængelighed til de forskellige sider*/
+/*navigational bar at the top of the webpage*/
 .navbar {
   width: 100%;
   margin: auto;
@@ -35,19 +35,20 @@
   color: #000000;
   border-bottom: 1px solid #000;
 }
-/* List attributes (forskellige knapper) */
+/* buttons for the navbar */
 .navbar ul li {
   list-style: none;
   display: inline-block;
   margin: 0 35px;
   position: relative;
 }
-/* underlining 28-46 */
+/* text decoration */
 .navbar ul li a {
   text-decoration: none;
   color: #000;
   text-transform: uppercase;
 }
+/* button hover effect */
 .navbar ul li::after {
   content: "";
   height: 1px;
@@ -58,13 +59,15 @@
   bottom: -2px;
   transition: 0.3s;
 }
+/* after effect */
 .navbar ul li:hover::after {
   width: 100%;
 }
-
+/* hover effect */
 .navbar a:hover {
   color: #000;
 }
+/* placement of logo */
 .logo {
   padding: 5px 10px;
 }
@@ -86,33 +89,25 @@
   justify-content: center;
   align-items: center;
 }
+/* Hover effect for the button of index */
 .interactiveMap:hover {
   background: #ffbf00;
   color: #f0dca1cc;
   border: 2px solid #000000;
 }
-/*centrering af kort*/
+/*container styling to center the element*/
 .svg-container {
   display: relative;
   justify-content: center;
   align-items: center;
 }
-span {
-  color: #f0dca1cc;
-  height: 100%;
-  width: 0%;
-  border: 25px;
-  left: 0;
-  bottom: 0;
-  z-index: 2;
-  transition: 0.5s;
-}
+/* h1 styling of this class */
 .sourceData {
   color: #000;
   font-size: 20px;
   padding: 2cm;
 }
-/* Content i midten af siden */
+/* multipurpose content box styling */
 .content {
   width: 35%;
   margin: 0 auto;
@@ -127,41 +122,43 @@ span {
   position: relative;
   z-index: 1;
 }
+/* h1 styling */
 .content h1 {
   font-size: 24px;
   margin-top: 15px;
   margin-bottom: 15px;
   color: #000;
 }
+/* p styling */
 .content p {
   margin: 20px auto;
   font-weight: 450;
   line-height: 45px;
   color: #000;
 }
+/* svg bar container for bars created within div element (popup for countries)  */
 #svgbar {
   position: absolute;
   top: 100;
   left: 10px;
 }
 
-/* The Modal (background) */
+/* popup styling. Hidden, positioning, background and fallback colours and size */
 .popup {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  display: none; 
+  position: fixed; 
+  z-index: 1; 
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgb(0, 0, 0); 
+  background-color: rgba(0, 0, 0, 0.4); 
+  background-color: rgb(0, 0, 0); 
+  background-color: rgba(0, 0, 0, 0.4); 
 }
-
-/* Modal Content/Box */
+/* Styling within the popup */
 .popupPage {
   margin-top: 5%;
   margin-left: 5%; /* 15% from the top and centered */
@@ -172,7 +169,7 @@ span {
   width: 10%; /* Decrease this to make the popup smaller */
   color: #000000;
 }
-
+/* Styling of the welcome header */
 .welcome-heading {
   display: flex;
   justify-content: center;
@@ -181,6 +178,7 @@ span {
   font-weight: bold;
   font-style: italic;
 }
+/* Styling of the welcome header */
 .welcome-heading-bar {
   display: flex;
   justify-content: center;
@@ -189,12 +187,13 @@ span {
   font-weight: bold;
   font-style: italic;
 }
+/* Positioning of the search container  */
 #searchContainer {
   position: relative;
   width: 400px;
   margin: 20px auto 0;
 }
-
+/* Styling in the search function of the search box */ 
 #search-box {
   width: 75%;
   padding: 12px 20px;
@@ -204,11 +203,11 @@ span {
   box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
   outline: none;
 }
-
+/* Blue outlining when the search function is being used */
 #search-box:focus {
   border-color: #4285f4;
 }
-
+/* Styling of dropdown for countries shown when looking up countries */
 #dropdown {
   position: absolute;
   width: 100%;
@@ -224,20 +223,16 @@ span {
   z-index: 1000;
   padding: 5px 10px;
 }
-
+/* when the search function is being used the dropdown is being shown */
 #dropdown div {
   padding: 12px 20px;
   cursor: pointer;
 }
-
-#dropdown div:hover {
-  background: #f1f1f1;
-}
-
+/* centering of the svg container */
 .svg-container {
   text-align: center;
 }
-
+/* Styling of the dark mode button */
 .darkMode {
   display: inline-block;
   font-size: 16px;
@@ -253,52 +248,64 @@ span {
   border-radius: 10px; /* Changed to match the border radius of .popupPage */
   box-shadow: none; /* Removed to match the flat design of the rest of your page */
 }
+/* Dark Hover effect for the dark mode button */
 .darkMode:hover {
   background-color: #f8f8f8; /* Lighter shade when hovered */
 }
-
+/* When clicked, the dark mode button transforms the background into black */
 .darkMode:active {
   background-color: #000; /* Even lighter shade when active */
   transform: none;
 }
+/* Dark mode effect on svg */
 .dark-mode .mySvg {
   color: white;
   background-color: black;
 }
+/* Dark mode effect on title */
 .dark-mode .welcome-heading {
   color: white;
   background-color: black;
 }
+/* Dark mode effect on image */
 .dark-mode .image {
   filter: invert();
 }
+/* Dark mode effect on text */
 .dark-mode #minText {
   color: white;
   background-color: black;
 }
+/* Dark mode effect on text */
 .dark-mode #maxText {
   background-color: black;
   color: white;
 }
+/* Dark mode effect on search function container */
 .dark-mode #searchContainer {
   background-color: black;
   color: white;
 }
+/* Dark mode effect on search box styling */
 .dark-mode #search-box {
   background-color: black;
   color: white;
 }
+/* Dark mode effect on drop down styling */
 .dark-mode #dropdown {
   background-color: black;
   color: white;
 }
+/* Dark mode effect on drop down element styling */
 .dark-mode #dropdown-item {
   background-color: black;
   color: white;
-} /* Style the bars */
+} 
+/* styling of the color of the bar */ 
 #barchartSunProd {
   fill: steelblue;
 }
+/* styling of the color of the bar */
 #barchartEnergyCons {
   fill: orange;
 }
@@ -309,16 +316,16 @@ span {
   stroke: #000;
   shape-rendering: crispEdges;
 }
-
 .axis text {
   font-family: sans-serif;
   font-size: 11px;
 }
+/* Styling of the heading container */
 .heading-container {
   display: flex;
   justify-content: space-between;
 }
-
+/* Styling of the welcome heading bar */
 .welcome-heading-bar {
   width: 50%;
 }
@@ -330,7 +337,7 @@ span {
   margin: 20px 0;
 }
 
-/* CSS for Buttons */
+/* CSS for Buttons, Hover function for the button container to contain all 3 buttons in 1 line  */
 .button-container button {
   background-color: #007bff;
   color: white;
@@ -341,16 +348,17 @@ span {
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
-
+/* color of the button */
 .button-container button:hover {
   background-color: #0056b3;
   transform: translateY(-2px);
 }
-
+/* Effect when clicked */
 .button-container button:active {
   background-color: #004494;
   transform: translateY(0);
 }
+/* text font weight */
 .bold-text {
   font-weight: bold;
 }

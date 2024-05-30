@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="styles.css" />
     <title>Map - Sundata</title>
   </head>
+  <!-- Import of the Montserrat font from Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -20,6 +21,7 @@
     ></div>
     <div id="maxText" style="position: fixed; right: 40px; bottom: 50px"></div>
     <div><div class="gradientBar" id="gradientBar"></div></div>
+     <!-- Navigation bar with logo and links to other pages -->
     <div class="navbar">
       <a href="https://www.eaaa.dk/">
         <img class="logo" src="photos/eaa_logo.png" alt="logo" />
@@ -33,6 +35,7 @@
       </ul>
     </div>
 
+    <!-- Info button png with click function to open popup window with instructions -->
     <input
       class="image"
       type="image"
@@ -43,6 +46,7 @@
       height="50"
       onclick="popupOpen()"
     />
+    <!-- The popup window with instructions. This contains the text and the popup close function -->
     <div id="popup" class="popup">
       <div class="popupPage" onclick="popupClose()">
         <h1>Welcome to the Map!</h1>
@@ -58,6 +62,7 @@
         </p>
       </div>
     </div>
+    <!-- Dark mode button for the map -->
     <button
       class="darkMode"
       style="position: absolute; left: 80px; top: 105px"
@@ -65,14 +70,15 @@
     >
       Dark Mode
     </button>
-
+    <!-- Heading for the map -->
     <div id="welcome-heading" class="welcome-heading">
       Potential solar energy production
     </div>
-
+    <!-- scripts -->
     <script src="https://d3js.org/d3.v6.js"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- Search function for the map -->
     <div id="searchContainer">
       <input
         type="text"
@@ -81,6 +87,7 @@
       />
       <ul id="dropdown"></ul>
     </div>
+    <!-- Container for the d3 map -->
     <div class="svg-container">
       <svg id="svgmap" width="2000" height="1000" margin-top="100px"></svg>
     </div>
