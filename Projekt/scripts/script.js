@@ -812,91 +812,102 @@ function popupClose() {
   document.getElementById("popup").style.display = "none";
 }
 
-// Funktion til at indlæse countries.json og oprette mapping fra landenavne til landekoder
-// Definér en global variabel til at gemme landeoplysningerne
+//Define a global variable to store the country information
 let countriesData;
-// Funktion til at indlæse landeoplysninger fra JSON-filen
+// Funktion for loading the data inside the countries.json file
 function loadCountriesData() {
-  // Foretag en HTTP-anmodning for at indlæse countries.json
-  // Her er et eksempel på, hvordan du kan gøre det med fetch API
   fetch("scripts/countries.json")
     .then((response) => response.json())
     .then((data) => {
-      // Gem landeoplysningerne i countriesData
       countriesData = data;
+      // saving the data inside the countriesData variable
       console.log("Landeoplysninger indlæst:", countriesData);
     })
     .catch((error) =>
       console.error("Fejl ved indlæsning af landeoplysninger:", error)
     );
 }
+// console.log = import data succes/failure
 
-// Funktion til at mappe landenavne til landekoder
+
+//Funktion to map country names to country codes
 function mapCountryNameCode(countryName) {
   console.log("Landenavn før mapping til kode:", countryName);
 
-  // Tjek om countriesData er defineret og ikke null eller undefined
+
+  // Checking if countriesData is defined and not null or undefined
   if (countriesData && typeof countriesData === "object") {
-    // Tjek om landenavnet findes i countriesData
+    //Checking if the country name exists in the countriesData
     const countryCode = Object.keys(countriesData).find(
       (key) => countriesData[key].toLowerCase() === countryName.toLowerCase()
     );
 
-    // Hvis landekoden findes, returner den
+
+    //If the country code exists, return it
     if (countryCode) {
-      console.log("Landekode fra kort:", countryCode);
+      console.log("Countrycode from countries.json:", countryCode);
       return countryCode;
     } else {
-      // Hvis landenavnet ikke findes, udskriv en fejlmeddelelse
-      console.log("Landenavnet blev ikke fundet i kortet.");
-      return null; // eller hvad der er passende for din logik
+      // If the country name does not exist, print an error message
+      console.log("Countryname couldn't be found");
+      return
     }
   } else {
-    // Hvis countriesData ikke er defineret eller ikke er et objekt, udskriv en fejlmeddelelse
-    console.error("countriesData er ikke defineret eller ikke et objekt.");
-    return null; // eller hvad der er passende for din logik
+    // If countriesData is not defined or not an object, print an error message
+    console.error("CountriesData is not defined or not an object.");
+    return
   }
 }
 
-// Kald funktionen til indlæsning af landeoplysninger
+
+// Call the function to load the country information.
 loadCountriesData();
 
-// Funktion til at opdatere flaget baseret på landekoden
+
+// Function to update the flag based on the country code
 function updateFlag(countryCode) {
   console.log("Received country code:", countryCode);
   if (typeof countryCode === "string") {
     const flagURL = `photos/flags/${countryCode.toLowerCase()}.png`;
     console.log("Constructed flag URL:", flagURL);
-    // Vælg det relevante <img> element og indstil src-attributten til flagets URL
     d3.select("#flag").attr("src", flagURL);
+//If the countryCode is a string, it will find the right flag .png image which is based on countrycode
+//d3.select("#flag").attr("src", flagURL); // This line updates the flag image source
   } else {
     console.log("Invalid country code.");
   }
 }
-function selectCountryFromDropdown(countryName) {
-  // Reset the map
-  resetMap();
 
-  // Find the country code for the selected country
+// Function for handling a connection between the dropdownmenu and the countrycode.
+function selectCountryFromDropdown(countryName) {
+  
+  resetMap(); // Reset the map before selecting a new country
+
+  // Finding the countryCode for the selected country
   const countryCode = mapCountryNameCode(countryName);
 
-  // Check if countryCode exists
+  // Check if the countryCode exists
   if (countryCode) {
+    // Update the flag with the country code
     updateFlag(countryCode);
-    mouseClickMap.call(d3.select("#" + countryCode).node());
 
-    // Zoom and pan to the selected country
-    zoomToCountry(countryCode);
+    // Simulate a mouse click on the map element for the country
+    mouseClickMap.call(d3.select("#" + countryCode).node());
   } else {
-    console.log("Landekode ikke fundet for", countryName);
+    // writing out a message in console if the country code wasn't found
+    console.log("Country code couldn't be found for", countryName);
   }
 }
 
 // Function to handle selecting a country from the search box
 function selectCountryFromSearchBox() {
+  // Get the value entered in the search input box
   const countryName = document.getElementById("search").value;
 
+  // Check if the search input is not empty
   if (countryName !== "") {
+    // Call the function to select the country from the dropdown
     selectCountryFromDropdown(countryName);
   }
 }
+
