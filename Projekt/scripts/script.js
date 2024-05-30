@@ -246,7 +246,6 @@ svgBarChartEnergiCons
     resetMap();
     // Save the input field's value in lowercase
     const searchTerm = searchBox.property("value").toLowerCase();
-
     // Filter countries based on the input field's value
     const filteredCountries = topoData.features
       .map((d) => d.properties.name)
@@ -337,8 +336,8 @@ svgBarChartEnergiCons
       resetMap();
       updateMap(selectedCountry);
     });
-  // Draw the map
 
+  // Draw the map
   svgBar
     .selectAll("path")
     .data(topoData.features)
@@ -393,10 +392,7 @@ svgBarChartEnergiCons
     clickedCountryData,
     clickedCountryName,
     countryCode
-  ) {
-    // Display the data for the selected country here
-    // This function can be used to update the content div with the relevant data
-  }
+  ){}
   // Function for when a country is clicked
   function mouseClickMap(d) {
     const dataCountry = d3.select(this).datum();
@@ -406,7 +402,7 @@ svgBarChartEnergiCons
     const clickedCountryData = alldata.filter(
       (data) => data.country === clickedCountryName
     )[0];
-    console.log("this is the clicked country data", clickedCountryData);
+ 
     // Update the flag and display the country data
     const countryCode = mapCountryNameCode(clickedCountryName);
     if (countryCode) {
@@ -443,7 +439,7 @@ svgBarChartEnergiCons
         d3.select(this).style("display", "none");
       });
 
-    // gør det valgte land synligt og gør det stort, samt få det til at være i midten
+    // Transition the clicked country to the center of the map and scale it
     d3.select(this)
       .transition()
       .duration(750)
@@ -468,7 +464,7 @@ svgBarChartEnergiCons
         div.append("p").text("").attr("id", "contentText");
         div.transition().duration(750).style("opacity", 1);
         
-
+// Add the name of the country to the content div
         d3.select("#contentText") // Add the name of the country to the content div
           .attr("x", widthMap / 1.25) // Position it at the center of the SVG
           .attr("y", 50) // A little bit down from the top
@@ -481,11 +477,13 @@ svgBarChartEnergiCons
           .duration(500)
           .style("opacity", 1); // Set the text to the name of the country
 
+        // Create a container for the buttons
         const buttonContainer = d3
           .select("#content")
           .append("div")
           .attr("class", "button-container");
-
+        
+          // Add the buttons
         buttonContainer
           .append("button")
           .attr("id", "solarPotentialButton")
@@ -507,7 +505,7 @@ svgBarChartEnergiCons
         function clearSVG() {
           d3.select("#svgbar").selectAll("*").remove();
         }
-
+        
         function showSolarPotential(data) {
           clearSVG();
 
@@ -676,13 +674,13 @@ svgBarChartEnergiCons
           .style("width", "250px")
           .style("height", "auto")
           .style("border", "3px solid black");
+
           // Add a close button
-         
-div.append("button")
-  .text("Close")
-  .attr("id", "closeButton") 
-  .on("click", resetMap);
-      });
+          div.append("button")
+            .text("Close")
+            .attr("id", "closeButton") 
+            .on("click", resetMap);
+                });
 
     function sunPotentialBarScale(d) {
       // This function returns the width of the rectangle based on the sun potential
