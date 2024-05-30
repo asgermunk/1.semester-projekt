@@ -329,6 +329,7 @@ svgBarChartEnergiCons
       .style("opacity", 0)
       .remove();
   }
+  // Add the dropdown event listener
   document
     .getElementById("dropdown")
     .addEventListener("change", function (event) {
@@ -412,7 +413,7 @@ svgBarChartEnergiCons
       console.log("Landekode ikke fundet for", clickedCountryName);
     }
     // Calculate the bounding box of the clicked country
-    const bboxMap = this.getBBox(); //bboxMap = {x, y, width, height} bounding box laver den mindste firkant omkring landet
+    const bboxMap = this.getBBox(); //bboxMap = {x, y, width, height} bounding box creates a rectangle around the country
     const bboxWidthMap = bboxMap.width;
     const bboxHeightMap = bboxMap.height;
     // Calculate the scale factor based on the size of the country
@@ -465,17 +466,17 @@ svgBarChartEnergiCons
         div.transition().duration(750).style("opacity", 1);
         
 // Add the name of the country to the content div
-        d3.select("#contentText") // Add the name of the country to the content div
-          .attr("x", widthMap / 1.25) // Position it at the center of the SVG
-          .attr("y", 50) // A little bit down from the top
-          .attr("text-anchor", "middle") // Center the text
-          .style("font-size", "48px") // Make the text a bit larger
-          .style("fill", "black") // Make the text black
-          .style("opacity", 0) // Set the opacity to 0
+        d3.select("#contentText") 
+          .attr("x", widthMap / 1.25) 
+          .attr("y", 50) 
+          .attr("text-anchor", "middle") 
+          .style("font-size", "48px") 
+          .style("fill", "black") 
+          .style("opacity", 0) 
           .text(d.properties.name)
           .transition()
           .duration(500)
-          .style("opacity", 1); // Set the text to the name of the country
+          .style("opacity", 1); 
 
         // Create a container for the buttons
         const buttonContainer = d3
@@ -501,14 +502,14 @@ svgBarChartEnergiCons
           .attr("id", "solarProductionButton")
           .text("Solar Production")
           .on("click", () => showSolarProduction(dataCountry));
-
+        // Create a function to clear the SVG
         function clearSVG() {
           d3.select("#svgbar").selectAll("*").remove();
         }
-        
+        // Create a function to display the solar potential
         function showSolarPotential(data) {
           clearSVG();
-
+          // Create a rectangle for the solar potential
           svgBar
             .append("rect")
             .attr("x", 0)
@@ -525,6 +526,7 @@ svgBarChartEnergiCons
             .style("opacity", 1);
 
           var sunPotentialValue = sunPotential(data);
+          // Add the text for the solar potential
           svgBar
             .append("text")
             .attr("x", sunPotentialBarScale(data) + 10 + "px")
@@ -559,10 +561,10 @@ svgBarChartEnergiCons
             .style("font-weight", "bold") // Make this text bold
             .text(" 100% of the area to be covered with solar panels.");
         }
-
+        // Create a function to display the energy consumption
         function showEnergyConsumption(data) {
           clearSVG();
-
+          // Create a rectangle for the energy consumption
           svgBar
             .append("rect")
             .attr("x", 0)
@@ -578,6 +580,7 @@ svgBarChartEnergiCons
             .style("opacity", 1);
 
           var energiConsValue = energiConsMap(data);
+          // Add the text for the energy consumption
           svgBar
             .append("text")
             .attr("x", energiConsBarScale(data) + 10 + "px")
@@ -598,10 +601,10 @@ svgBarChartEnergiCons
             .style("fill", "black")
             .text("The total energy consumption from all sources in PWh");
         }
-
+        // Create a function to display the solar production
         function showSolarProduction(data) {
           clearSVG();
-
+          // Create a rectangle for the solar production
           svgBar
             .append("rect")
             .attr("x", 0)
@@ -617,6 +620,7 @@ svgBarChartEnergiCons
             .style("opacity", 1);
 
           var sunProdValue = sunProdMap(data);
+          // Add the text for the solar production
           svgBar
             .append("text")
             .attr("x", sunProdBarScale(data) + 10 + "px")
@@ -647,7 +651,7 @@ svgBarChartEnergiCons
           .attr("height", heightBar)
           .style("position", "flex");
 
-        // Initial display (could be either one of the data types or empty)
+       
         showSolarPotential(dataCountry);
 
         // Create a container for the flag
@@ -758,7 +762,9 @@ svgBarChartEnergiCons
   // Add an event listener for a double click event
   svgBar.on("dblclick",resetMap)
 });
+//Function to reset the map
 function resetMap() {
+  // Reset the map
   d3.selectAll(".Country")
       .transition()
       .duration(1000)
@@ -867,12 +873,13 @@ loadCountriesData();
 // Function to update the flag based on the country code
 function updateFlag(countryCode) {
   console.log("Received country code:", countryCode);
+  //If the countryCode is a string, it will find the right flag .png image which is based on countrycode
   if (typeof countryCode === "string") {
     const flagURL = `photos/flags/${countryCode.toLowerCase()}.png`;
     console.log("Constructed flag URL:", flagURL);
-    d3.select("#flag").attr("src", flagURL);
-//If the countryCode is a string, it will find the right flag .png image which is based on countrycode
-//d3.select("#flag").attr("src", flagURL); // This line updates the flag image source
+    d3.select("#flag").attr("src", flagURL); // This line updates the flag image source
+
+
   } else {
     console.log("Invalid country code.");
   }
