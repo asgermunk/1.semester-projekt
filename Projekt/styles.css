@@ -354,8 +354,8 @@ span {
 .bold-text {
   font-weight: bold;
 }
+/* Style the closeButton */
 #closeButton {
-  /* Your existing styles */
   background-color: #FF0000;
   border: none;
   color: white;
@@ -370,14 +370,12 @@ span {
   transition-duration: 0.4s;
   position: absolute;
   bottom: 0;
-
-  /* New styles to center the button */
-  left: 50%; /* Position the left edge of the button in the middle of the div */
-  transform: translateX(-50%); /* Shift the button leftwards by half its width */
+  left: 50%; 
+  transform: translateX(-50%);
 }
-
+/*hover effect  */
 #closeButton:hover {
-  background-color: #B22222; /* White background on hover */
-  color: black; /* Black text on hover */
-  /* Add a green border on hover */
+  background-color: #B22222; 
+  color: black; 
+
 }
