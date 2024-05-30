@@ -137,6 +137,7 @@
   color: #000;
 }
 /* svg bar container for bars created within div element (popup for countries)  */
+
 #svgbar {
   position: absolute;
   top: 100;
