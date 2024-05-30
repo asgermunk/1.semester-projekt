@@ -144,86 +144,77 @@ Promise.all([
       .style("margin-bottom", "50px")
       .style("margin-left", "50px");
 
-    // Create scales
-    const xScaleSunProd = d3.scaleBand().range([0, widthBar]).padding(0.4);
-    const xScaleEnergiCons = d3.scaleBand().range([0, widthBar]).padding(0.4);
-    const yScaleSunProd = d3.scaleLinear().range([heightBar, 0]);
-    const yScaleEnergiCons = d3.scaleLinear().range([heightBar, 0]);
+  
+   // Create scales
+const yScaleSunProd = d3.scaleBand().range([0, heightBar]).padding(0.4);
+const yScaleEnergiCons = d3.scaleBand().range([0, heightBar]).padding(0.4);
+const xScaleSunProd = d3.scaleLinear().range([0, widthBar]);
+const xScaleEnergiCons = d3.scaleLinear().range([0, widthBar]);
 
-    //define the domains
-    xScaleSunProd.domain(barChartDataSunProd.map((d) => d.country));
-    xScaleEnergiCons.domain(barChartDataEnergiCons.map((d) => d.country));
-    yScaleSunProd.domain([0, d3.max(barChartDataSunProd, (d) => d.value)]);
-    yScaleEnergiCons.domain([
-      0,
-      d3.max(barChartDataEnergiCons, (d) => d.value),
-    ]);
+//define the domains
+yScaleSunProd.domain(barChartDataSunProd.map((d) => d.country));
+yScaleEnergiCons.domain(barChartDataEnergiCons.map((d) => d.country));
+xScaleSunProd.domain([0, d3.max(barChartDataSunProd, (d) => d.value)]);
+xScaleEnergiCons.domain([0, d3.max(barChartDataEnergiCons, (d) => d.value)]);
 
-    // Add Y-axis to the first SVG and add the suffix
-    svgBarChartSunProd
-      .append("g")
-      .attr("class", "axis")
-      .call(d3.axisLeft(yScaleSunProd).tickFormat((d) => `${d} TWh`));
+// Add X-axis to the first SVG and add the suffix
+svgBarChartSunProd
+  .append("g")
+  .attr("class", "axis")
+  .attr("transform", `translate(0,${heightBar})`)
+  .call(d3.axisBottom(xScaleSunProd).tickFormat((d) => `${d} TWh`));
 
-    // Add X-axis to the first SVG
-    svgBarChartSunProd
-      .append("g")
-      .attr("class", "axis")
-      .attr("transform", `translate(0,${heightBar})`)
-      .call(d3.axisBottom(xScaleSunProd))
-      .selectAll("text")
-      .attr("transform", "translate(-10,0)rotate(-45)")
-      .style("text-anchor", "end");
+// Add Y-axis to the first SVG
+svgBarChartSunProd
+  .append("g")
+  .attr("class", "axis")
+  .call(d3.axisLeft(yScaleSunProd));
 
-    // Add Y-axis to the second SVG and add the suffix
-    svgBarChartEnergiCons
-      .append("g")
-      .attr("class", "axis")
-      .call(
-        d3.axisLeft(yScaleEnergiCons).tickFormat((d) => `${d * 1e-12} PWh`)
-      );
+// Add X-axis to the second SVG and add the suffix
+svgBarChartEnergiCons
+  .append("g")
+  .attr("class", "axis")
+  .attr("transform", `translate(0,${heightBar})`)
+  .call(d3.axisBottom(xScaleEnergiCons).tickFormat((d) => `${d * 1e-12} PWh`))
+  .selectAll("text")
+  .attr("transform", "rotate(-45)")
+  .style("text-anchor", "end");
 
-    // Add X-axis to the second SVG
-    svgBarChartEnergiCons
-      .append("g")
-      .attr("class", "axis")
-      .attr("transform", `translate(0,${heightBar})`)
-      .call(d3.axisBottom(xScaleEnergiCons))
-      .selectAll("text")
-      .attr("transform", "translate(-10,0)rotate(-45)")
-      .style("text-anchor", "end");
+// Add Y-axis to the second SVG
+svgBarChartEnergiCons
+  .append("g")
+  .attr("class", "axis")
+  .call(d3.axisLeft(yScaleEnergiCons));
 
-    // bar chart for sol potentiale
-    svgBarChartSunProd
-      .selectAll(".barChart")
-      .data(barChartDataSunProd)
-      .enter()
-      .append("rect")
-      .attr("x", (d) => xScaleSunProd(d.country))
-      .attr("y", heightBar) // Start from the bottom of the chart
-      .attr("width", xScaleSunProd.bandwidth())
-      .attr("height", 0) // Initial height is 0
-      .transition() // Start a transition
-      .duration(600) // Transition duration
-      .delay((d, i) => (barChartDataSunProd.length - i) * 100) // Delay to start right to left
-      .attr("y", (d) => yScaleSunProd(d.value)) // End at the correct y position
-      .attr("height", (d) => heightBar - yScaleSunProd(d.value)); // End at the correct height
+// bar chart for sol potentiale
+svgBarChartSunProd
+  .selectAll(".barChart")
+  .data(barChartDataSunProd)
+  .enter()
+  .append("rect")
+  .attr("y", (d) => yScaleSunProd(d.country))
+  .attr("x", 0) // Start from the left of the chart
+  .attr("height", yScaleSunProd.bandwidth())
+  .attr("width", 0) // Initial width is 0
+  .transition() // Start a transition
+  .duration(600) // Transition duration
+  .delay((d, i) => (barChartDataSunProd.length - i) * 100) // Delay to start top to bottom
+  .attr("width", (d) => xScaleSunProd(d.value)); // End at the correct width
 
-    //Barchart for energi forbrug
-    svgBarChartEnergiCons
-      .selectAll(".barChart")
-      .data(barChartDataEnergiCons)
-      .enter()
-      .append("rect")
-      .attr("x", (d) => xScaleEnergiCons(d.country))
-      .attr("y", heightBar) // Start from the bottom of the chart
-      .attr("width", xScaleEnergiCons.bandwidth())
-      .attr("height", 0) // Initial height is 0
-      .transition() // Start a transition
-      .duration(600) // Transition duration
-      .delay((d, i) => (barChartDataEnergiCons.length - i) * 100) // Delay to start right to left
-      .attr("y", (d) => yScaleEnergiCons(d.value)) // End at the correct y position
-      .attr("height", (d) => heightBar - yScaleEnergiCons(d.value)); // End at the correct height
+//Barchart for energi forbrug
+svgBarChartEnergiCons
+  .selectAll(".barChart")
+  .data(barChartDataEnergiCons)
+  .enter()
+  .append("rect")
+  .attr("y", (d) => yScaleEnergiCons(d.country))
+  .attr("x", 0) // Start from the left of the chart
+  .attr("height", yScaleEnergiCons.bandwidth())
+  .attr("width", 0) // Initial width is 0
+  .transition() // Start a transition
+  .duration(600) // Transition duration
+  .delay((d, i) => (barChartDataEnergiCons.length - i) * 100) // Delay to start top to bottom
+  .attr("width", (d) => xScaleEnergiCons(d.value)); // End at the correct width
   }
   // Create SVG for solar production and energy consumption
 
