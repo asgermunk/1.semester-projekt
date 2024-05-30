@@ -144,20 +144,7 @@ Promise.all([
       .style("margin-bottom", "50px")
       .style("margin-left", "50px");
 
-    // Create scales
-    const xScaleSunProd = d3.scaleBand().range([0, widthBar]).padding(0.4);
-    const xScaleEnergiCons = d3.scaleBand().range([0, widthBar]).padding(0.4);
-    const yScaleSunProd = d3.scaleLinear().range([heightBar, 0]);
-    const yScaleEnergiCons = d3.scaleLinear().range([heightBar, 0]);
-
-    //define the domains
-    xScaleSunProd.domain(barChartDataSunProd.map((d) => d.country));
-    xScaleEnergiCons.domain(barChartDataEnergiCons.map((d) => d.country));
-    yScaleSunProd.domain([0, d3.max(barChartDataSunProd, (d) => d.value)]);
-    yScaleEnergiCons.domain([
-      0,
-      d3.max(barChartDataEnergiCons, (d) => d.value),
-    ]);
+  
    // Create scales
 const yScaleSunProd = d3.scaleBand().range([0, heightBar]).padding(0.4);
 const yScaleEnergiCons = d3.scaleBand().range([0, heightBar]).padding(0.4);
