@@ -68,35 +68,36 @@ Promise.all([
   let energyConsByCountry = {};
   let sunPotentialByCountry = {};
 
+//Convert the data to numbers
   alldata.forEach((d) => {
     sunPotentialByCountry[d.country] = +d.sunpotentialkwhyearm2; // convert to number
   });
-  console.log("this is sunpotentialbycountry", sunPotentialByCountry);
   alldata.forEach((d) => {
     sunProdByCountry[d.country] = +d.solarproductionterawatthoursyear; // convert to number
   });
-
   alldata.forEach((d) => {
     energyConsByCountry[d.country] = +d.energyproductionkwhyear; // convert to number
   });
+
   // Convert the object to an array of objects
   let barChartDataSunProd = Object.entries(sunProdByCountry).map(
     ([country, value]) => ({ country, value })
   );
-
   let barChartDataEnergiCons = Object.entries(energyConsByCountry).map(
     ([country, value]) => ({ country, value })
   );
-  // Sort data in descending order and limit to top 10
+
+  // Sort data in descending order and limit to top 20
   barChartDataSunProd.sort((a, b) => d3.descending(a.value, b.value));
   barChartDataSunProd = barChartDataSunProd.slice(0, 20);
-  console.log("this is barChartDataSunProd", barChartDataSunProd);
   barChartDataEnergiCons.sort((a, b) => d3.descending(a.value, b.value));
   barChartDataEnergiCons = barChartDataEnergiCons.slice(0, 20);
-  console.log("this is barChartDataEnergiCons", barChartDataEnergiCons);
+
+  // Create the scales
   const margin = { top: 20, right: 20, bottom: 70, left: 200 };
   const widthBar = 700 - margin.left - margin.right;
   const heightBar = 500 - margin.top - margin.bottom;
+  
   // Create divs for the charts
   if (window.location.href.endsWith("chart.html")) {
     //Only create the charts if the URL ends with chart.html
@@ -142,6 +143,21 @@ Promise.all([
       .style("width", "50%")
       .style("margin-bottom", "50px")
       .style("margin-left", "50px");
+
+    // Create scales
+    const xScaleSunProd = d3.scaleBand().range([0, widthBar]).padding(0.4);
+    const xScaleEnergiCons = d3.scaleBand().range([0, widthBar]).padding(0.4);
+    const yScaleSunProd = d3.scaleLinear().range([heightBar, 0]);
+    const yScaleEnergiCons = d3.scaleLinear().range([heightBar, 0]);
+
+    //define the domains
+    xScaleSunProd.domain(barChartDataSunProd.map((d) => d.country));
+    xScaleEnergiCons.domain(barChartDataEnergiCons.map((d) => d.country));
+    yScaleSunProd.domain([0, d3.max(barChartDataSunProd, (d) => d.value)]);
+    yScaleEnergiCons.domain([
+      0,
+      d3.max(barChartDataEnergiCons, (d) => d.value),
+    ]);
    // Create scales
 const yScaleSunProd = d3.scaleBand().range([0, heightBar]).padding(0.4);
 const yScaleEnergiCons = d3.scaleBand().range([0, heightBar]).padding(0.4);
@@ -219,25 +235,25 @@ svgBarChartEnergiCons
   let sunPotentialValues = Object.values(sunPotentialByCountry);
   let minSunPotential = d3.min(sunPotentialValues.filter((value) => value > 0));
   let maxSunPotential = d3.max(sunPotentialValues);
-
-  let sunProdValues = Object.values(sunProdByCountry); // Get the values of the sun production
-  let minSunProd = d3.min(sunProdValues.filter((value) => value > 0)); // Find the minimum value
-  let maxSunProd = d3.max(sunProdValues); // Find the maximum value
-
+  let sunProdValues = Object.values(sunProdByCountry); 
+  let minSunProd = d3.min(sunProdValues.filter((value) => value > 0)); 
+  let maxSunProd = d3.max(sunProdValues); 
   let energyConsValues = Object.values(energyConsByCountry);
   let minEnergiCons = d3.min(energyConsValues.filter((value) => value > 0));
   let maxEnergiCons = d3.max(energyConsValues);
+
   // Create the color scale for the map
   const colorScaleMap = d3
     .scaleSequential()
     .domain([minSunPotential, maxSunPotential]) // Set the domain to the min and max sun potential values
     .interpolator(d3.interpolateYlOrRd); // Use the YlOrRd color scheme
+
   // Process population data
   alldata.forEach(function (d) {
     dataMap.set(d.country, +d.sunpotentialkwhyearm2);
   }); //
 
-  console.log("this is dataMap", dataMap);
+ 
   // Listen for changes in the input field
   searchBox.on("input", function () {
     resetMap();
